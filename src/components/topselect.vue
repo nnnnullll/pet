@@ -3,7 +3,7 @@
     <div class="tab">
       <img :src="topUrl" class="toplogo">
       <p @click="gotomain" class="webitem1">首页</p>
-      <p @click="gotosection" class="webitem15">流浪之家🏡</p>
+      <p @click="gotosection" class="webitem15">流浪之家💕</p>
       <p @click="gotosection" class="webitem15">宠物识别🔍</p>
       <p @click="gotosection" class="webitem15">医疗资源💊</p>
       <img :src="imgUrl" class="img">
@@ -44,7 +44,7 @@ export default {
       this.$router.push('/section');
     },
     gotomain(){
-      this.$router.push('/main');
+      this.$router.push('/home');
     }
   }
 }
@@ -61,8 +61,8 @@ export default {
   margin-right: 1%;
   margin-left: 27px;
   margin-top: 15px;
-  width: 167px;
-  height: 40px;
+  width: 146px;
+  height: 38px;
 }
 
 .webitem1{
@@ -79,11 +79,11 @@ export default {
 
 }
 .webitem15{
-  flex: 0 0 180px;
+  flex: 0 0 125px;
   flex-shrink: 0;
   margin-right: 1%;
-  margin-top:2%;
-  width: 180px;
+  margin-top:1.75%;
+  width: 125px;
   height: 22px;
   font-size: 23px;
   font-family: ZTSJ-BaguetteFont;
@@ -104,10 +104,8 @@ export default {
   color: #000000;
 
 }
-
 .img{
   margin-top: 19px;
-  margin-right: 12px;
   margin-bottom: 13px;
   flex: 0 0 35px;
   width: 35px;
@@ -139,13 +137,13 @@ export default {
   margin-left: 10%;
 }
 .webitem4{
-  flex: 0 0 373px;
+  flex: 0 0 300px;
   flex-shrink: 0;
   margin-top: 1.5%;
-  width: 373px;
+  width: 300px;
   height: 41px;
   background: #B6B6B6;
-  opacity: 0.3;
+  opacity: 0.1;
   box-sizing: border-box;
 
 }
@@ -154,18 +152,20 @@ export default {
   height: 41px;
   background: #F5EEEE;
   margin-top: 1.5%;
+  margin-right: 1.5%;
 
 }
 .userimg{
   width:75px;
   height: 75px;
+  margin-right: 1%;
 }
 .webitem6{
   font-size: 23px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #030303;
-  margin-left: 1%;
+  margin-right: 1%;
   margin-top: 2%;
 }
 .webitem7{
@@ -174,7 +174,6 @@ export default {
   font-weight: 400;
   color: #030303;
   margin-top: 2%;
-  margin-left: 1%;
 }
 
 </style>
