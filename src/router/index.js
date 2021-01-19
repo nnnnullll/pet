@@ -3,9 +3,7 @@ import Router from 'vue-router'
 import Register from '../views/register'//视图组件导入 改别名Register
 import Othershome from '../views/othershome'
 import PetRegister from '../components/petregister'
-import PetLogin from '../components/petlogin'
 import PetLog from '../components/petlog'
-import Content from '../components/Content'
 import Home from '../components/home'
 Vue.use(Router)
 
@@ -28,19 +26,9 @@ export default  new Router({
       component:PetRegister
     },
     {
-      path:'/l',
-      name:'PetLogin',
-      component:PetLogin
-    },
-    {
       path:'/log',
       name:'PetLog',
       component:PetLog
-    },
-    {
-      path:'/content',
-      name:'Content',
-      component:Content
     },
     {
       path:'/home',

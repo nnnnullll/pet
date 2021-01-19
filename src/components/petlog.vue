@@ -27,22 +27,22 @@
                     <!-- 文字内容 -->
                     <div class="messagetext">{{messageinform.passage}}</div>
                     </div>
-                        <el-image  v-for="(photo) in photourl" :key="photo.key" 
+                        <el-img  v-for="(photo) in photourl" :key="photo.key" 
                             style="width: 221px; height: 150px;padding:1px"
                             :src="photo"
                             :preview-src-list="photourl"
                             fit="cover">
-                        </el-image>
+                        </el-img>
                     <el-row  class="lovestar" >  
                         <el-col  :span="10" >
                             <div class="txt" style="font-weight:bold" >
-                            <img @click="starplus()" class="p1" src="../assets/imag/star.png" alt="">
+                            <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
                             {{messageinform.starnumber}}  {{messageinform.isstar}}
                             </div>
                         </el-col>
                         <el-col  :span="12" >
                             <div class="txt" style="font-weight:bold" >
-                            <img @click="loveplus()" class="p1" src="../assets/imag/love.png" alt="">
+                            <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
                             {{messageinform.lovenumber}}  {{messageinform.islove}}
                             </div>
                         </el-col>
@@ -83,7 +83,7 @@ export default {
                     'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                 ],
             pic: {
-                backgroundImage: "url(" + require('../assets/imag/a2.png') + ")",
+                backgroundImage: "url(" + require('../assets/img/a2.png') + ")",
                 width: '1440px',
                 height: '685px',
                 position: 'absolute',

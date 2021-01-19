@@ -27,8 +27,8 @@ const axios=require('axios');
 export default {
   data() {
     return {
-      imgUrl:require("@/assets/imag/img1.png"),
-      userimg:require("@/assets/imag/userimg.png"),
+      imgUrl:require("@/assets/img/img1.png"),
+      userimg:require("@/assets/img/userimg.png"),
     }
   },
   methods: {

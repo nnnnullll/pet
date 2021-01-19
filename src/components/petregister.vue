@@ -20,7 +20,7 @@
     <!-- <svg-icon icon-class="404" size="40"></svg-icon>
     <icon name="picture1_animals" :w="1440" :h="140"></icon> -->
     <!-- 注册 -->
-    <img class="p1" src="../assets/imag/a1.png" alt="">
+    <img class="p1" src="../assets/img/a1.png" alt="">
     <div class="line1"></div>
     <div class="line2"></div>
     <div class="head">注册</div>
@@ -92,8 +92,8 @@ export default {
       }
     };
     return {
-      imgUrl:require("@/assets/imag/img1.png"),
-      userimg:require("@/assets/imag/userimg.png"),
+      imgUrl:require("@/assets/img/img1.png"),
+      userimg:require("@/assets/img/userimg.png"),
       userinform: {
       //用户信息
       name:"",
