@@ -1,6 +1,5 @@
 // 头部选择栏
 <template xmlns:overflow="http://www.w3.org/1999/xhtml">
-  <div class="building">
     <div class="tab">
       <img :src="topUrl" class="toplogo">
       <p @click="gotomain" class="webitem1">首页</p>
@@ -17,8 +16,6 @@
       <p class="webitem6" @click="gotologin">登陆</p>
       <p class="webitem7" @click="gotoregister">注册</p>
     </div>
-  </div>
-
 </template>
 
 <script>
@@ -54,13 +51,6 @@ export default {
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-.building{
-  width: 1440px;
-  height: 900px;
-}
 .tab{
   display: flex;
   flex-direction: row;
@@ -159,16 +149,6 @@ body {
   opacity: 0.75;
   border-radius: 50%;
   margin-left: 79px;
-}
-.bottom{
-  width: 1440px;
-  height: 823px;
-  background: #F8C291;
-  opacity: 0.35;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  top: 1%;
 }
 .webitem6{
   font-size: 23px;
