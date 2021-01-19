@@ -1,3 +1,4 @@
+// 详细记录
 <template>
     <!-- <div class="container"> -->
         <div class="box" :style ="pic" >
