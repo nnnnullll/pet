@@ -1,10 +1,8 @@
-// 登录
+// 注册
 <template>  
   <div class="registerbox">
     <!-- 首栏 -->
     <v-top></v-top>
-    <!-- <svg-icon icon-class="404" size="40"></svg-icon>
-    <icon name="picture1_animals" :w="1440" :h="140"></icon> -->
     <!-- 注册 -->
     <img class="p1" src="../assets/img/longpets.png" alt="">
     <div class="line1"></div>

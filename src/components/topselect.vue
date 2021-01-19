@@ -1,18 +1,18 @@
-// 头部选择栏
+// 头部选择栏组件
 <template xmlns:overflow="http://www.w3.org/1999/xhtml">
     <div class="tab">
       <img :src="topUrl" class="toplogo">
       <p @click="gotomain" class="webitem1">首页</p>
-      <p @click="gotosection" class="webitem2">栏目</p>
+      <p @click="gotosection" class="webitem15">流浪之家🏡</p>
+      <p @click="gotosection" class="webitem15">宠物识别🔍</p>
+      <p @click="gotosection" class="webitem15">医疗资源💊</p>
       <img :src="imgUrl" class="img">
       <p class="webitem3">扫码小程序</p>
       <input type="text" class="webitem4"></input>
       <div class="webitem5" @click="search">
         <p class="text1">搜索</p>
       </div>
-      <div class="circle2img" >
-        <img :src="userimg"  class="userimg" >
-      </div>
+      <img :src="userimg"  class="userimg" >
       <p class="webitem6" @click="gotologin">登陆</p>
       <p class="webitem7" @click="gotoregister">注册</p>
     </div>
@@ -50,12 +50,12 @@ export default {
 }
 </script>
 
-<style>
+<style scope>
 .tab{
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
-  margin-top: 1%;
+  margin-top: 0.7%;
 }
 .toplogo{
   margin-right: 1%;
@@ -78,6 +78,19 @@ export default {
   margin-top: 2%;
 
 }
+.webitem15{
+  flex: 0 0 180px;
+  flex-shrink: 0;
+  margin-right: 1%;
+  margin-top:2%;
+  width: 180px;
+  height: 22px;
+  font-size: 23px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #000000;
+
+}
 .webitem2{
   flex: 0 0 46px;
   flex-shrink: 0;
@@ -91,6 +104,7 @@ export default {
   color: #000000;
 
 }
+
 .img{
   margin-top: 19px;
   margin-right: 12px;
@@ -133,6 +147,7 @@ export default {
   background: #B6B6B6;
   opacity: 0.3;
   box-sizing: border-box;
+
 }
 .webitem5{
   width: 61px;
@@ -141,22 +156,16 @@ export default {
   margin-top: 1.5%;
 
 }
-
-.circle2{
-  width: 70px;
-  height: 70px;
-  background: #F8C291;
-  opacity: 0.75;
-  border-radius: 50%;
-  margin-left: 79px;
+.userimg{
+  width:75px;
+  height: 75px;
 }
 .webitem6{
   font-size: 23px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #030303;
-  margin-right: 1%;
-  margin-left: 0.5%;
+  margin-left: 1%;
   margin-top: 2%;
 }
 .webitem7{
@@ -165,45 +174,8 @@ export default {
   font-weight: 400;
   color: #030303;
   margin-top: 2%;
+  margin-left: 1%;
 }
-.circle2img{
-  margin-left: 5%;
-  background: #f6deca;
-  border-radius: 50%;
-  width:4.8%;
-  height: 4.8%;
-}
-.userimg{
-  margin-left: 12px;
-}
+
 </style>
 
-<style scoped>
-.itemlabel1>>>input{
-  color: #ffffff;
-  background-color: #4FA1F4 !important;
-}
-.itemlabel2>>>input{
-  color: #ffffff;
-  background-color: #4FA1F4 !important;
-}
-.el-input__inner::placeholder {
-  color: #ffffff;
-  text-align:center;
-}
-/* 谷歌 */
-.el-input__inner::-webkit-input-placeholder {
-  color: #ffffff;
-  text-align:center;
-}
-/* 火狐 */
-.el-input__inner:-moz-placeholder {
-  color: #000000;
-  text-align:center;
-}
-.el-input__inner {
-  background-color: #4FA1F4 ;
-  border: 1px solid #2f2f34;
-  width: 90%;
-}
-</style>
