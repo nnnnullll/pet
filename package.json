@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev",
+    "build": "node build/build.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -14,7 +16,8 @@
     "stylus-loader": "^4.3.3",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.2",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "webpack-dev-server": "^2.9.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

@@ -6,14 +6,7 @@ import PetRegister from '../components/petregister'
 import PetLog from '../components/petlog'
 import Home from '../components/home'
 import Content from "../components/Content";
-import Login from "../views/Login";
-import Main from "../views/Main";
 import Testcomp from "../components/Testcomp/Testcomp";
-import like from "../components/like";
-import collect from "../components/collect";
-import user from "../components/user";
-import section from "../components/section";
-import rank from "../components/rank";
 import sortcomp from "../components/sortcomp/sortcomp";
 import register from "../components/register";
 import search from "../components/search";
@@ -56,52 +49,6 @@ export default  new Router({
       //跳转的组件
       name: 'content',
       component: Content,
-    },
-    {
-      path:'/login',
-      name:'login',
-      component: Login,
-      meta: {
-        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-      },
-    },
-    {
-      path:'/main',
-      name:'Main',
-
-      component: Main,
-      children:[
-        {
-          path:'/like',
-          name:'like',
-          component: like
-        },
-
-        {
-          path:'/collect',
-          name:'collect',
-          component: collect
-        },
-        {
-          path:'/user',
-          name:'user',
-          component: user
-        },
-        {
-          path:'/section',
-          name:'section',
-          component: section,
-          meta: {
-            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-          },
-        },
-        {
-          path:'/rank',
-          name:'rank',
-          component: rank
-        },
-
-      ]
     },
     {
       path:'/test',
