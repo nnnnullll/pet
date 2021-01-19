@@ -83,7 +83,7 @@ export default {
                     'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                 ],
             pic: {
-                backgroundImage: "url(" + require('../assets/img/a2.png') + ")",
+                backgroundImage: "url(" + require('../assets/img/petshome.png') + ")",
                 width: '1440px',
                 height: '685px',
                 position: 'absolute',
