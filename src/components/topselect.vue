@@ -1,8 +1,8 @@
-
+// 头部选择栏
 <template xmlns:overflow="http://www.w3.org/1999/xhtml">
   <div class="building">
     <div class="tab">
-      <p class="webtitle">宠物的一生</p>
+      <img :src="topUrl" class="toplogo">
       <p @click="gotomain" class="webitem1">首页</p>
       <p @click="gotosection" class="webitem2">栏目</p>
       <img :src="imgUrl" class="img">
@@ -25,8 +25,10 @@
 import { mapMutations } from 'vuex';
 const axios=require('axios');
 export default {
+  name:'v-top',
   data() {
     return {
+      topUrl:require("@/assets/img/toplogo.png"),
       imgUrl:require("@/assets/img/img1.png"),
       userimg:require("@/assets/img/userimg.png"),
     }
@@ -65,20 +67,14 @@ body {
   flex-shrink: 0;
   margin-top: 1%;
 }
-.webtitle{
-  flex: 0 0 196px;
-  flex-shrink: 0;
-  margin-right: 35px;
+.toplogo{
+  margin-right: 1%;
   margin-left: 27px;
   margin-top: 15px;
-  width: 196px;
-  height: 20px;
-  font-size: 36px;
-  font-family: ZTSJ-BaguetteFont;
-  font-weight: 400;
-  color: #4FA1F4;
-  opacity: 0.91;
+  width: 167px;
+  height: 40px;
 }
+
 .webitem1{
   flex: 0 0 46px;
   flex-shrink: 0;
@@ -88,14 +84,14 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #030303;
-  margin-right: 2%;
+  margin-right: 1%;
   margin-top: 2%;
 
 }
 .webitem2{
   flex: 0 0 46px;
   flex-shrink: 0;
-  margin-right: 0.7%;
+  margin-right: 1%;
   margin-top:2%;
   width: 43px;
   height: 22px;
@@ -106,7 +102,6 @@ body {
 
 }
 .img{
-  margin-left: 42px;
   margin-top: 19px;
   margin-right: 12px;
   margin-bottom: 13px;
@@ -118,7 +113,7 @@ body {
   flex: 0 0 116px;
   flex-shrink: 0;
   margin-top: 2%;
-  margin-right: 4%;
+  margin-right: 1%;
   width: 116px;
   height: 23px;
   font-size: 23px;
