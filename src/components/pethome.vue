@@ -2,7 +2,7 @@
 <template>
   <div class="building">
     <!-- 首栏 -->
-    <v-top></v-top>
+    <v-top style="margin-bottom:5px"></v-top>
     <div >
       <div style="display: flex;flex-direction: row;justify-content: center">
         <p class="text3">以领养代替购买</p>
@@ -47,7 +47,7 @@
         <p class="text6">联系我们</p>
         <div class="line3-right"></div>
       </div>
-      <div class="contact" style="display:flex;flex-direction: column;justify-content: center">
+      <div class="contact" style="display:flex;flex-direction: column;justify-content: center;text-align:center">
         <p class="addr">
           地址：上海大学宝山校区
         </p>
@@ -97,7 +97,7 @@ body {
   margin: 0;
 }
 .building{
-  width: 1400px;
+  width: 1440px;
   height: 1100px;
 }
 .text3{

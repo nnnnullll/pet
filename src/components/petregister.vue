@@ -4,7 +4,7 @@
     <!-- 首栏 -->
     <v-top></v-top>
     <!-- 注册 -->
-    <img class="p1" src="../assets/img/longpets.png" alt="">
+    <img class="longpets" src="../assets/img/longpets.png" alt="">
     <div class="line1"></div>
     <div class="line2"></div>
     <div class="head">注册</div>
@@ -129,10 +129,8 @@ export default {
   width: 1440px;
   height: 800px;
 }
-.p1{
-  position: absolute;
-  top: 90px;
-  left: 0px;
+.longpets{
+  margin-top:4px;
 }
 .head{
   position: absolute;
