@@ -35,6 +35,8 @@ body {
 .longpets{
   margin-top:4px;
 }
+
+
 .homelogos{
     margin-top: 10px;
     height: 126px;
