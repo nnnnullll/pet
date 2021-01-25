@@ -3,10 +3,8 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -76,3 +74,4 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
+

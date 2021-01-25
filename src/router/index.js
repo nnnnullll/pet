@@ -80,7 +80,10 @@ export default  new Router({
       path: '/pethome',
       //跳转的组件
       name: 'pethome',
-      component: pethome
+      component: pethome,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      },
     },
     {
       //路由路径

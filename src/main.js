@@ -44,8 +44,6 @@ axios.interceptors.response.use(response => {
         localStorage.removeItem('token');
         router.replace({
           path: '/content'
-          //登录成功后跳入浏览的当前页面
-          // query: {redirect: router.currentRoute.fullPath}
         })
     }
     // 返回接口返回的错误信息
