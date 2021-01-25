@@ -12,9 +12,14 @@ import 'video.js/dist/video-js.css'
 Vue.use(VideoPlayer)
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
+<<<<<<< HEAD
 Vue.use(ElementUI);
 Vue.use(router);
 
+=======
+Vue.use(router);
+Vue.use(ElementUI);
+>>>>>>> 20674149967405267b40c956d90c8a75e160ef3a
 new Vue({
   el: '#app',
   //配置路由
@@ -49,8 +54,6 @@ axios.interceptors.response.use(response => {
         localStorage.removeItem('token');
         router.replace({
           path: '/content'
-          //登录成功后跳入浏览的当前页面
-          // query: {redirect: router.currentRoute.fullPath}
         })
     }
     // 返回接口返回的错误信息
