@@ -1,11 +1,11 @@
 // 头部选择栏组件
-<template xmlns:overflow="http://www.w3.org/1999/xhtml">
+<template>
     <div class="tab">
       <img :src="topUrl" class="toplogo">
-      <p @click="gotomain" class="webitem1">首页</p>
-      <p @click="gotosection" class="webitem15">流浪之家💕</p>
-      <p @click="gotosection" class="webitem15">宠物识别🔍</p>
-      <p @click="gotosection" class="webitem15">医疗资源💊</p>
+      <p @click="top_goto('home')" class="webitem1">首页</p>
+      <p @click="top_goto('pethome')" class="webitem15">流浪之家💕</p>
+      <p @click="top_goto('knowledgecard')" class="webitem15">宠物识别🔍</p>
+      <p @click="top_goto('hospital')" class="webitem15">医疗资源💊</p>
       <img :src="imgUrl" class="img">
       <p class="webitem3">扫码小程序</p>
       <input type="text" class="webitem4"></input>
@@ -13,8 +13,8 @@
         <p class="text1">搜索</p>
       </div>
       <img :src="userimg"  class="userimg" >
-      <p class="webitem6" @click="gotologin">登陆</p>
-      <p class="webitem7" @click="gotoregister">注册</p>
+      <p class="webitem6" @click="top_goto('register')">登陆</p>
+      <p class="webitem7" @click="top_goto('petregister')">注册</p>
     </div>
 </template>
 
@@ -34,18 +34,9 @@ export default {
     search(){
       this.$router.push('/search');
     },
-    gotoregister(){
-      this.$router.push('/register');
+    top_goto(e){
+      this.$router.push('/'+e);
     },
-    gotologin(){
-      this.$router.push('/content');
-    },
-    gotosection(){
-      this.$router.push('/section');
-    },
-    gotomain(){
-      this.$router.push('/home');
-    }
   }
 }
 </script>

@@ -7,12 +7,14 @@ import PetLog from '../components/petlog'
 import Home from '../components/home'
 import Content from "../components/Content";
 import Testcomp from "../components/Testcomp/Testcomp";
+import Test from "../views/test";
 import sortcomp from "../components/sortcomp/sortcomp";
 import register from "../components/register";
 import search from "../components/search";
 import pethome from "../components/pethome";
 import lan from "../components/lan"
 import knowledgecard from "../components/knowledgecard";
+import hospital from "../components/hospital";
 Vue.use(Router)
 
 export default  new Router({
@@ -29,7 +31,7 @@ export default  new Router({
       component:Othershome
     },
     {
-      path:'/register',
+      path:'/petregister',
       name:'PetRegister',
       component:PetRegister
     },
@@ -54,6 +56,11 @@ export default  new Router({
       path:'/test',
       name:'test',
       component: Testcomp
+    },
+    {
+      path:'/t',
+      name:'t',
+      component: Test
     },
     {
       path:'/sort',
@@ -95,6 +102,13 @@ export default  new Router({
       //跳转的组件
       name: 'knowledgecard',
       component: knowledgecard
+    },
+    {
+      //路由路径
+      path: '/hospital',
+      //跳转的组件
+      name: 'hospital',
+      component: hospital
     },
   ]
 })
