@@ -8,12 +8,12 @@
       <p @click="top_goto('hospital')" class="webitem15">医疗资源💊</p>
       <img :src="imgUrl" class="img">
       <p class="webitem3">扫码小程序</p>
-      <input type="text" class="webitem4"></input>
-      <div class="webitem5" @click="search">
-        <p class="text1">搜索</p>
+      <input type="text" class="webitem4" id="topinput"></input>
+      <div class="webitem5" @click="top_gotosearch">
+        <p  class="text1">搜索</p>
       </div>
       <img :src="userimg"  class="userimg" >
-      <p class="webitem6" @click="top_goto('register')">登陆</p>
+      <p class="webitem6" @click="top_goto('content')">登陆</p>
       <p class="webitem7" @click="top_goto('petregister')">注册</p>
     </div>
 </template>
@@ -31,11 +31,18 @@ export default {
     }
   },
   methods: {
-    search(){
-      this.$router.push('/search');
-    },
     top_goto(e){
       this.$router.push('/'+e);
+    },
+    top_gotosearch(){
+      var e=document.getElementById("topinput");
+      console.log(e.value),
+      this.$router.push({
+                name: 'search',
+                params: {
+                topsearch: e.value,
+                }
+            })
     },
   }
 }

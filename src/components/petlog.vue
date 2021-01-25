@@ -94,6 +94,10 @@ export default {
         }
     },
     methods:{
+    getRouterData() {
+      // 接收参数  
+      console.log(this.$route.params.jlid)
+    },
     guanzhu() {
       console.log(this)
       // 这里要改数据库关注

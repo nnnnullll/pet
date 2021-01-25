@@ -37,7 +37,7 @@ export default  new Router({
     },
     {
       path:'/log',
-      name:'PetLog',
+      name:'Petlog',
       component:PetLog
     },
     {

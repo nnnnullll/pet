@@ -13,31 +13,42 @@
             <img @click="home_goto('hospital')" class="homelogo23" :src="logo3">
             <!-- 分区 -->
             <div class="homelans">
-                <img class="homelan1" :src="lan1">
-                <img class="homelan2" :src="lan2">
+                <img @click="home_gotosearch('1')" class="homelan1" :src="lan1"> <!-- 萌宠日常 -->
+                <img @click="home_gotosearch('2')" class="homelan2" :src="lan2"> <!-- 学习训练 -->
             </div>
             <div class="homelans">
-                <img class="homelan3" :src="lan3">
-                <img class="homelan4" :src="lan4">
+                <img @click="home_gotosearch('3')" class="homelan3" :src="lan3"> <!-- 喂养贴士 -->
+                <img @click="home_gotosearch('4')" class="homelan4" :src="lan4"> <!-- DIY课堂 -->
             </div>
             <!-- 分类 -->
             <div class="homefenqus">
                 <div class="homefenqus1">
-                    <span>猫咪</span>
-                    <span>兔子</span>
-                    <span>狗狗</span>
-                    <span>仓鼠</span>
-                    <span>乌龟</span>
+                    <div  v-for="lan in lans1" :key="lan.key">
+                        <span @click="home_gotosearch(lan)">{{lan}}</span>
+                    </div>
                 </div>
                 <div class="homefenqus1">
-                    <span>鱼类</span>
-                    <span>鸟类</span>
-                    <span>昆虫</span>
-                    <span>爬宠</span>
-                    <span>更多</span>
+                    <div  v-for="lan in lans2" :key="lan.key">
+                        <span @click="home_gotosearch(lan)">{{lan}}</span>
+                    </div>
+                    <el-popover
+                        placement="bottom"
+                        min-width="150"
+                        trigger="click">
+                        <div class="homefenqus2_col">
+                            <div v-for="(lan3,index) in lans3" :key="lan3.key">
+                                <div class="homefenqu2_row">
+                                    <div  v-for="lan in lans3[index]" :key="lan.key">
+                                        <div class="fenqu2lan" @click="home_gotosearch(lan)">{{lan}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span slot="reference">更多</span>
+                    </el-popover>
                 </div>
             </div>
-            <img class="book" :src="book">
+            <img @click="home_goto('book')" class="book" :src="book">
         </div>
         <div class="homebuttom">
             <div class="homeleft">
@@ -55,7 +66,7 @@
                         <img class="title1" :src="title1">
                         <img class="title15" :src="title15">
                     </div>
-                    <div v-for="(tuijian,index) in tuijianlist_pic"  :key="tuijian.key" >
+                    <div @click="home_gotolog(tuijian.jlid)" v-for="(tuijian,index) in tuijianlist_pic"  :key="tuijian.key" >
                         <div  class="tuijianitembox_pic">
                             <img class="tuijianpic" :src="tuijian.url">
                             <div class="tuijianright">
@@ -77,7 +88,7 @@
                         </div>
                         <div class="tuijianline"></div>
                     </div>
-                    <div v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
+                    <div @click="home_gotolog(tuijian2.jlid)" v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
                         <div  class="tuijianitembox_video">
                             <div class="tuijianvideo">
                                 <video-player class="video-player vjs-custom-skin"
@@ -111,7 +122,7 @@
             <div class="homerebangbox">
                 <img class="title2" :src="title2">
                 <div class="hotbox">
-                    <div v-for="(hot,index) in hotlist" :key="hot.key" class="hotitem">
+                    <div @click="home_gotolog(hot.hotid)" v-for="(hot,index) in hotlist" :key="hot.key" class="hotitem">
                         <span class="hotid">{{index+1}}</span>
                         <img  class="hotpic" :src="hot.hotpic">
                         <div class="hottextbox">
@@ -123,7 +134,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import vTop from '../components/topselect'
 import { videoPlayer } from 'vue-video-player'
@@ -148,6 +158,16 @@ export default {
             title15:require("@/assets/img/home_title_huan.png"),
             star:require("@/assets/img/star.png"),
             love:require("@/assets/img/love.png"),
+            lans1:['猫咪','兔子','狗狗','仓鼠','乌龟'],
+            lans2:['鱼类','鸟类','昆虫','爬宠'],
+            lans3:[
+                ['猫咪','兔子','狗狗','仓鼠','乌龟'],
+                ['猫咪','兔子','狗狗','仓鼠','乌龟'],
+                ['猫咪','兔子','狗狗','仓鼠','乌龟'],
+                ['猫咪','兔子','狗狗','仓鼠','乌龟'],
+                ['猫咪','兔子','狗狗','仓鼠','乌龟'],
+                ['猫咪','兔子'],
+            ],
             lunbolist:[
                 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
@@ -156,48 +176,59 @@ export default {
             ],
             hotlist:[
                 {
+                    hotid:12,
                     hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:23,
                     hotpic:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
                     hottext:'文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:11,
                     hotpic:  'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
                     hottext:'字例文字示例文字示例文'
                 },
                 {
+                    hotid:14,
                     hotpic: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:2,
                     hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:1,
                     hotpic:'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:3,
                     hotpic: 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:4,
                     hotpic:'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                  {
+                    hotid:8,
                     hotpic:'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
+                    hotid:9,
                     hotpic:'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
             ],
             tuijianlist_pic:[
                 {
+                    jlid:1,
                     url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -207,6 +238,7 @@ export default {
                     lovenum:'',
                 },
                 {
+                    jlid:12,
                     url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     txt:'测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -216,6 +248,7 @@ export default {
                     lovenum:'',
                 },
                 {
+                    jlid:1,
                     url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     txt:'测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -227,6 +260,7 @@ export default {
             ],
             tuijianlist_video:[
                 {
+                    jlid:13,
                     txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     username:'用户名',
@@ -262,6 +296,24 @@ export default {
     methods:{
         home_goto(e){
             this.$router.push('/'+e);
+        },
+        home_gotosearch(e){
+            console.log(e),
+            this.$router.push({
+                name: 'search',
+                params: {
+                homesearch: e,
+                }
+            })
+        },
+        home_gotolog(e){
+            console.log(e),
+            this.$router.push({
+                name: 'Petlog',
+                params: {
+                    jlid: e,
+                }
+            })
         },
     }
 }   
@@ -318,12 +370,26 @@ body {
     flex-direction: column;
     justify-content: space-around;
 }
+
 .homefenqus1{
     width: 300px;
     height: 24px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.homefenqus2_col{
+    min-width: 250px;
+    display: flex;
+    flex-direction: col;
+}
+.homefenqus2_row{
+    min-width: 250px;
+    display: flex;
+    flex-direction: row;
+}
+.fenqu2lan{
+    padding: 5px;
 }
 .book{
     widows: 105px;
@@ -350,19 +416,6 @@ body {
     width: 721px;
     height: 250px;
     background:white;
-}
-.el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 150px;
-    margin: 0;
-}
-.el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-}  
-.el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
 }
 /* 推荐 */
 /* 推荐title */

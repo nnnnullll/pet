@@ -93,6 +93,13 @@ export default {
     }
   },
   methods:{
+    // 接收页面跳转得参数
+    getRouterData() {
+      // 接收top栏参数  
+      console.log(this.$route.params.topsearch)
+      //接收home页参数  因为栏用1 2 3 4 标志所以必须和top分开避免相同
+      console.log( this.$route.params.homesearch)
+    },
     gotoregister(){
       this.$router.push('/register');
     },
