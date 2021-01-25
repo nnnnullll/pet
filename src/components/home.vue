@@ -2,11 +2,11 @@
 <template>
     <div class="homebox">
         <v-top></v-top>
-        <img class="longpets" src="../assets/img/longpets.png" alt="">
+        <img class="longpets" :src="longpets" >
         <div class="homelogos">
-            <img class="homelogo1" src="../assets/img/logoliulang.png" alt="">
-            <img class="homelogo2" src="../assets/img/logokepu.png" alt="">
-            <img class="homelogo3" src="../assets/img/logohospital.png" alt="">
+            <img class="homelogo1" :src="logo1" >
+            <img class="homelogo2" :src="logo2">
+            <img class="homelogo3" :src="logo3">
         </div>
         
 
@@ -19,6 +19,14 @@ export default {
     components:{
         vTop
     },
+    data(){
+        return{
+            longpets:require("@/assets/img/longpets.png"),
+            logo1:require("@/assets/img/home_logo_liulang.png"),
+            logo2:require("@/assets/img/home_logo_kepu.png"),
+            logo3:require("@/assets/img/home_logo_hospital.png"),
+        }
+    }
     
 }
 </script>
