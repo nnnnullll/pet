@@ -74,7 +74,7 @@ export default {
           var tmp = 'Bearer ' + data.token;
           // 将用户token保存到vuex中
           _this.changeLogin({ token: tmp});
-          _this.$router.push('/login');
+          _this.$router.push('/home');
           alert('登陆成功');
         }
         else{
@@ -88,6 +88,21 @@ export default {
     clearForm(info){
       this.$refs[info].resetFields()
     },
+    search(){
+      this.$router.push('/search');
+    },
+    gotoregister(){
+      this.$router.push('/register');
+    },
+    gotologin(){
+      this.$router.push('/content');
+    },
+    gotosection(){
+      this.$router.push('/section');
+    },
+    gotomain(){
+      this.$router.push('/main');
+    }
   }
 }
 </script>

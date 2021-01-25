@@ -8,11 +8,8 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
-Vue.prototype.$axios=axios;
-Vue.use(ElementUI);
 Vue.use(router);
 Vue.use(ElementUI);
-
 new Vue({
   el: '#app',
   //配置路由

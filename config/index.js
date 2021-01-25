@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {//虚拟目录
-        target: 'http://localhost:8037',//后台NodeSpringboot项目的请求网址
+        target: 'http://localhost:8050',//后台NodeSpringboot项目的请求网址
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''//由于上面的虚拟目录实际上是不存在的，不去掉的话访问的时候显示的url会变成'http://localhost:3000/api'，所以得去掉
@@ -22,7 +22,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: '127.0.0.1', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
