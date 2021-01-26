@@ -6,10 +6,14 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import VideoPlayer from 'vue-video-player'
+import 'vue-video-player/src/custom-theme.css'
+import 'video.js/dist/video-js.css'
+Vue.use(VideoPlayer)
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
-Vue.use(router);
 Vue.use(ElementUI);
+Vue.use(router);
 new Vue({
   el: '#app',
   //配置路由

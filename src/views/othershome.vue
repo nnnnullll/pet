@@ -267,16 +267,14 @@ export default {
     border-radius: 4px;
     min-height: 50px;
   }
-  .container {
+.container {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .container.fold {
   -webkit-line-clamp: 2;
 }
-
 .container.unfold {
   -webkit-line-clamp: 100;
 }
