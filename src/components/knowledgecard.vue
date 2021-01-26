@@ -20,7 +20,7 @@
       </div>
       <div style="display: flex;flex-direction: column;">
         <img :src="flags" class="flags">
-        <button class="petbtn">👣宠物识别</button>
+        <button class="petbtn" @click="submitForm">👣宠物识别</button>
         <img :src="pet" class="pet">
         <img :src="border" class="border">
       </div>
@@ -28,6 +28,7 @@
   </div>
 </template>
 <script>
+const axios=require('axios');
 import vTop from '../components/topselect'
 export default {
   name: "knowledgecard",
@@ -59,6 +60,31 @@ export default {
           "欢。",
     }
   },
+  methods:{
+    submitForm(){
+      let _this = this;
+      var data;
+      axios.post('http://localhost:8050/knowledge',{
+        pz:"狗"
+      }).then((response)=>{
+        console.log(response)
+        if(response){
+          data=response.data;
+          console.log(data);
+          alert('查询成功');
+          this.pz=data.pz,
+              this.bm=data.bm,
+              this.xgtz=data.xgtz,
+              this.jj=data.jj
+        }
+        else{
+          alert('查询失败，请重试！')
+        }
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      });
+    },
+  }
 }
 </script>
 
