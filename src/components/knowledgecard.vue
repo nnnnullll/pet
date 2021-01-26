@@ -72,10 +72,7 @@ export default {
           data=response.data;
           console.log(data);
           alert('查询成功');
-          this.pz=data.pz,
-              this.bm=data.bm,
-              this.xgtz=data.xgtz,
-              this.jj=data.jj
+          this.pz=data.pz, this.bm=data.bm,this.xgtz=data.xgtz, this.jj=data.jj
         }
         else{
           alert('查询失败，请重试！')
