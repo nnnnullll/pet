@@ -111,7 +111,10 @@ export default  new Router({
       path: '/hospital',
       //跳转的组件
       name: 'hospital',
-      component: hospital
+      component: hospital,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      },
     },
   ]
 })
