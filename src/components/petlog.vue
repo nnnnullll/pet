@@ -2,6 +2,7 @@
 <template>
     <!-- <div class="container"> -->
         <div class="box" :style ="pic" >
+            <!-- <div>{{this.$route.params.jlid}}</div> -->
             <el-card  class="messagecard">
             <!-- 用户信息 -->
                 <el-row  >
@@ -56,10 +57,12 @@
 
 <script>
 const axios = require('axios');
+
 export default {
     name: 'productdetailspage',
     data() {
         return {
+            id:null,
             messageinform:{
                 messagenum:1,
                 username:"用户名",
@@ -93,11 +96,36 @@ export default {
             }
         }
     },
-    methods:{
-    getRouterData() {
-      // 接收参数  
-      console.log(this.$route.params.jlid)
+    mounted:function(){
+        const _this = this
+        _this.id=this.$route.params.jlid;
+        // console.log(_this.id);
+        this.getJlData();        
     },
+    methods:{
+    getJlData() { 
+        const _this = this
+        axios.get('http://localhost:8050/getShareByjlid',{
+            params:{
+                jlid:'1'
+            }
+        }).then(res => {
+            console.log(res.data)
+            _this.messageinform.messagenum=res.data.jlid
+            _this.messageinform.username=res.data.yhm
+            // _this.messageinform.userUrl
+            _this.messageinform.datatime=res.data.fbsj
+            _this.messageinform.passage=res.data.wz
+            // _this.messageinform.photonum
+            // _this.messageinform.lovenumber
+            // _this.messageinform.islove
+            // _this.messageinform.starnumber
+            // _this.messageinform.isstar
+        })
+        .catch(err => {
+            console.log('错误：'+err)
+        })
+    }, 
     guanzhu() {
       console.log(this)
       // 这里要改数据库关注

@@ -3,7 +3,10 @@
     <router-link to="pethome">topethome</router-link>
     <router-link to="search">tosearch</router-link>
     <router-link to="knowledgecard">toknowledgecard</router-link>
-    <router-view></router-view>
+    <!--  <keep-alive> 帮助获取路由跳转监听 -->
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
