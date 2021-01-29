@@ -123,6 +123,9 @@ export default  new Router({
       //跳转的组件
       name: 'hospital',
       component: hospital,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      },
      
     },
     {
@@ -132,6 +135,8 @@ export default  new Router({
       name: 'Zhongzhuan',
       component: Zhongzhuan,
       
+
+     
     },
   ]
 })

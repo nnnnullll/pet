@@ -1,17 +1,6 @@
 <template>
   <div class="building">
-    <div class="tab">
-      <p class="webtitle">宠物的一生</p>
-      <p @click="gotomain" class="webitem1">首页</p>
-      <p @click="gotosection" class="webitem2">栏目</p>
-      <img :src="imgUrl" class="img">
-      <p class="webitem3">扫码小程序</p>
-      <div class="circle2img" >
-        <img :src="userimg"  class="userimg" >
-      </div>
-      <p class="webitem6" @click="gotologin">登陆</p>
-      <p class="webitem7" @click="gotoregister">注册</p>
-    </div>
+    <v-top></v-top>
     <div class="bottom">
       <div class="search" style="display: flex;flex-direction: row;justify-content: center">
         <input v-model="searchcontent" type="text" class="webitem4" ></input>
@@ -20,17 +9,28 @@
           <img :src="searchicon">
         </div>
       </div>
+
       <div class="lead" style="display: flex;flex-direction: row;justify-content: center">
-        <p @click="gotolan" class="lan">专栏</p>
-        <p  class="user">用户</p>
+        <div class="nav-box" >
+          <!-- 导航列表 -->
+          <li class="nav-item"
+              v-for="(item, index) in nav"
+              @click="routerLink(index, item.path)"
+              :key="index">
+            <!-- 判断高亮表 -->
+            <p :class=" navIndex === index ? 'item-cn item-cn-active' : 'item-cn'">
+              {{ item.title }}
+            </p>
+          </li>
+        </div>
         <img :src="laycat" class="laycat">
       </div>
-      <div class="selectedline"></div>
       <div class="line"></div>
-      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到{{count}}位饲养员  |  按粉丝数排序</div>
+      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到{{num}}位饲养员  |  按粉丝数排序</div>
       <div v-for="user in Sort" :key="id">
         <div>
           <usercomp  @getflag="getflag" :flag="user.flag" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>
+<!--          <usercomp  @getflag="getflag" :flag="user.flag" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>-->
         </div>
       </div>
     </div>
@@ -38,11 +38,14 @@
 </template>
 
 <script>
+const axios=require('axios');
 import usercomp from "./Testcomp/Testcomp"
+import vTop from "@/components/topselect";
 export default {
   name: "search",
   components: {
     usercomp,
+    vTop
   },
   data() {
     return {
@@ -51,15 +54,11 @@ export default {
         password: '',
       },
       searchcontent:'',
-      rules: {
-        input: [{required: true, message: '账号不能为空', trigger: 'blur'}],
-        password: [{required: true, message: '密码不能为空', trigger: 'blur'}]
-      },
       imgUrl:require("@/assets/img/img1.png"),
       userimg:require("@/assets/img/userimg.png"),
       searchicon:require("@/assets/img/searchicon.png"),
       laycat:require("@/assets/img/laycat.png"),
-      count:5,
+      num:30,
       users:[
         {username:'张三',
           number:132,
@@ -90,6 +89,12 @@ export default {
           info:"热情随和，活波开朗！"
         },
       ],
+      nav: [
+        {title: '用户',path: '/search'},
+        {title: '专栏', path: '/lan'}
+      ],
+      navIndex: 0,
+      yhid:'',
     }
   },
   methods:{
@@ -100,21 +105,8 @@ export default {
       //接收home页参数  因为栏用1 2 3 4 标志所以必须和top分开避免相同
       console.log( this.$route.params.homesearch)
     },
-    gotoregister(){
-      this.$router.push('/register');
-    },
-    gotologin(){
-      this.$router.push('/content');
-    },
-    gotosection(){
-      this.$router.push('/section');
-    },
-    gotomain(){
-      this.$router.push('/main');
-    },
     getflag:function(flag,id){
       this.users[id].flag = flag;
-      console.log(this.users[id].flag,id);
     },
     getinfo:function (label){
       console.log(label);
@@ -125,15 +117,58 @@ export default {
       this.$router.push('/lan');
     },
     search(){
+      let _this = this;
+      var tmp=localStorage.getItem("yhid")
+      var test='1'
+      console.log(tmp)
+    //  console.log(typeof tmp)
+    //  console.log('http://localhost:8050/share?yhid='+tmp)
+      axios.post('http://localhost:8050/share?yhid='+2).then((response)=>{
+          console.log(response)
+          if(response){
+            var data=response.data;
+            console.log(data);
+            alert('查询成功');
+            _this.num=data.num
+          }
+          else{
+            alert('查询失败，请重试！')
+          }
+        }).catch(function (error) { // 请求失败处理
+          console.log("---查询出错---！"+error);
+        })
+    },
+    /**
+     * 路由跳转
+     * @param index
+     * @param link
+     */
+    routerLink(index, path) {
+      // 点击哪个路由就赋值给自定义的下下标
+      this.navIndex = index;
+      // 路由跳转
+      this.$router.push(path)
+    },
 
+    /**
+     * 检索当前路径
+     * @param path
+     */
+    checkRouterLocal(path) {
+      // 查找当前路由下标高亮
+      this.navIndex = this.nav.findIndex(item => item.path === path);
     }
   },
   mounted() {
-    this.tmp=this.users;
-    console.log(this.tmp);
+
   },
-  created() {
-    //this.searchcontent=this.$route.params.searchcontent;
+  watch: {
+    "$route"() {
+      // 获取当前路径
+      let path = this.$route.path;
+      // 检索当前路径
+      this.checkRouterLocal(path);
+    }
   },
   computed:{
     Sort:function(){
@@ -156,8 +191,8 @@ body {
   margin: 0;
 }
 .building{
-  width: 1400px;
-  height: 1100px;
+  width: 1440px;
+  height: 1300px;
 }
 .tab{
   display: flex;
@@ -338,4 +373,61 @@ body {
   margin-bottom: 0.5%;
   margin-top: 1%;
 }
+
+
+
+.nav-box {
+  display: flex;
+}
+
+.nav-item {
+  text-align: center;
+  padding: 0 32px;
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  line-height: 25px;
+}
+
+/*导航普通状态*/
+.item-cn {
+  color: #1c2438;
+  font-weight: 800;
+  width: 50px;
+  height: 23px;
+  font-size: 24px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+
+}
+
+
+/*导航高亮*/
+.item-cn-active {
+  color: #2d8cf0;
+  width: 50px;
+  height: 23px;
+  font-size: 24px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+
+}
+
+.nav-item:hover .item-cn {
+  color: #2d8cf0;
+}
+.nav-item:after {
+  position: absolute;
+  right: 0;
+  top: 20px;
+  content: '';
+  width: 1px;
+  height: 16px;
+  background-color: #f8f8f8;
+}
+.nav-item:after:last-child {
+  width: 0;
+}
+
+
 </style>

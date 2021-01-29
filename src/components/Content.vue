@@ -18,7 +18,7 @@
           <el-input placeholder="密码" type="password" v-model="user.password"
                     show-password clearable></el-input>
         </div>
-        <div>
+        <div style="display: flex;flex-direction: row;justify-content: center">
           <el-button class="btn1" @click="submitForm(user)">提交</el-button>
           <el-button class="btn2" @click="gotoregister">注册</el-button>
         </div>
@@ -70,10 +70,12 @@ export default {
         console.log(response)
         if(response.data.token){
           var data=response.data;
-          console.log(data);
+          console.log(data.yhid);
+          localStorage.setItem('yhid', JSON.stringify(data.yhid));
           var tmp = 'Bearer ' + data.token;
           // 将用户token保存到vuex中
           _this.changeLogin({ token: tmp});
+          //localStorage.setItem('token',JSON.stringify(tmp))
           _this.$router.push('/home');
           alert('登陆成功');
         }
@@ -92,7 +94,7 @@ export default {
       this.$router.push('/search');
     },
     gotoregister(){
-      this.$router.push('/register');
+      this.$router.push('/petregister');
     },
     gotologin(){
       this.$router.push('/content');
@@ -136,7 +138,7 @@ body {
   border-radius: 10px;
   display: flex;
   justify-content: center;
-
+  text-align:center;
 }
 .itemlabel2{
   width: 350px;
@@ -144,6 +146,7 @@ body {
   border-radius: 10px;
   display: flex;
   justify-content: center;
+  text-align:center;
 }
 .circle{
   width: 238px;

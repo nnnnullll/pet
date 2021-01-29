@@ -6,14 +6,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import VideoPlayer from 'vue-video-player'
-import 'vue-video-player/src/custom-theme.css'
-import 'video.js/dist/video-js.css'
-Vue.use(VideoPlayer)
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
-Vue.use(ElementUI);
 Vue.use(router);
+Vue.use(ElementUI);
 new Vue({
   el: '#app',
   //配置路由
@@ -48,6 +44,8 @@ axios.interceptors.response.use(response => {
         localStorage.removeItem('token');
         router.replace({
           path: '/content'
+          //登录成功后跳入浏览的当前页面
+          // query: {redirect: router.currentRoute.fullPath}
         })
     }
     // 返回接口返回的错误信息
