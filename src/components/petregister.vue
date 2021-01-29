@@ -105,20 +105,51 @@ export default {
     };
   },
   methods:{
+    Checkname(name){
+      axios.get('http://localhost:8000/user/registercheck',{
+            params:{
+                yhm:name
+            }
+        }).then(res => {
+              console.log(res)
+              return res
+        })
+        .catch(err => {
+            console.log('错误：'+err)
+        })
+    },
     submitForm(formName) {
       const  _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('注册成功!');
-          axios.post('http://localhost:8000/user/register',{
-            username:_this.userinform.name,
-            password:_this.userinform.password,
-            yx:_this.userinform.email
-          }).then(function(resp){
-            console.log(resp)
+          axios.get('http://localhost:8000/user/registercheck',{
+              params:{
+                  yhm:_this.userinform.name
+              }
+          }).then(res => {
+                console.log(res.data)
+                if(res.data=="testusername"){
+                  alert('注册成功!');
+                  axios.post('http://localhost:8000/user/register',{
+                    username:_this.userinform.name,
+                    password:_this.userinform.password,
+                    yx:_this.userinform.email
+                  }).then(function(resp){
+                    console.log(resp)
+                  })
+                  this.$router.replace('/l')
+                }
+                else{
+                  alert('用户名已存在');
+                  return false;
+                }
           })
-          this.$router.replace('/l')
-        } else {
+          .catch(err => {
+              console.log('错误：'+err)
+          })
+         
+        }
+        else {
           console.log('信息错误，注册失败!');
           return false;
         }
