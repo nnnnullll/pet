@@ -9,7 +9,6 @@ import Content from "../components/Content";
 import Testcomp from "../components/Testcomp/Testcomp";
 import Test from "../views/test";
 import sortcomp from "../components/sortcomp/sortcomp";
-import register from "../components/register";
 import search from "../components/search";
 import pethome from "../components/pethome";
 import lan from "../components/lan"
@@ -75,13 +74,6 @@ export default  new Router({
       name:'sort',
       component: sortcomp,
      
-    },
-    {
-      //路由路径
-      path: '/register',
-      //跳转的组件
-      name: 'register',
-      component: register,
     },
     {
       //路由路径
