@@ -293,14 +293,11 @@ export default {
             }, 
         }
     },
-      watch: {
-        '$route'(to,from){
-            console.log(to);
-            // this.getJlData();//换成你的方法
-            this.$router.go(0);
-
-        }
-    },
+    // watch:{
+    //     '$route'(to,from){
+    //         this.$router.go(0);
+    //     }
+    // },
     methods:{
         home_goto(e){
             this.$router.push('/'+e);
