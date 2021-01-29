@@ -16,9 +16,9 @@
         <div class="background">
           <div class="momenttext">最近动态：{{information}}</div>
           <div class="imgs" style="display: flex;flex-direction: row;">
-            <img :src="shareurl" class="shareimg1">
-            <img :src="shareurl" class="shareimg2">
-            <img :src="shareurl" class="shareimg3">
+            <img :src="photo[0]" class="shareimg1">
+            <img :src="photo[1]" class="shareimg2">
+            <img :src="photo[2]" class="shareimg3">
           </div>
       </div>
 
@@ -29,15 +29,14 @@
 <script>
 export default {
   name:"usercomp",
-  props:['name','num','count','information','circleurl','flag','id'],
+  props:['name','num','count','information','circleurl','flag','id','photo'],
   data(){
     return{
       msg:'',
       //iconData:'el-icon-star-off',
       defaultHeight: {
         height: ""
-      },
-      shareurl:require("@/assets/img/tmp.png"),
+      }
     }
   },
   methods:{
@@ -46,15 +45,12 @@ export default {
         //this.iconData = 'el-icon-star-on';
         this.msg="已关注";
         this.flag=false;
-        alert("关注成功！");
       }else{
         //this.iconData = 'el-icon-star-off';
         this.flag=true;
         this.msg="+关注";
-        alert("取消关注成功！");
       }
-      this.$emit("getflag", this.flag,this.id);
-      console.log(this.flag,this.id);
+      this.$emit("getflag",this.id,this.flag);
     }
   },
   mounted() {
@@ -67,7 +63,6 @@ export default {
       this.msg="已关注"
       //this.iconData = 'el-icon-star-on';
     }
-    console.log(this.circleurl);
   }
 }
 

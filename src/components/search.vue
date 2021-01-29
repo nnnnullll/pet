@@ -3,8 +3,8 @@
     <v-top></v-top>
     <div class="bottom">
       <div class="search" style="display: flex;flex-direction: row;justify-content: center">
-        <input class="s-search-text" type="text" placeholder="猜你喜欢" id="s-search-text" ref="searchval" v-model="message" @keyup="search">
-        <div class="webitem5" style="display: flex;flex-direction: row;justify-content: center" @click="find">
+        <input class="s-search-text" type="text" placeholder="猜你喜欢" id="s-search-text" ref="searchval">
+        <div class="webitem5" style="display: flex;flex-direction: row;justify-content: center" @click="search">
           <p class="text1">搜索</p>
           <img :src="searchicon">
         </div>
@@ -26,12 +26,9 @@
         <img :src="laycat" class="laycat">
       </div>
       <div class="line"></div>
-      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到{{this.num}}位饲养员  |  按粉丝数排序  testfans:{{this.fans}}</div>
-      <div v-for="user in Sort" :key="id">
-        <div>
-          <usercomp  @getflag="getflag" :flag="user.flag" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>
-<!--          <usercomp  @getflag="getflag" :flag="user.flag" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>-->
-        </div>
+      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到4位饲养员  |  按粉丝数排序 </div>
+      <div v-for="(user,index) in Sort" :key="index">
+          <usercomp  @getflag="getflag" :id="index" :flag="user.flag" :photo="user.photo" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>
       </div>
     </div>
   </div>
@@ -58,7 +55,8 @@ export default {
       userimg:require("@/assets/img/userimg.png"),
       searchicon:require("@/assets/img/searchicon.png"),
       laycat:require("@/assets/img/laycat.png"),
-      num:30,
+      num:4,
+      id:'',
       //users表示后端返回的模糊查询的四个用户信息，包括用户名、粉丝数、动态数、最近一条动态和最近三张照片
       users:[
         {username:'张三',
@@ -66,28 +64,32 @@ export default {
           count:10,
           flag:false,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
-          info:"今天天气真好，和主人逛gai~"
+          info:"今天天气真好，和主人逛gai~",
+          photo:[],
         },
         {username:'李四',
           number:412,
           count:8,
           flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
-          info:"啊今天睡了懒觉真开心"
+          info:"啊今天睡了懒觉真开心",
+          photo:[]
         },
         {username:'王五',
           number:23,
           count:53,
           flag:true,
           circleurl:"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1549131754,2955370505&fm=26&gp=0.jpg",
-          info: "昨天下雨了汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～"
+          info: "昨天下雨了汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～",
+          photo: []
         },
         {username:'赵六',
           number:732,
           count: 946,
           flag:false,
           circleurl:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3562519436,2223863513&fm=26&gp=0.jpg",
-          info:"热情随和，活波开朗！"
+          info:"热情随和，活波开朗！",
+          photo: []
         },
       ],
       useridtmp:[],
@@ -95,9 +97,7 @@ export default {
         {title: '用户',path: '/search'},
         {title: '专栏', path: '/lan'}
       ],
-      navIndex: 0,
-      yhid:'',
-      fans:''
+      navIndex: 0
     }
   },
   methods:{
@@ -108,8 +108,8 @@ export default {
       //接收home页参数  因为栏用1 2 3 4 标志所以必须和top分开避免相同
       console.log( this.$route.params.homesearch)
     },
-    getflag:function(flag,id){
-      this.users[id].flag = flag;
+    getflag:function(id,flag){
+      this.users[id].flag=flag;
     },
     getinfo:function (label){
       console.log(label);
@@ -129,44 +129,51 @@ export default {
         // this.searchState.showsug = true
         // this.searchState.searchtext = this.$refs.searchval.value
         // this.$emit('searchstate', this.searchState)
-        axios.post('http://localhost:8000/user/search', {username: searchText})
+        axios.post('http://localhost:8000/user/search',
+            {
+              username: searchText,
+              zyhid:localStorage.getItem("yhid")
+            })
             .then((res) => {
-              console.log(res)
+              //console.log(res)
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
                 //this.$emit('search', res.data.result.allMatch)
                 console.log(res.data)
-                console.log(res.data.share)
                 for (let i=0; i<3; i++){
                   this.users[i].username=res.data.user[i].yhm;
                   this.users[i].info=res.data.share[i];
-                  this.users[i].photo=res.data.photo[i];
+                  this.users[i].flag=res.data.follow[i];
+                  var k=0,j;
+                  for(j=0;j<res.data.photo[i].length;j++){
+                    if(res.data.photo[i][j].zp){
+                      this.users[i].photo[k]=res.data.photo[i][j].zp;
+                      k++;
+                    }
+                  }
+                  //console.log(this.users[i].photo)
                   let tmp=res.data.user[i].yhid;
                   axios.post('http://localhost:8000/share?yhid='+tmp).then((response)=>{
                     console.log(response)
                     if(response){
                       var data=response.data;
-                      console.log(data);
-                      this.users[i].num=data
-                      console.log(this.users[i].num)
+                      this.users[i].count=data
                     }
                     else{
                       alert('查询失败，请重试！')
                     }
-                  }).catch(function (error) { // 请求失败处理
-                    console.log("---查询出错---！"+error);
-                  })
-                  axios.post('http://localhost:8000/follow?zyhid='+tmp).then((response)=>{
-                    console.log(response)
-                    if(response){
-                      var data=response.data;
-                      console.log(data);
-                      this.users[i].fans=data
-                      console.log(this.users[i].count)
-                    }
-                    else{
-                      alert('查询失败，请重试！')
-                    }
+                    axios.post('http://localhost:8000/follow?zyhid='+tmp).then((response)=>{
+                      console.log(response)
+                      if(response){
+                        var data=response.data;
+                        this.users[i].number=data
+                      }
+                      else{
+                        alert('查询失败，请重试！')
+                      }
+                    }).catch(function (error) { // 请求失败处理
+                      console.log("---查询出错---！"+error);
+                    })
                   }).catch(function (error) { // 请求失败处理
                     console.log("---查询出错---！"+error);
                   })
@@ -177,7 +184,7 @@ export default {
             .catch((err) => {
               console.log(err)
             })
-
+        this.$forceUpdate()
       }
     },
     //通过当前yhid查询数据库中发布动态数和粉丝数
@@ -259,7 +266,7 @@ function sortKey(array,key){
   return array.sort(function(a,b){
     var x = a[key];
     var y = b[key];
-    return ((x<y)?-1:(x>y)?1:0)
+    return ((x>y)?-1:(x<y)?1:0)
   })
 }
 </script>
