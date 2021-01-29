@@ -2,7 +2,7 @@
 <template>
     <!-- <div class="container"> -->
         <div class="box" :style ="pic" >
-            <!-- <div>{{this.$route.params.jlid}}</div> -->
+            <div>{{this.$route.params.jlid}}</div>
             <el-card  class="messagecard">
             <!-- 用户信息 -->
                 <el-row  >
@@ -63,28 +63,28 @@ export default {
     data() {
         return {
             id:null,
+            ph:{},
             messageinform:{
                 messagenum:1,
                 username:"用户名",
                 userUrl:'',
                 datatime:"2020-12-26",
                 passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
-                photonum:1,
                 lovenumber:15,
                 islove:"喜欢",
                 starnumber:9,
                 isstar:"收藏"
             },
             photourl: [
-                    'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                    'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
+                    // // 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+                    // // 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
+                    // // 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
+                    // 'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                 ],
             pic: {
                 backgroundImage: "url(" + require('../assets/img/petshome.png') + ")",
@@ -97,17 +97,15 @@ export default {
         }
     },
     mounted:function(){
-        const _this = this
-        _this.id=this.$route.params.jlid;
-        // console.log(_this.id);
-        this.getJlData();        
+        console.log(this.$route.params.jlid)
+        this.getJlData(this.$route.params.jlid)   
     },
     methods:{
-    getJlData() { 
+    getJlData(e) { 
         const _this = this
-        axios.get('http://localhost:8050/getShareByjlid',{
+        axios.get('http://localhost:8000/getShareByjlid',{
             params:{
-                jlid:'1'
+                jlid:1
             }
         }).then(res => {
             console.log(res.data)
@@ -116,7 +114,6 @@ export default {
             // _this.messageinform.userUrl
             _this.messageinform.datatime=res.data.fbsj
             _this.messageinform.passage=res.data.wz
-            // _this.messageinform.photonum
             // _this.messageinform.lovenumber
             // _this.messageinform.islove
             // _this.messageinform.starnumber
@@ -125,6 +122,28 @@ export default {
         .catch(err => {
             console.log('错误：'+err)
         })
+        axios.get('http://localhost:8000/getPhotoByjlid',{
+            params:{
+                jlid:1
+            }
+        }).then(res => {
+            console.log(res.data)
+            _this.ph=res.data
+            // console.log(_this.ph[0].zp)
+            // console.log(_this.ph[1].zp)
+            var i=0
+            for(i=0;i<_this.ph.length;i++){
+                // console.log(_this.ph[i].zp)
+                _this.photourl[i]=_this.ph[i].zp
+                console.log(_this.photourl[i])
+            }
+            // console.log(_this.photourl)
+                
+        })
+        .catch(err => {
+            console.log('错误：'+err)
+        })
+        
     }, 
     guanzhu() {
       console.log(this)

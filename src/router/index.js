@@ -9,12 +9,12 @@ import Content from "../components/Content";
 import Testcomp from "../components/Testcomp/Testcomp";
 import Test from "../views/test";
 import sortcomp from "../components/sortcomp/sortcomp";
-import register from "../components/register";
 import search from "../components/search";
 import pethome from "../components/pethome";
 import lan from "../components/lan"
 import knowledgecard from "../components/knowledgecard";
 import hospital from "../components/hospital";
+import Zhongzhuan from "../components/zhongzhuan"
 Vue.use(Router)
 
 export default  new Router({
@@ -23,27 +23,31 @@ export default  new Router({
     {
       path:'/r',//网站访问路径
       name:'R',//这个路由的名字叫Regiter
-      component:R//内容就是上面引入的视图组件Register
+      component:R,//内容就是上面引入的视图组件Register
     },
     {
       path:'/o',
       name:'Othershome',
-      component:Othershome
+      component:Othershome,
+
     },
     {
       path:'/petregister',
       name:'PetRegister',
-      component:PetRegister
+      component:PetRegister,
+  
     },
     {
       path:'/log',
       name:'Petlog',
-      component:PetLog
+      component:PetLog,
+    
     },
     {
       path:'/home',
       name:'Home',
-      component:Home
+      component:Home,
+     
     },
     {
       //路由路径
@@ -51,28 +55,25 @@ export default  new Router({
       //跳转的组件
       name: 'content',
       component: Content,
+      
     },
     {
       path:'/test',
       name:'test',
-      component: Testcomp
+      component: Testcomp,
+     
     },
     {
       path:'/t',
       name:'t',
-      component: Test
+      component: Test,
+     
     },
     {
       path:'/sort',
       name:'sort',
-      component: sortcomp
-    },
-    {
-      //路由路径
-      path: '/register',
-      //跳转的组件
-      name: 'register',
-      component: register,
+      component: sortcomp,
+     
     },
     {
       //路由路径
@@ -97,14 +98,16 @@ export default  new Router({
       path: '/lan',
       //跳转的组件
       name: 'lan',
-      component: lan
+      component: lan,
+      
     },
     {
       //路由路径
       path: '/knowledgecard',
       //跳转的组件
       name: 'knowledgecard',
-      component: knowledgecard
+      component: knowledgecard,
+      
     },
     {
       //路由路径
@@ -115,6 +118,17 @@ export default  new Router({
       meta: {
         requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
       },
+     
+    },
+    {
+      //路由路径
+      path: '/zhongzhuan',
+      //跳转的组件
+      name: 'Zhongzhuan',
+      component: Zhongzhuan,
+      
+
+     
     },
   ]
 })
