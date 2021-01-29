@@ -63,7 +63,7 @@ export default {
     submitForm(user){
       let _this = this;
       console.log(user);
-      axios.post('http://localhost:8050/user/login',{
+      axios.post('http://localhost:8000/user/login',{
         username:_this.user.input,
         password:_this.user.password
       }).then((response)=>{

@@ -110,7 +110,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           alert('注册成功!');
-          axios.post('http://localhost:8050/user/register',{
+          axios.post('http://localhost:8000/user/register',{
             username:_this.userinform.name,
             password:_this.userinform.password,
             yx:_this.userinform.email

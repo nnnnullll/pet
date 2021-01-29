@@ -8,6 +8,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 Vue.use(router);
 Vue.use(ElementUI);
 new Vue({
@@ -22,11 +23,9 @@ new Vue({
 
 // http request 请求拦截器
 axios.interceptors.request.use(config => {
-  if(localStorage.getItem('token')){
-    if(pathname != '/' &&  pathname != '/content'){
-      config.headers.common['token'] = localStorage.getItem('token');
+  if(store.state.token){
+      config.headers.Authorization = `token ${store.state.token}`;
       console.log("token----->"+localStorage.getItem('token'))
-    }
   }
   return config;
 }, error => {

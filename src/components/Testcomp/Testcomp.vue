@@ -69,8 +69,6 @@ export default {
     }
     console.log(this.circleurl);
   }
-
-
 }
 
 </script>
