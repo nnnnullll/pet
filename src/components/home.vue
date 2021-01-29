@@ -176,27 +176,27 @@ export default {
             ],
             hotlist:[
                 {
-                    hotid:12,
+                    hotid:1,
                     hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:23,
+                    hotid:2,
                     hotpic:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
                     hottext:'文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:11,
+                    hotid:1,
                     hotpic:  'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
                     hottext:'字例文字示例文字示例文'
                 },
                 {
-                    hotid:14,
+                    hotid:2,
                     hotpic: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:2,
+                    hotid:1,
                     hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
@@ -206,22 +206,22 @@ export default {
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:3,
+                    hotid:2,
                     hotpic: 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:4,
+                    hotid:1,
                     hotpic:'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                  {
-                    hotid:8,
+                    hotid:2,
                     hotpic:'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
                 {
-                    hotid:9,
+                    hotid:1,
                     hotpic:'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                     hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
                 },
@@ -238,7 +238,7 @@ export default {
                     lovenum:'',
                 },
                 {
-                    jlid:12,
+                    jlid:2,
                     url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     txt:'测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
