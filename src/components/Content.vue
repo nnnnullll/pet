@@ -43,10 +43,6 @@ export default {
         input: '',
         password: '',
       },
-      rules: {
-        input: [{required: true, message: '账号不能为空', trigger: 'blur'}],
-        password: [{required: true, message: '密码不能为空', trigger: 'blur'}]
-      },
       gifUrl:require("@/assets/img/welcome.gif"),
       pet:require("@/assets/img/userimg.png"),
     }

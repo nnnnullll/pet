@@ -9,6 +9,7 @@ import VueAxios from 'vue-axios';
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+
 Vue.use(router);
 Vue.use(ElementUI);
 new Vue({
