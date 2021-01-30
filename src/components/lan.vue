@@ -74,10 +74,10 @@
               <!-- 文字内容 -->
               <div class="messagetext">{{item.passage}}</div>
             </div>
-            <el-image  v-for="(photo) in photourl" :key="photo.key"
+            <el-image  v-for="(photo) in item.photourl" :key="photo.key"
                      style="width: 221px; height: 150px;padding:1px"
                      :src="photo"
-                     :preview-src-list="photourl"
+                     :preview-src-list="item.photourl"
                      fit="cover"/>
             <el-row  class="lovestar" >
               <el-col  :span="10" >
@@ -114,7 +114,39 @@ export default {
       ph:{},
       messageinform:[
           {
-      },{},{},{}
+            messagenum:1,
+            username:"用户名",
+            userUrl:'',
+            datatime:"2020-12-26",
+            passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
+            lovenumber:15,
+            islove:"喜欢",
+            starnumber:9,
+            isstar:"收藏",
+            photourl:[]
+          },{
+          messagenum:1,
+          username:"用户名",
+          userUrl:'',
+          datatime:"2020-12-26",
+          passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
+          lovenumber:15,
+          islove:"喜欢",
+          starnumber:9,
+          isstar:"收藏",
+          photourl:[]
+        },{
+          messagenum:1,
+          username:"用户名",
+          userUrl:'',
+          datatime:"2020-12-26",
+          passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
+          lovenumber:15,
+          islove:"喜欢",
+          starnumber:9,
+          isstar:"收藏",
+          photourl:[]
+        }
       ],
       photourl: [
       ],
@@ -191,7 +223,8 @@ export default {
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
                 console.log("res.data:"+res.data);
-                for (let i=0; i<(len>3?3:len); i++){
+                if(len>3){len=3}
+                for (let i=0; i<len; i++){
                   this.recordid[i]=res.data.shareinfo[i].jlid;
                   let tmp=this.recordid[i];
                   const _this = this
@@ -205,10 +238,6 @@ export default {
                     _this.messageinform[i].username=res.data.yhm
                     _this.messageinform[i].datatime=res.data.fbsj
                     _this.messageinform[i].passage=res.data.wz
-                    })
-                        .catch(err => {
-                          console.log('错误：'+err)
-                        })
                     axios.get('http://localhost:8000/getPhotoByjlid',{
                       params:{
                         jlid:tmp
@@ -217,9 +246,23 @@ export default {
                       _this.ph=res.data
                       var j=0
                       for(j=0;j<_this.ph.length;j++){
-                        _this.photourl[j]=_this.ph[j].zp
-                        // console.log(_this.photourl[j])
+                        _this.messageinform[i].photourl[j]=_this.ph[j].zp
                       }
+                      axios.post('http://localhost:8000/likecount?jlid='+tmp).then(res=>{
+                        console.log(res.data)
+                       _this.messageinform[i].lovenumber=res.data;
+                      })
+                      axios.post('http://localhost:8000/starcount?jlid='+tmp).then(res=>{
+                        console.log(res.data)
+                        _this.messageinform[i].starnumber=res.data;
+                      })
+
+
+                    })
+                        .catch(err => {
+                          console.log('错误！！！！：'+err)
+                        })
+
                     })
                         .catch(err => {
                           console.log('错误：'+err)
