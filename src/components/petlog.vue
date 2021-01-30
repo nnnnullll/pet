@@ -15,8 +15,8 @@
                                 <div class="username">{{messageinform.username}}</div>
                             </el-col>
                             <el-col :span="4">
-                                <div class="guanzhu" @click="guanzhu()">
-                                <div  class="guantext"> +关注</div>
+                                <div class="guanzhu" @click="guanZhu()">
+                                <div  class="guantext"> {{guanzhu}}</div>
                                 </div>
                             </el-col>
                         </el-row>
@@ -64,6 +64,7 @@ export default {
         return {
             id:null,
             ph:{},
+            guanzhu:"",
             messageinform:{
                 messagenum:1,
                 username:"用户名",
@@ -96,86 +97,146 @@ export default {
             }
         }
     },
-    mounted:function(){
+    activated:function(){
         console.log(this.$route.params.jlid)
         this.getJlData(this.$route.params.jlid)   
     },
     methods:{
-    getJlData(e) { 
-        const _this = this
-        axios.get('http://localhost:8000/getShareByjlid',{
-            params:{
-                jlid:1
+        getJlData(e) { 
+            const _this = this
+            axios.get('http://localhost:8000/getShareByjlid',{
+                params:{
+                    jlid:e
+                }
+            }).then(res => {
+                console.log(res.data)
+                _this.messageinform.messagenum=res.data.jlid
+                _this.messageinform.username=res.data.yhm
+                // _this.messageinform.userUrl
+                _this.messageinform.datatime=res.data.fbsj
+                _this.messageinform.passage=res.data.wz
+                // _this.messageinform.lovenumber
+                // _this.messageinform.islove
+                // _this.messageinform.starnumber
+                // _this.messageinform.isstar
+            })
+            .catch(err => {
+                console.log('错误：'+err)
+            })
+            axios.get('http://localhost:8000/getPhotoByjlid',{
+                params:{
+                    jlid:e
+                }
+            }).then(res => {
+                console.log(res.data)
+                _this.ph=res.data
+                // console.log(_this.ph[0].zp)
+                // console.log(_this.ph[1].zp)
+                var i=0
+                for(i=0;i<_this.ph.length;i++){
+                    // console.log(_this.ph[i].zp)
+                    _this.photourl[i]=_this.ph[i].zp
+                    console.log(_this.photourl[i])
+                }
+                // console.log(_this.photourl)
+                    
+            })
+            .catch(err => {
+                console.log('错误：'+err)
+            })
+            
+        }, 
+        guanZhu() {
+            axios.get('http://localhost:8000/isfollow',{//查成功
+                params:{
+                    zyhid:1,
+                    fsid:2,
+                }
+            }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                    axios.get('http://localhost:8000/addfollow',{
+                        params:{
+                            zyhid:1,
+                            fsid:2,
+                            qxgz:0
+                        }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            alert("关注成功")
+                        } 
+                    })
+                    .catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                    })
+                } 
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/upfollow',{
+                        params:{
+                            zyhid:1,
+                            fsid:2,
+                            qxgz:0
+                        }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            alert("关注成功")
+                        } 
+                    })
+                    .catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                    })
+
+                }
+                else{
+                    axios.get('http://localhost:8000/upfollow',{
+                        params:{
+                            zyhid:1,
+                            fsid:2,
+                            qxgz:1
+                        }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            alert("取消关注成功")
+                        } 
+                    })
+                    .catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+            })
+            .catch(err => {
+                console.log('查错误：'+err)
+            })
+        },
+        loveplus() {
+            if(
+                this.messageinform.islove=="已喜欢"){
+                this.messageinform.lovenumber--;
+                this.messageinform.islove="喜欢"
             }
-        }).then(res => {
-            console.log(res.data)
-            _this.messageinform.messagenum=res.data.jlid
-            _this.messageinform.username=res.data.yhm
-            // _this.messageinform.userUrl
-            _this.messageinform.datatime=res.data.fbsj
-            _this.messageinform.passage=res.data.wz
-            // _this.messageinform.lovenumber
-            // _this.messageinform.islove
-            // _this.messageinform.starnumber
-            // _this.messageinform.isstar
-        })
-        .catch(err => {
-            console.log('错误：'+err)
-        })
-        axios.get('http://localhost:8000/getPhotoByjlid',{
-            params:{
-                jlid:1
+            else{
+                this.messageinform.lovenumber++;
+                this.messageinform.islove="已喜欢"
             }
-        }).then(res => {
-            console.log(res.data)
-            _this.ph=res.data
-            // console.log(_this.ph[0].zp)
-            // console.log(_this.ph[1].zp)
-            var i=0
-            for(i=0;i<_this.ph.length;i++){
-                // console.log(_this.ph[i].zp)
-                _this.photourl[i]=_this.ph[i].zp
-                console.log(_this.photourl[i])
+            // 这里还要改数据库点赞数增加
+            // 如果没登录跳转到登录页面
+        },
+        starplus() {
+            if(this.messageinform.isstar=="已收藏"){
+                this.messageinform.starnumber--;
+                this.messageinform.isstar="收藏"
             }
-            // console.log(_this.photourl)
-                
-        })
-        .catch(err => {
-            console.log('错误：'+err)
-        })
-        
-    }, 
-    guanzhu() {
-      console.log(this)
-      // 这里要改数据库关注
-      // 如果没登录跳转到登录页面
-    },
-    loveplus() {
-       if(
-        this.messageinform.islove=="已喜欢"){
-        this.messageinform.lovenumber--;
-        this.messageinform.islove="喜欢"
-      }
-      else{
-        this.messageinform.lovenumber++;
-        this.messageinform.islove="已喜欢"
-      }
-      // 这里还要改数据库点赞数增加
-      // 如果没登录跳转到登录页面
-    },
-    starplus() {
-      if(this.messageinform.isstar=="已收藏"){
-        this.messageinform.starnumber--;
-        this.messageinform.isstar="收藏"
-      }
-      else{
-        this.messageinform.starnumber++;
-        this.messageinform.isstar="已收藏"
-      }
-      // 这里还要改数据库点赞数增加
-      // 如果没登录跳转到登录页面
-    },
-  }
+            else{
+                this.messageinform.starnumber++;
+                this.messageinform.isstar="已收藏"
+            }
+            // 这里还要改数据库点赞数增加
+            // 如果没登录跳转到登录页面
+        },
+    }
 }
   
 </script>
