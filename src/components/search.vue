@@ -26,9 +26,9 @@
         <img :src="laycat" class="laycat">
       </div>
       <div class="line"></div>
-      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到4位饲养员  |  按粉丝数排序 </div>
+      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到4位饲养员  |  按相关度排序 </div>
       <div v-for="(user,index) in Sort" :key="index">
-          <usercomp  @getflag="getflag" :id="index" :flag="user.flag" :photo="user.photo" :circleurl="user.circleurl" :name="user.username" :num="user.number" :information="user.info" :count="user.count"></usercomp>
+          <usercomp  @getflag="getflag" :id="index" :flag="user.flag" :photo="user.photo" :circleurl="user.circleurl" :name="user.username" :num="user.num" :information="user.info" :count="user.count"></usercomp>
       </div>
     </div>
   </div>
@@ -60,15 +60,15 @@ export default {
       //users表示后端返回的模糊查询的四个用户信息，包括用户名、粉丝数、动态数、最近一条动态和最近三张照片
       users:[
         {username:'张三',
-          number:132,
+          num:132,
           count:10,
-          flag:false,
+          flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
           info:"今天天气真好，和主人逛gai~",
           photo:[],
         },
         {username:'李四',
-          number:412,
+          num:412,
           count:8,
           flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
@@ -76,7 +76,7 @@ export default {
           photo:[]
         },
         {username:'王五',
-          number:23,
+          num:23,
           count:53,
           flag:true,
           circleurl:"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1549131754,2955370505&fm=26&gp=0.jpg",
@@ -84,9 +84,9 @@ export default {
           photo: []
         },
         {username:'赵六',
-          number:732,
+          num:732,
           count: 946,
-          flag:false,
+          flag:true,
           circleurl:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3562519436,2223863513&fm=26&gp=0.jpg",
           info:"热情随和，活波开朗！",
           photo: []
@@ -138,12 +138,11 @@ export default {
               //console.log(res)
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
-                //this.$emit('search', res.data.result.allMatch)
                 console.log(res.data)
                 for (let i=0; i<3; i++){
                   this.users[i].username=res.data.user[i].yhm;
                   this.users[i].info=res.data.share[i];
-                  this.users[i].flag=res.data.follow[i];
+                  //this.users[i].flag=res.data.follow[i];
                   var k=0,j;
                   for(j=0;j<res.data.photo[i].length;j++){
                     if(res.data.photo[i][j].zp){
@@ -151,8 +150,30 @@ export default {
                       k++;
                     }
                   }
-                  //console.log(this.users[i].photo)
                   let tmp=res.data.user[i].yhid;
+                  this.useridtmp[i]=res.data.user[i].yhid;
+                  ///////////////
+                  axios.get('http://localhost:8000/isfollow',{//查成功
+                    params:{
+                      zyhid:localStorage.getItem('yhid'),
+                      fsid:tmp
+                    }
+                  }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="wu"){
+                      this.users[i].flag=false;
+                    }
+                    else if(res.data=="1"){
+                      this.users[i].flag=false;
+                    }
+                    else{
+                      this.users[i].flag=true;
+                    }
+                  })
+                      .catch(err => {
+                        console.log('查错误：'+err)
+                      })
+                  ///////////////
                   axios.post('http://localhost:8000/share?yhid='+tmp).then((response)=>{
                     console.log(response)
                     if(response){
@@ -166,7 +187,7 @@ export default {
                       console.log(response)
                       if(response){
                         var data=response.data;
-                        this.users[i].number=data
+                        this.users[i].num=data
                       }
                       else{
                         alert('查询失败，请重试！')
@@ -186,6 +207,71 @@ export default {
             })
         this.$forceUpdate()
       }
+    },
+    guanZhu() {
+      axios.get('http://localhost:8000/isfollow',{//查成功
+        params:{
+          zyhid:localStorage.setItem('yhid'),
+          fsid:tmp
+        }
+      }).then(res => {
+        console.log(res.data)
+        if(res.data=="wu"){
+          axios.post('http://localhost:8000/addfollow',{
+            params:{
+              zyhid:1,
+              fsid:2,
+              qxgz:0
+            }
+          }).then(res => {
+            console.log(res.data)
+            if(res.data=="success"){
+              alert("关注成功")
+            }
+          })
+              .catch(err => {
+                console.log('首关注环节错误：'+err)//
+              })
+        }
+        else if(res.data=="1"){
+          axios.post('http://localhost:8000/upfollow',{
+            params:{
+              zyhid:1,
+              fsid:2,
+              qxgz:0
+            }
+          }).then(res => {
+            console.log(res.data)
+            if(res.data=="success"){
+              alert("关注成功")
+            }
+          })
+              .catch(err => {
+                console.log('再关注环节错误：'+err)//
+              })
+
+        }
+        else{
+          axios.post('http://localhost:8000/upfollow',{
+            params:{
+              zyhid:1,
+              fsid:2,
+              qxgz:1
+            }
+          }).then(res => {
+            console.log(res.data)
+            if(res.data=="success"){
+              alert("取消关注成功")
+            }
+          })
+              .catch(err => {
+                console.log('取关错误：'+err)
+              })
+        }
+      })
+          .catch(err => {
+            console.log('查错误：'+err)
+          })
     },
     //通过当前yhid查询数据库中发布动态数和粉丝数
     find(){
@@ -258,15 +344,17 @@ export default {
   computed:{
     Sort:function(){
       var temp=this.users;
-      return sortKey(temp,'number');
+      return temp
+      //return sortKey(temp,'num');
     }
   }
 }
 function sortKey(array,key){
-  return array.sort(function(a,b){
-    var x = a[key];
-    var y = b[key];
-    return ((x>y)?-1:(x<y)?1:0)
+  return array.sort(
+      function(a,b){
+        var x = a[key];
+        var y = b[key];
+        return ((x>y)?-1:(x<y)?1:0)
   })
 }
 </script>

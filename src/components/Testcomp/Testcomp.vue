@@ -5,7 +5,7 @@
       <div class="box">
         <div class="userinfo" style="display: flex;flex-direction: row">
           <div class="name">{{name}}</div>
-          <button  class="btn" v-bind:msg="msg" v-bind:flag="flag" round type="primary" @click="follow">
+          <button  class="btn" v-bind:msg="msg" v-bind:flag="this.flag" round type="primary" @click="follow">
             {{msg}}
           </button>
         </div>
@@ -39,9 +39,11 @@ export default {
       }
     }
   },
+  //flag=true表示未关注
   methods:{
     follow:function () {
       if(this.flag==true){
+        //表示未关注，并进行关注操作
         //this.iconData = 'el-icon-star-on';
         this.msg="已关注";
         this.flag=false;
@@ -53,6 +55,7 @@ export default {
       this.$emit("getflag",this.id,this.flag);
     }
   },
+
   mounted() {
     if(this.flag==true)
     {
