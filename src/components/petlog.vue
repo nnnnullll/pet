@@ -147,69 +147,76 @@ export default {
             
         }, 
         guanZhu() {
-            axios.get('http://localhost:8000/isfollow',{//查成功
-                params:{
-                    zyhid:1,
-                    fsid:2,
-                }
-            }).then(res => {
-                console.log(res.data)
-                if(res.data=="wu"){
-                    axios.get('http://localhost:8000/addfollow',{
-                        params:{
-                            zyhid:1,
-                            fsid:2,
-                            qxgz:0
-                        }
-                    }).then(res => {
-                        console.log(res.data)
-                        if(res.data=="success"){
-                            alert("关注成功")
-                        } 
-                    })
-                    .catch(err => {
-                        console.log('首关注环节错误：'+err)//
-                    })
-                } 
-                else if(res.data=="1"){
-                    axios.get('http://localhost:8000/upfollow',{
-                        params:{
-                            zyhid:1,
-                            fsid:2,
-                            qxgz:0
-                        }
-                    }).then(res => {
-                        console.log(res.data)
-                        if(res.data=="success"){
-                            alert("关注成功")
-                        } 
-                    })
-                    .catch(err => {
-                        console.log('再关注环节错误：'+err)//
-                    })
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/isfollow',{//查成功
+                    params:{
+                        zyhid:localStorage.getItem("yhid"),
+                        fsid:2,
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="wu"){
+                        axios.get('http://localhost:8000/addfollow',{
+                            params:{
+                                zyhid:localStorage.getItem("yhid"),
+                                fsid:2,
+                                qxgz:0
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            if(res.data=="success"){
+                                alert("关注成功")
+                            } 
+                        })
+                        .catch(err => {
+                            console.log('首关注环节错误：'+err)//
+                        })
+                    } 
+                    else if(res.data=="1"){
+                        axios.get('http://localhost:8000/upfollow',{
+                            params:{
+                                zyhid:localStorage.getItem("yhid"),
+                                fsid:2,
+                                qxgz:0
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            if(res.data=="success"){
+                                alert("关注成功")
+                            } 
+                        })
+                        .catch(err => {
+                            console.log('再关注环节错误：'+err)//
+                        })
 
-                }
-                else{
-                    axios.get('http://localhost:8000/upfollow',{
-                        params:{
-                            zyhid:1,
-                            fsid:2,
-                            qxgz:1
-                        }
-                    }).then(res => {
-                        console.log(res.data)
-                        if(res.data=="success"){
-                            alert("取消关注成功")
-                        } 
-                    })
-                    .catch(err => {
-                        console.log('取关错误：'+err)
-                    })
-                }
+                    }
+                    else{
+                        axios.get('http://localhost:8000/upfollow',{
+                            params:{
+                                zyhid:localStorage.getItem("yhid"),
+                                fsid:2,
+                                qxgz:1
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            if(res.data=="success"){
+                                alert("取消关注成功")
+                            } 
+                        })
+                        .catch(err => {
+                            console.log('取关错误：'+err)
+                        })
+                    }
+                })
+                .catch(err => {
+                    console.log('查错误：'+err)
+                })
+            }
+            else{
+                this.$router.push({
+                name: 'content',
             })
-            .catch(err => {
-                console.log('查错误：'+err)
-            })
+            }
         },
         loveplus() {
             if(

@@ -127,15 +127,16 @@ export default {
               yhm:_this.userinform.name
             }
           }).then(res => {
-            console.log(res.data)
+            //console.log(res.data)
             if(res.data=="testusername"){
-              axios.get('http://localhost:8000/user/registercheck',{
+              axios.get('http://localhost:8000/user/registeryxcheck',{
                 params:{
-                  yhm:_this.userinform.name
+                  yx:_this.userinform.name
                 }
-              }).then(res=>{
-                  if(res.data==[]){
-                    console.log(res.data)
+              }).then(re=>{
+                  console.log(re)
+                  if(re.data=="testmail"){
+                    console.log(re.data)
                     alert('注册成功!');
                     axios.post('http://localhost:8000/user/register',{
                       username:_this.userinform.name,
