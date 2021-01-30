@@ -48,16 +48,16 @@
     <div class="bottom">
       <div class="box"  >
         <div>{{this.$route.params.jlid}}</div>
-        <el-card  class="messagecard">
+        <el-card  class="messagecard" v-for="(item,index) in messageinform" :key="index">
           <!-- 用户信息 -->
           <el-row  >
             <el-col :span="4" class="userleft">
-              <el-avatar class="userurl" :size="100"  :src="messageinform.userUrl"></el-avatar>
+              <el-avatar class="userurl" :size="100"  :src="item.userUrl"></el-avatar>
             </el-col >
             <el-col :span="6" class="userright">
               <el-row>
                 <el-col :span="10">
-                  <div class="username">{{messageinform.username}}</div>
+                  <div class="username">{{item.username}}</div>
                 </el-col>
                 <el-col :span="4">
                   <div class="guanzhu" @click="guanzhu()">
@@ -65,32 +65,31 @@
                   </div>
                 </el-col>
               </el-row>
-              <div  class="userdatetime">{{messageinform.datatime}}</div>
+              <div  class="userdatetime">{{item.datatime}}</div>
             </el-col >
           </el-row>
           <!-- 记录内容 -->
           <div class="messagecont">
             <div  class="textcont">
               <!-- 文字内容 -->
-              <div class="messagetext">{{messageinform.passage}}</div>
+              <div class="messagetext">{{item.passage}}</div>
             </div>
-            <el-img  v-for="(photo) in photourl" :key="photo.key"
+            <el-image  v-for="(photo) in photourl" :key="photo.key"
                      style="width: 221px; height: 150px;padding:1px"
                      :src="photo"
                      :preview-src-list="photourl"
-                     fit="cover">
-            </el-img>
+                     fit="cover"/>
             <el-row  class="lovestar" >
               <el-col  :span="10" >
                 <div class="txt" style="font-weight:bold" >
                   <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
-                  {{messageinform.starnumber}}  {{messageinform.isstar}}
+                  {{item.starnumber}}  {{item.isstar}}
                 </div>
               </el-col>
               <el-col  :span="12" >
                 <div class="txt" style="font-weight:bold" >
                   <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
-                  {{messageinform.lovenumber}}  {{messageinform.islove}}
+                  {{item.lovenumber}}  {{item.islove}}
                 </div>
               </el-col>
             </el-row>
@@ -113,27 +112,11 @@ export default {
     return {
       id:null,
       ph:{},
-      messageinform:{
-        messagenum:1,
-            username:"用户名",
-            userUrl:'',
-            datatime:"2020-12-26",
-            passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
-            lovenumber:15,
-            islove:"喜欢",
-            starnumber:9,
-            isstar:"收藏"
-      },
+      messageinform:[
+          {
+      },{},{},{}
+      ],
       photourl: [
-        // 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        // 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-        // 'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-        // // 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-        // // 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-        // // 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-        // 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-        // 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-        // 'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
       ],
       //////
       user: {
@@ -204,11 +187,11 @@ export default {
               //zyhid:localStorage.getItem("yhid")
             })
             .then((res) => {
-              console.log(res)
+              var len=res.data.shareinfo.length
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
-                console.log(res.data.shareinfo.length);
-                for (let i=0; i<res.data.shareinfo.length>3?3:res.data.shareinfo.length; i++){
+                console.log("res.data:"+res.data);
+                for (let i=0; i<(len>3?3:len); i++){
                   this.recordid[i]=res.data.shareinfo[i].jlid;
                   let tmp=this.recordid[i];
                   const _this = this
@@ -218,10 +201,10 @@ export default {
                       }
                     }).then(res => {
                     console.log(res.data)
-                    _this.messageinform.messagenum=res.data.jlid
-                    _this.messageinform.username=res.data.yhm
-                    _this.messageinform.datatime=res.data.fbsj
-                    _this.messageinform.passage=res.data.wz
+                    _this.messageinform[i].messagenum=res.data.jlid
+                    _this.messageinform[i].username=res.data.yhm
+                    _this.messageinform[i].datatime=res.data.fbsj
+                    _this.messageinform[i].passage=res.data.wz
                     })
                         .catch(err => {
                           console.log('错误：'+err)
@@ -231,18 +214,18 @@ export default {
                         jlid:tmp
                       }
                     }).then(res => {
-                      console.log(res.data)
                       _this.ph=res.data
                       var j=0
                       for(j=0;j<_this.ph.length;j++){
                         _this.photourl[j]=_this.ph[j].zp
-                        console.log(_this.photourl[j])
+                        // console.log(_this.photourl[j])
                       }
                     })
                         .catch(err => {
                           console.log('错误：'+err)
                         })
-
+                  console.log("看这里！！！！！：")
+                  console.log(this.messageinform)
                   ///////////////
                   // axios.get('http://localhost:8000/isfollow',{//查成功
                   //   params:{
@@ -567,13 +550,10 @@ body {
 }
 
 .box{
-  width: 1440px;
-  height: 768px;
   margin-top: 2%;
 }
 .messagecard{
-  position: absolute;
-  left: 20%;
+  margin-left: 20%;
   width: 900px;
   min-height: 320px;
   background: #FDF0E3;
