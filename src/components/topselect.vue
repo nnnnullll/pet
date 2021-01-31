@@ -8,7 +8,7 @@
       <p @click="top_goto('hospital')" class="webitem15">医疗资源💊</p>
       <img :src="imgUrl" class="img">
       <p class="webitem3">扫码小程序</p>
-      <input type="text" class="webitem4" id="topinput"></input>
+      <input type="text" class="webitem4" ref="topsearchval" id="topinput"></input>
       <div class="webitem5" @click="top_gotosearch">
         <p  class="text1">搜索</p>
       </div>
@@ -36,7 +36,8 @@ export default {
     },
     top_gotosearch(){
       var e=document.getElementById("topinput");
-      console.log(e.value),
+      console.log(e.value);
+      this.$refs.topsearchval.value="";
       this.$router.push({
                 name: 'search',
                 params: {
