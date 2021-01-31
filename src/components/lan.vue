@@ -1,7 +1,6 @@
 <template>
   <div class="building1">
     <v-top></v-top>
-
       <div class="search" style="display: flex;flex-direction: row;justify-content: center">
         <input class="s-search-text" type="text" placeholder="猜你喜欢" id="s-search-text" ref="searchval">
         <div class="webitem5" style="display: flex;flex-direction: row;justify-content: center" @click="search">
@@ -44,11 +43,10 @@
           <button class="btngroup3">仓鼠</button>
         </div>
       </div>
-
     <div class="bottom">
       <div class="box"  >
         <div>{{this.$route.params.jlid}}</div>
-        <el-card  class="messagecard" v-for="(item,index) in messageinform" :key="index">
+        <el-card  class="messagecard" v-if="showflag==true&&index<length" v-for="(item,index) in messageinform" :key="index" >
           <!-- 用户信息 -->
           <el-row  >
             <el-col :span="4" class="userleft">
@@ -60,8 +58,8 @@
                   <div class="username">{{item.username}}</div>
                 </el-col>
                 <el-col :span="4">
-                  <div class="guanzhu" @click="guanzhu()">
-                    <div  class="guantext"> +关注</div>
+                  <div class="guanzhu">
+                    <div  class="guantext" v-on:click="getIndex(item,index)" @click="guanZhu"> {{item.msg}}</div>
                   </div>
                 </el-col>
               </el-row>
@@ -82,13 +80,13 @@
             <el-row  class="lovestar" >
               <el-col  :span="10" >
                 <div class="txt" style="font-weight:bold" >
-                  <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
+                  <img @click="starplus()" v-on:click="getIndex(item,index)" class="p1" src="../assets/img/star.png" alt="">
                   {{item.starnumber}}  {{item.isstar}}
                 </div>
               </el-col>
               <el-col  :span="12" >
                 <div class="txt" style="font-weight:bold" >
-                  <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
+                  <img @click="loveplus()" v-on:click="getIndex(item,index)" class="p1" src="../assets/img/love.png" alt="">
                   {{item.lovenumber}}  {{item.islove}}
                 </div>
               </el-col>
@@ -110,6 +108,9 @@ export default {
   },
   data() {
     return {
+      length:0,
+      showflag:false,
+      index:0,
       id:null,
       ph:{},
       messageinform:[
@@ -123,7 +124,11 @@ export default {
             islove:"喜欢",
             starnumber:9,
             isstar:"收藏",
-            photourl:[]
+            photourl:[],
+            flag:true,
+            msg:"",
+            star:false,
+            love:false
           },{
           messagenum:1,
           username:"用户名",
@@ -134,7 +139,11 @@ export default {
           islove:"喜欢",
           starnumber:9,
           isstar:"收藏",
-          photourl:[]
+          photourl:[],
+          flag:true,
+          msg:"",
+          star:false,
+          love:false
         },{
           messagenum:1,
           username:"用户名",
@@ -145,12 +154,31 @@ export default {
           islove:"喜欢",
           starnumber:9,
           isstar:"收藏",
-          photourl:[]
+          photourl:[],
+          flag:true,
+          msg:"",
+          star:false,
+          love:false
+        },
+        {
+          messagenum:1,
+          username:"用户名",
+          userUrl:'',
+          datatime:"2020-12-26",
+          passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
+          lovenumber:15,
+          islove:"喜欢",
+          starnumber:9,
+          isstar:"收藏",
+          photourl:[],
+          flag:true,
+          msg:"",
+          star:false,
+          love:false
         }
       ],
       photourl: [
       ],
-      //////
       user: {
         input: '',
         password: '',
@@ -161,41 +189,6 @@ export default {
       searchicon:require("@/assets/img/searchicon.png"),
       laycat:require("@/assets/img/laycat.png"),
       num:4,
-      //users表示后端返回的模糊查询的四个用户信息，包括用户名、粉丝数、动态数、最近一条动态和最近三张照片
-      users:[
-        {username:'张三',
-          num:132,
-          count:10,
-          flag:true,
-          circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
-          info:"今天天气真好，和主人逛gai~",
-          photo:[],
-        },
-        {username:'李四',
-          num:412,
-          count:8,
-          flag:true,
-          circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
-          info:"啊今天睡了懒觉真开心",
-          photo:[]
-        },
-        {username:'王五',
-          num:23,
-          count:53,
-          flag:true,
-          circleurl:"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1549131754,2955370505&fm=26&gp=0.jpg",
-          info: "昨天下雨了汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～",
-          photo: []
-        },
-        {username:'赵六',
-          num:732,
-          count: 946,
-          flag:true,
-          circleurl:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3562519436,2223863513&fm=26&gp=0.jpg",
-          info:"热情随和，活波开朗！",
-          photo: []
-        },
-      ],
       recordid:[],
       useridtmp:[],
       nav: [
@@ -205,6 +198,10 @@ export default {
       navIndex: 1
     }
   },
+  activated:function(){
+      console.log("!!!!!!!:"+this.$refs.searchval.value)
+      this.search()
+  },
   methods:{
     search () {
       //模糊查找记录名&用户名与查询内容相关的
@@ -213,6 +210,7 @@ export default {
       if (searchText =='') {
         return
       } else {
+        this.showflag=true
         axios.post('http://localhost:8000/sharesearch',
             {
               wz: searchText,
@@ -220,11 +218,16 @@ export default {
             })
             .then((res) => {
               var len=res.data.shareinfo.length
+              if(len>this.length){
+                this.length=3
+              }else{
+                this.length=len
+              }
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
-                console.log("res.data:"+res.data);
-                if(len>3){len=3}
+                console.log(res.data);
                 for (let i=0; i<len; i++){
+                  this.useridtmp[i]=res.data.shareinfo[i].yhid;
                   this.recordid[i]=res.data.shareinfo[i].jlid;
                   let tmp=this.recordid[i];
                   const _this = this
@@ -256,8 +259,29 @@ export default {
                         console.log(res.data)
                         _this.messageinform[i].starnumber=res.data;
                       })
-
-
+                      axios.get('http://localhost:8000/isfollow',{//查成功
+                        params:{
+                          zyhid:localStorage.getItem('yhid'),
+                          fsid:tmp
+                        }
+                      }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="wu"){
+                          this.messageinform[i].flag=false;
+                          this.messageinform[i].msg="+关注"
+                        }
+                        else if(res.data=="1"){
+                          this.messageinform[i].flag=false;
+                          this.messageinform[i].msg="+关注"
+                        }
+                        else{
+                          this.messageinform[i].flag=true;
+                          this.messageinform[i].msg="已关注"
+                        }
+                      })
+                          .catch(err => {
+                            console.log('查错误：'+err)
+                          })
                     })
                         .catch(err => {
                           console.log('错误！！！！：'+err)
@@ -269,53 +293,6 @@ export default {
                         })
                   console.log("看这里！！！！！：")
                   console.log(this.messageinform)
-                  ///////////////
-                  // axios.get('http://localhost:8000/isfollow',{//查成功
-                  //   params:{
-                  //     zyhid:localStorage.getItem('yhid'),
-                  //     fsid:tmp
-                  //   }
-                  // }).then(res => {
-                  //   console.log(res.data)
-                  //   if(res.data=="wu"){
-                  //     this.users[i].flag=false;
-                  //   }
-                  //   else if(res.data=="1"){
-                  //     this.users[i].flag=false;
-                  //   }
-                  //   else{
-                  //     this.users[i].flag=true;
-                  //   }
-                  // })
-                  //     .catch(err => {
-                  //       console.log('查错误：'+err)
-                  //     })
-                  ///////////////
-                  // axios.post('http://localhost:8000/share?yhid='+tmp).then((response)=>{
-                  //   console.log(response)
-                  //   if(response){
-                  //     var data=response.data;
-                  //     this.users[i].count=data
-                  //   }
-                  //   else{
-                  //     alert('查询失败，请重试！')
-                  //   }
-                  //   axios.post('http://localhost:8000/follow?zyhid='+tmp).then((response)=>{
-                  //     console.log(response)
-                  //     if(response){
-                  //       var data=response.data;
-                  //       this.users[i].num=data
-                  //     }
-                  //     else{
-                  //       alert('查询失败，请重试！')
-                  //     }
-                  //   }).catch(function (error) { // 请求失败处理
-                  //     console.log("---查询出错---！"+error);
-                  //   })
-                  // }).catch(function (error) { // 请求失败处理
-                  //   console.log("---查询出错---！"+error);
-                  // })
-
                 }
               }
             })
@@ -370,35 +347,240 @@ export default {
           })
 
     },
-    guanzhu() {
-      console.log(this)
-      // 这里要改数据库关注
-      // 如果没登录跳转到登录页面
+    getIndex(item,index){
+      console.log(index)
+      this.index=index;
+      //这里的item是点击获取当前值的每一项内容
+      //这里的index是点击获取当前值的下标
     },
-    loveplus() {
-      if(
-          this.messageinform.islove=="已喜欢"){
-        this.messageinform.lovenumber--;
-        this.messageinform.islove="喜欢"
+    guanZhu(index) {
+      console.log("------------")
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isfollow',{//查成功
+          params:{
+            zyhid:localStorage.getItem("yhid"),
+            fsid:this.useridtmp[this.index],
+          }
+        }).then(res => {
+          console.log(res.data)
+          if(res.data=="wu"){
+            axios.get('http://localhost:8000/addfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].flag=false;
+                this.messageinform[this.index].msg="已关注"
+              }
+            })
+                .catch(err => {
+                  console.log('首关注环节错误：'+err)//
+                })
+          }
+          else if(res.data=="1"){
+            axios.get('http://localhost:8000/upfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].flag=false;
+                this.messageinform[this.index].msg="已关注"
+              }
+            })
+                .catch(err => {
+                  console.log('再关注环节错误：'+err)//
+                })
+          }
+          else{
+            axios.get('http://localhost:8000/upfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:1
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].flag=true;
+                this.messageinform[this.index].msg="+关注"
+              }
+            })
+                .catch(err => {
+                  console.log('取关错误：'+err)
+                })
+          }
+        })
+            .catch(err => {
+              console.log('查错误：'+err)
+            })
       }
       else{
-        this.messageinform.lovenumber++;
-        this.messageinform.islove="已喜欢"
+        this.$router.push({
+          name: 'content',
+        })
       }
-      // 这里还要改数据库点赞数增加
-      // 如果没登录跳转到登录页面
     },
-    starplus() {
-      if(this.messageinform.isstar=="已收藏"){
-        this.messageinform.starnumber--;
-        this.messageinform.isstar="收藏"
+    loveplus(index) {
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/islike', {
+          params:{
+            yhid:localStorage.getItem("yhid"),
+            jlid:this.recordid[this.index]
+          }
+        }).then(res => {
+          console.log(res.data)
+          if(res.data=="wu"){
+            axios.get('http://localhost:8000/addlike',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index]
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].love=false;
+                this.messageinform[this.index].islove="已喜欢"
+                this.messageinform[this.index].lovenumber++
+              }
+            })
+                .catch(err => {
+                  console.log('首关注环节错误：'+err)//
+                })
+          }
+          else if(res.data=="1"){
+            axios.get('http://localhost:8000/uplike',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index],
+                sc:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].love=false;
+                this.messageinform[this.index].islove="已喜欢"
+                this.messageinform[this.index].lovenumber++
+              }
+            })
+                .catch(err => {
+                  console.log('再关注环节错误：'+err)//
+                })
+          }
+          else{
+            axios.get('http://localhost:8000/uplike',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index],
+                sc:1
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].love=true;
+                this.messageinform[this.index].islove="喜欢"
+                this.messageinform[this.index].lovenumber--
+              }
+            })
+                .catch(err => {
+                  console.log('取关错误：'+err)
+                })
+          }
+        })
+            .catch(err => {
+              console.log('查错误：'+err)
+            })
       }
       else{
-        this.messageinform.starnumber++;
-        this.messageinform.isstar="已收藏"
+        this.$router.push({
+          name: 'content',
+        })
       }
-      // 这里还要改数据库点赞数增加
-      // 如果没登录跳转到登录页面
+
+    },
+    starplus(index) {
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isstar', {
+          params:{
+            yhid:localStorage.getItem("yhid"),
+            jlid:this.recordid[this.index]
+          }
+        }).then(res => {
+          console.log(res.data)
+          if(res.data=="wu"){
+            axios.get('http://localhost:8000/addstar',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index]
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].star=false;
+                this.messageinform[this.index].isstar="已收藏"
+                this.messageinform[this.index].starnumber++
+              }
+            })
+                .catch(err => {
+                  console.log('首关注环节错误：'+err)//
+                })
+          }
+          else if(res.data=="1"){
+            axios.get('http://localhost:8000/upstar',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index],
+                sc:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].star=false;
+                this.messageinform[this.index].isstar="已收藏"
+                this.messageinform[this.index].starnumber++
+              }
+            })
+                .catch(err => {
+                  console.log('再关注环节错误：'+err)//
+                })
+          }
+          else{
+            axios.get('http://localhost:8000/upstar',{
+              params:{
+                yhid:localStorage.getItem("yhid"),
+                jlid:this.recordid[this.index],
+                sc:1
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.messageinform[this.index].star=true;
+                this.messageinform[this.index].isstar="收藏"
+                this.messageinform[this.index].starnumber--
+              }
+            })
+                .catch(err => {
+                  console.log('取关错误：'+err)
+                })
+          }
+        })
+            .catch(err => {
+              console.log('查错误：'+err)
+            })
+      }
+      else{
+        this.$router.push({
+          name: 'content',
+        })
+      }
+
     },
     // 接收页面跳转得参数
     getRouterData() {
@@ -419,6 +601,9 @@ export default {
       this.navIndex = index;
       // 路由跳转
       this.$router.push(path)
+      this.showflag=false;
+      this.$refs.searchval.value=""
+      this.length=0
     },
     /**
      * 检索当前路径
@@ -431,7 +616,7 @@ export default {
   },
   mounted:function(){
     console.log(this.$route.params.jlid)
-    this.getJlData(this.$route.params.jlid)
+    //this.getJlData(this.$route.params.jlid)
   },
   watch: {
     "$route"() {
@@ -627,7 +812,7 @@ body {
 }
 .guanzhu{
   height: 24px;
-  width: 50px;
+  width: 65px;
   background: #fab990;
   border-radius: 10%;
 }
@@ -638,7 +823,8 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #000000;
-  padding: 3px
+  padding: 3px;
+  padding-left: 10px;
 }
 .messagecont{
   margin-left: 140px;

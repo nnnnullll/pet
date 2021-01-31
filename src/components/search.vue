@@ -9,7 +9,6 @@
           <img :src="searchicon">
         </div>
       </div>
-
       <div class="lead" style="display: flex;flex-direction: row;justify-content: center">
         <div class="nav-box" >
           <!-- 导航列表 -->
@@ -26,10 +25,42 @@
         <img :src="laycat" class="laycat">
       </div>
       <div class="line"></div>
-      <div class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到4位饲养员  |  按相关度排序 </div>
-      <div v-for="(user,index) in Sort" :key="index">
-          <usercomp  @getflag="getflag" :id="index" :flag="user.flag" :photo="user.photo" :circleurl="user.circleurl" :name="user.username" :num="user.num" :information="user.info" :count="user.count"></usercomp>
+      <div v-if="showflag==true" class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到{{this.length}}位饲养员  |  按相关度排序 </div>
+      <div v-if="showflag==true&&index<length" v-for="(item,index) in users "  :key="index" >
+        <div class="showuser" style="display: flex;flex-direction: row">
+          <img class="usersimg" :src="item.circleurl">
+          <div class="box">
+            <div class="userinfo" style="display: flex;flex-direction: row">
+              <div class="name">{{item.username}}</div>
+              <button  class="btn"  round type="primary" v-on:click="getIndex(item,index)" @click="guanZhu" >
+                {{item.msg}}
+              </button>
+            </div>
+            <div class="detail" style="display: flex;flex-direction: row;">
+              <div class="moment">动态数：{{item.count}}条</div>
+              <div class="fansnum">粉丝数：{{item.num}}</div>
+            </div>
+            <div class="background">
+              <div class="momenttext">最近动态：{{item.info}}</div>
+              <div class="imgs" style="display: flex;flex-direction: row;" >
+                <el-image class="shareimg1"  v-for="(photo) in item.photo" :key="photo.key"
+
+                           :src="photo"
+                           :preview-src-list="item.photo"
+                           fit="cover"/>
+<!--                <img :src="item.photo[0]" class="shareimg1" v-if="item.photo[0]!=''">-->
+<!--                <img :src="item.photo[1]" class="shareimg2" v-if="item.photo[1]!=''">-->
+<!--                <img :src="item.photo[2]" class="shareimg3" v-if="item.photo[2]!=''">-->
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
+
+<!--      <div v-for="(user,index) in Sort" :key="index">-->
+<!--          <usercomp  @getflag="getflag" :id="index" :flag="user.flag" :photo="user.photo" :circleurl="user.circleurl" :name="user.username" :num="user.num" :information="user.info" :count="user.count"></usercomp>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -46,6 +77,9 @@ export default {
   },
   data() {
     return {
+      length:0,
+      showflag:false,
+      tmp:0,
       user: {
         input: '',
         password: '',
@@ -66,6 +100,7 @@ export default {
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
           info:"今天天气真好，和主人逛gai~",
           photo:[],
+          msg:''
         },
         {username:'李四',
           num:412,
@@ -73,7 +108,8 @@ export default {
           flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
           info:"啊今天睡了懒觉真开心",
-          photo:[]
+          photo:[],
+          msg:''
         },
         {username:'王五',
           num:23,
@@ -81,7 +117,8 @@ export default {
           flag:true,
           circleurl:"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1549131754,2955370505&fm=26&gp=0.jpg",
           info: "昨天下雨了汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～汪汪汪汪汪汪～",
-          photo: []
+          photo: [],
+          msg:''
         },
         {username:'赵六',
           num:732,
@@ -89,7 +126,8 @@ export default {
           flag:true,
           circleurl:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3562519436,2223863513&fm=26&gp=0.jpg",
           info:"热情随和，活波开朗！",
-          photo: []
+          photo: [],
+          msg:''
         },
       ],
       useridtmp:[],
@@ -100,7 +138,29 @@ export default {
       navIndex: 0
     }
   },
+  activated:function(){
+    if(this.$route.params.topsearch!=null){
+      this.$refs.searchval.value=this.$route.params.topsearch
+      console.log("!!!!!!!:"+this.$refs.searchval.value)
+      this.search()
+    }
+
+
+  },
   methods:{
+    IsFollow(){
+      for(var i=0;i<this.users.length;i++){
+        if(this.users[i].flag==true)
+        {
+          this.users[i].msg="+关注"
+          //this.iconData = 'el-icon-star-off';
+        }
+        else if(this.users[i].flag==false){
+          this.users[i].msg="已关注"
+          //this.iconData = 'el-icon-star-on';
+        }
+      }
+    },
     // 接收页面跳转得参数
     getRouterData() {
       // 接收top栏参数  
@@ -125,6 +185,7 @@ export default {
       if (searchText =='') {
         return
       } else {
+        this.showflag=true;
         // this.closeState = true
         // this.searchState.showsug = true
         // this.searchState.searchtext = this.$refs.searchval.value
@@ -135,11 +196,15 @@ export default {
               zyhid:localStorage.getItem("yhid")
             })
             .then((res) => {
-              //console.log(res)
               if (res.status == 200) {
                 //this.$emit用于向父组件传值
                 console.log(res.data)
-                for (let i=0; i<3; i++){
+                if(res.data.user.length<3){
+                  this.length=res.data.user.length;
+                } else{
+                  this.length=3
+                }
+                for (let i=0; i<this.length; i++){
                   this.users[i].username=res.data.user[i].yhm;
                   this.users[i].info=res.data.share[i];
                   //this.users[i].flag=res.data.follow[i];
@@ -152,7 +217,6 @@ export default {
                   }
                   let tmp=res.data.user[i].yhid;
                   this.useridtmp[i]=res.data.user[i].yhid;
-                  ///////////////
                   axios.get('http://localhost:8000/isfollow',{//查成功
                     params:{
                       zyhid:localStorage.getItem('yhid'),
@@ -162,18 +226,20 @@ export default {
                     console.log(res.data)
                     if(res.data=="wu"){
                       this.users[i].flag=false;
+                      this.users[i].msg="+关注"
                     }
                     else if(res.data=="1"){
                       this.users[i].flag=false;
+                      this.users[i].msg="+关注"
                     }
                     else{
                       this.users[i].flag=true;
+                      this.users[i].msg="已关注"
                     }
                   })
                       .catch(err => {
                         console.log('查错误：'+err)
                       })
-                  ///////////////
                   axios.post('http://localhost:8000/share?yhid='+tmp).then((response)=>{
                     console.log(response)
                     if(response){
@@ -198,80 +264,96 @@ export default {
                   }).catch(function (error) { // 请求失败处理
                     console.log("---查询出错---！"+error);
                   })
-
                 }
+                console.log(this.users)
               }
             })
             .catch((err) => {
               console.log(err)
             })
-        this.$forceUpdate()
+        //this.$forceUpdate()
       }
     },
-    guanZhu() {
-      axios.get('http://localhost:8000/isfollow',{//查成功
-        params:{
-          zyhid:localStorage.setItem('yhid'),
-          fsid:tmp
-        }
-      }).then(res => {
-        console.log(res.data)
-        if(res.data=="wu"){
-          axios.post('http://localhost:8000/addfollow',{
-            params:{
-              zyhid:1,
-              fsid:2,
-              qxgz:0
-            }
-          }).then(res => {
-            console.log(res.data)
-            if(res.data=="success"){
-              alert("关注成功")
-            }
-          })
-              .catch(err => {
-                console.log('首关注环节错误：'+err)//
-              })
-        }
-        else if(res.data=="1"){
-          axios.post('http://localhost:8000/upfollow',{
-            params:{
-              zyhid:1,
-              fsid:2,
-              qxgz:0
-            }
-          }).then(res => {
-            console.log(res.data)
-            if(res.data=="success"){
-              alert("关注成功")
-            }
-          })
-              .catch(err => {
-                console.log('再关注环节错误：'+err)//
-              })
+    getIndex(item,index){
+      console.log(index)
+      this.index=index;
+      //这里的item是点击获取当前值的每一项内容
+      //这里的index是点击获取当前值的下标
+    },
+    guanZhu(index) {
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isfollow',{//查成功
+          params:{
+            zyhid:localStorage.getItem("yhid"),
+            fsid:this.useridtmp[this.index],
+          }
+        }).then(res => {
+          console.log(res.data)
+          if(res.data=="wu"){
+            axios.get('http://localhost:8000/addfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.users[this.index].flag=false;
+                this.users[this.index].msg="已关注"
+              }
+            })
+                .catch(err => {
+                  console.log('首关注环节错误：'+err)//
+                })
+          }
+          else if(res.data=="1"){
+            axios.get('http://localhost:8000/upfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.users[this.index].flag=false;
+                this.users[this.index].msg="已关注"
+              }
+            })
+                .catch(err => {
+                  console.log('再关注环节错误：'+err)//
+                })
+          }
+          else{
+            axios.get('http://localhost:8000/upfollow',{
+              params:{
+                zyhid:localStorage.getItem("yhid"),
+                fsid:this.useridtmp[this.index],
+                qxgz:1
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                this.users[this.index].flag=true;
+                this.users[this.index].msg="+关注"
+              }
+            })
+                .catch(err => {
+                  console.log('取关错误：'+err)
+                })
+          }
+        })
+            .catch(err => {
+              console.log('查错误：'+err)
+            })
 
-        }
-        else{
-          axios.post('http://localhost:8000/upfollow',{
-            params:{
-              zyhid:1,
-              fsid:2,
-              qxgz:1
-            }
-          }).then(res => {
-            console.log(res.data)
-            if(res.data=="success"){
-              alert("取消关注成功")
-            }
-          })
-              .catch(err => {
-                console.log('取关错误：'+err)
-              })
-        }
-      })
-          .catch(err => {
-            console.log('查错误：'+err)
-          })
+      }
+      else{
+        this.$router.push({
+          name: 'content',
+        })
+      }
     },
     //通过当前yhid查询数据库中发布动态数和粉丝数
     find(){
@@ -319,6 +401,9 @@ export default {
       this.navIndex = index;
       // 路由跳转
       this.$router.push(path)
+      this.showflag=false;
+      this.$refs.searchval.value="";
+      this.length=0
     },
 
     /**
@@ -330,6 +415,7 @@ export default {
       this.navIndex = this.nav.findIndex(item => item.path === path);
     }
   },
+
   mounted() {
 
   },
@@ -398,7 +484,6 @@ body {
   color: #030303;
   margin-right: 2%;
   margin-top: 2%;
-
 }
 .webitem2{
   flex: 0 0 46px;
@@ -602,5 +687,94 @@ body {
   width: 0;
 }
 
+
+.usersimg{
+  width: 150px;
+  height: 150px;
+  background: #FACD89;
+  border-radius: 50%;
+  margin-left:10% ;
+}
+.name{
+  width: 105px;
+  height: 18px;
+  font-size: 18px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #000000;
+  margin-top: 0.2%;
+}
+.moment{
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  width: 130px;
+  height: 15px;
+  font-size: 16px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #A0A0A0;
+}
+.fansnum{
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  width: 130px;
+  height: 15px;
+  font-size: 16px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #A0A0A0;
+}
+.btn{
+  width: 75px;
+  height: 25px;
+  background: #308DC2;
+  border-radius: 10px;
+  font-size: 18px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.shareimg1{
+  width: 217px;
+  height: 109px;
+  padding-left: 5%;
+}
+.shareimg2{
+  width: 217px;
+  height: 109px;
+  margin-left: 5%;
+}
+.shareimg3{
+  width: 217px;
+  height: 109px;
+  margin-left: 5%;
+}
+.momenttext{
+  padding-top: 1%;
+  padding-bottom: 1%;
+  font-size: 14px;
+  font-family: ZTSJ-BaguetteFont;
+  font-weight: 400;
+  color: #000000;
+  width: 900px;
+  height: 20px;
+  text-align: left;
+  margin-left: 5px;
+}
+.background{
+  width: 968px;
+  height: 165px;
+  background: #f6deca;
+  margin-left: 5.8%;
+}
+.userinfo{
+  padding-left: 2.8%;
+}
+.detail{
+  padding-left: 4.5%;
+}
+.showuser{
+  margin-top: 3%;
+}
 
 </style>

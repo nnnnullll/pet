@@ -12,6 +12,9 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 Vue.use(router);
 Vue.use(ElementUI);
+
+
+window.router=router
 new Vue({
   el: '#app',
   //配置路由
