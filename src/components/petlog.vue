@@ -6,10 +6,10 @@
             <div class="logcard">
                 <div class="loguserinfobox">
                     <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
-                    <div @click="loggotohome" class="infoleft">
+                    <div class="infoleft">
                         <div class="infoup">
-                            <span class="username">{{messageinform.username}}</span>
-                            <span @click="guanZhu()" class="guanzhu">{{guanzhu}}</span>
+                            <span @click="loggotohome" class="username">{{messageinform.username}}</span>
+                            <span @click="guanZhu" class="guanzhu">{{guanzhu}}</span>
                         </div>
                         <span class="datetime">{{messageinform.datatime}}</span>
                     </div> 
@@ -55,6 +55,7 @@ export default {
                 username:"",
                 datatime:"",    
                 passage:"",
+                userid:"",
                 userUrl:'',
                 lovenumber:0,
                 starnumber:0,
@@ -65,14 +66,12 @@ export default {
         }
     },
     activated:function(){
-        console.log(this.$route.params.jlid)
-        this.getJlData(this.$route.params.jlid)     
-
+        this.id=this.$route.params.jlid
+        this.getJlData()     
     },
     methods:{
-        getJlData(e) {
+        getJlData() {
             const _this = this
-            _this.id=e,
             axios.get('http://localhost:8000/getShareByjlid',{
                 params:{
                     jlid:_this.id
@@ -82,6 +81,7 @@ export default {
                     _this.messageinform.username=res.data.yhm
                     _this.messageinform.datatime=res.data.fbsj
                     _this.messageinform.passage=res.data.wz
+                    _this.messageinform.userid=res.data.yhid
                     axios.get('http://localhost:8000/getPhotoByjlid',{
                     params:{
                         jlid:_this.id
@@ -111,6 +111,84 @@ export default {
                         }).catch(err => {
                             console.log('错误！！！！：'+err)
                         })
+                        // 关注初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/isfollow',{//查成功
+                                params:{
+                                    zyhid:_this.messageinform.userid,
+                                    fsid:localStorage.getItem("yhid"),
+                                }
+                            }).then(res => {
+                                console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.guanzhu="+关注"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.guanzhu="+关注"
+                                }
+                                else{
+                                    _this.guanzhu="已关注"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                            _this.guanzhu="+关注"
+                        }
+                        // 喜欢初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/islike',{//查成功
+                                params:{
+                                    yhid:localStorage.getItem("yhid"),
+                                    jlid:this.messageinform.messagenum
+                                }
+                            }).then(res => {
+                                console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.messageinform.islove="喜欢"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.messageinform.islove="喜欢"
+                                }
+                                else{
+                                    _this.messageinform.islove="已喜欢"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                            _this.messageinform.islove="喜欢"
+                        }
+                        // 收藏初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/isstar',{//查成功
+                                params:{
+                                    yhid:localStorage.getItem("yhid"),
+                                    jlid:this.messageinform.messagenum
+                                }
+                            }).then(res => {
+                                console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.messageinform.isstar="收藏"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.messageinform.isstar="收藏"
+                                }
+                                else{
+                                    _this.messageinform.isstar="已收藏"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                            _this.messageinform.isstar="收藏"
+                        }
                     }).catch(err => {
                         console.log('错误！！！！：'+err)
                     })
@@ -121,25 +199,27 @@ export default {
             console.log(this.messageinform)
         },   
         guanZhu() {
+            const _this=this
             if(localStorage.getItem("yhid")){
                 axios.get('http://localhost:8000/isfollow',{//查成功
                     params:{
-                        zyhid:localStorage.getItem("yhid"),
-                        fsid:2,
+                        zyhid:_this.messageinform.userid,
+                        fsid:localStorage.getItem("yhid"),
                     }
                 }).then(res => {
                     console.log(res.data)
                     if(res.data=="wu"){
                         axios.get('http://localhost:8000/addfollow',{
                             params:{
-                                zyhid:localStorage.getItem("yhid"),
-                                fsid:2,
+                                zyhid:_this.messageinform.userid,
+                                fsid:localStorage.getItem("yhid"),
                                 qxgz:0
                             }
                         }).then(res => {
                             console.log(res.data)
                             if(res.data=="success"){
                                 alert("关注成功")
+                                _this.guanzhu="已关注"
                             } 
                         })
                         .catch(err => {
@@ -149,32 +229,33 @@ export default {
                     else if(res.data=="1"){
                         axios.get('http://localhost:8000/upfollow',{
                             params:{
-                                zyhid:localStorage.getItem("yhid"),
-                                fsid:2,
+                                zyhid:_this.messageinform.userid,
+                                fsid:localStorage.getItem("yhid"),
                                 qxgz:0
                             }
                         }).then(res => {
                             console.log(res.data)
                             if(res.data=="success"){
                                 alert("关注成功")
+                                _this.guanzhu="已关注"
                             } 
                         })
                         .catch(err => {
                             console.log('再关注环节错误：'+err)//
                         })
-
                     }
                     else{
                         axios.get('http://localhost:8000/upfollow',{
                             params:{
-                                zyhid:localStorage.getItem("yhid"),
-                                fsid:2,
+                                zyhid:_this.messageinform.userid,
+                                fsid:localStorage.getItem("yhid"),
                                 qxgz:1
                             }
                         }).then(res => {
                             console.log(res.data)
                             if(res.data=="success"){
                                 alert("取消关注成功")
+                                _this.guanzhu="+关注"
                             } 
                         })
                         .catch(err => {
@@ -192,30 +273,150 @@ export default {
             })
             }
         },
-        loveplus() {
-            if(
-                this.messageinform.islove=="已喜欢"){
-                this.messageinform.lovenumber--;
-                this.messageinform.islove="喜欢"
+        loveplus(index) {
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/islike', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:this.messageinform.messagenum
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                    axios.get('http://localhost:8000/addlike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:this.messageinform.messagenum
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            this.messageinform.love=false;
+                            this.messageinform.islove="已喜欢"
+                            this.messageinform.lovenumber++
+                        }
+                    }).catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:this.messageinform.messagenum,
+                        sc:0
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            this.messageinform.love=false;
+                            this.messageinform.islove="已喜欢"
+                            this.messageinform.lovenumber++
+                        }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                        })
+                }
+                else{
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:this.messageinform.messagenum,
+                        sc:1
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        this.messageinform.love=true;
+                        this.messageinform.islove="喜欢"
+                        this.messageinform.lovenumber--
+                    }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
             }
             else{
-                this.messageinform.lovenumber++;
-                this.messageinform.islove="已喜欢"
+                this.$router.push({
+                name: 'content',
+                })
             }
-            // 这里还要改数据库点赞数增加
-            // 如果没登录跳转到登录页面
         },
-        starplus() {
-            if(this.messageinform.isstar=="已收藏"){
-                this.messageinform.starnumber--;
-                this.messageinform.isstar="收藏"
+        starplus(index) {
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/isstar', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:this.messageinform.messagenum
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                        axios.get('http://localhost:8000/addstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:this.messageinform.messagenum
+                        }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        this.messageinform.star=false;
+                        this.messageinform.isstar="已收藏"
+                        this.messageinform.starnumber++
+                    }
+                    })
+                        .catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/upstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:this.messageinform.messagenum,
+                            sc:0
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        this.messageinform.star=false;
+                        this.messageinform.isstar="已收藏"
+                        this.messageinform.starnumber++
+                    }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                    })
+                }
+                else{
+                    axios.get('http://localhost:8000/upstar',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:this.messageinform.messagenum,
+                        sc:1
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            this.messageinform.star=true;
+                            this.messageinform.isstar="收藏"
+                            this.messageinform.starnumber--
+                        }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
             }
             else{
-                this.messageinform.starnumber++;
-                this.messageinform.isstar="已收藏"
+                this.$router.push({
+                name: 'content',
+                })
             }
-            // 这里还要改数据库点赞数增加
-            // 如果没登录跳转到登录页面
         },
         loggotohome(){
             const _this=this

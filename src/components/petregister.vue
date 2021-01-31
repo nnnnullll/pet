@@ -145,7 +145,7 @@ export default {
                     }).then(function(resp){
                           console.log(resp)
                         })
-                        this.$router.replace('/l')
+                        this.$router.replace('/content')
                       }
                   else{
                     alert('该邮箱已注册');
