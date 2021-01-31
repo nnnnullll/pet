@@ -1,151 +1,125 @@
-// 详细记录
 <template>
-    <!-- <div class="container"> -->
-        <div class="box" :style ="pic" >
-            <div>{{this.$route.params.jlid}}</div>
-            <el-card  class="messagecard">
-            <!-- 用户信息 -->
-                <el-row  >
-                    <el-col :span="4" class="userleft">
-                        <el-avatar class="userurl" :size="100"  :src="messageinform.userUrl"></el-avatar>
-                    </el-col >
-                    <el-col :span="6" class="userright">
-                        <el-row>
-                            <el-col :span="10">
-                                <div class="username">{{messageinform.username}}</div>
-                            </el-col>
-                            <el-col :span="4">
-                                <div class="guanzhu" @click="guanZhu()">
-                                <div  class="guantext"> {{guanzhu}}</div>
-                                </div>
-                            </el-col>
-                        </el-row>
-                        <div  class="userdatetime">{{messageinform.datatime}}</div> 
-                    </el-col >
-                </el-row>
-                <!-- 记录内容 -->
-                <div class="messagecont">
-                    <div  class="textcont">
-                    <!-- 文字内容 -->
-                    <div class="messagetext">{{messageinform.passage}}</div>
-                    </div>
-                        <el-img  v-for="(photo) in photourl" :key="photo.key" 
-                            style="width: 221px; height: 150px;padding:1px"
-                            :src="photo"
-                            :preview-src-list="photourl"
-                            fit="cover">
-                        </el-img>
-                    <el-row  class="lovestar" >  
-                        <el-col  :span="10" >
-                            <div class="txt" style="font-weight:bold" >
-                            <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
-                            {{messageinform.starnumber}}  {{messageinform.isstar}}
-                            </div>
-                        </el-col>
-                        <el-col  :span="12" >
-                            <div class="txt" style="font-weight:bold" >
-                            <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
-                            {{messageinform.lovenumber}}  {{messageinform.islove}}
-                            </div>
-                        </el-col>
-                    </el-row>
+    <div class="logbox">
+        <!-- 首栏 -->
+        <v-top></v-top>
+        <div class="logmainbox"  :style ="pic">
+            <div class="logcard">
+                <div class="loguserinfobox">
+                    <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
+                    <div @click="loggotohome" class="infoleft">
+                        <div class="infoup">
+                            <span class="username">{{messageinform.username}}</span>
+                            <span @click="guanZhu()" class="guanzhu">{{guanzhu}}</span>
+                        </div>
+                        <span class="datetime">{{messageinform.datatime}}</span>
+                    </div> 
                 </div>
-            </el-card>
+                <div class="messagecont">{{messageinform.passage}}</div>
+                <div class="messageimgs">
+                    <img fit="cover" class="messageimg" v-image-preview v-for="(photo) in messageinform.photourl" :key="photo.key"  :src="photo">  
+                </div>
+                <div class="logfoot">
+                    <div class="txt" style="font-weight:bold" >
+                        <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
+                        {{messageinform.starnumber}}  {{messageinform.isstar}}
+                    </div>     
+                        <div class="txt" style="font-weight:bold" >
+                        <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
+                        {{messageinform.lovenumber}}  {{messageinform.islove}}
+                    </div>
+                </div>
+            </div>
         </div>
-    <!-- </div> -->
+    </div>
 </template>
 
 <script>
+import vTop from '../components/topselect'
 const axios = require('axios');
-
 export default {
-    name: 'productdetailspage',
-    data() {
-        return {
-            id:null,
-            ph:{},
-            guanzhu:"",
-            messageinform:{
-                messagenum:1,
-                username:"用户名",
-                userUrl:'',
-                datatime:"2020-12-26",
-                passage:"这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字这是一段示例文字",
-                lovenumber:15,
-                islove:"喜欢",
-                starnumber:9,
-                isstar:"收藏"
-            },
-            photourl: [
-                    // 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-                    // // 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    // // 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    // // 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    // 'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                ],
+    name: "Petlog2",
+    components:{
+        vTop
+    },
+    data(){
+        return{
+            id:0,
+            guanzhu:"关注",
             pic: {
                 backgroundImage: "url(" + require('../assets/img/petshome.png') + ")",
                 width: '1440px',
-                height: '685px',
-                position: 'absolute',
-                left: '0px',
-                top:'0px',
-            }
+                height: '675px',
+            },
+            messageinform:{
+                messagenum:0,
+                username:"",
+                datatime:"",    
+                passage:"",
+                userUrl:'',
+                lovenumber:0,
+                starnumber:0,
+                islove:"喜欢",
+                isstar:"收藏",
+                photourl: [],
+            },
         }
     },
     activated:function(){
         console.log(this.$route.params.jlid)
-        this.getJlData(this.$route.params.jlid)   
+        this.getJlData(this.$route.params.jlid)     
+
     },
     methods:{
-        getJlData(e) { 
+        getJlData(e) {
             const _this = this
+            _this.id=e,
             axios.get('http://localhost:8000/getShareByjlid',{
                 params:{
-                    jlid:e
+                    jlid:_this.id
                 }
-            }).then(res => {
-                console.log(res.data)
-                _this.messageinform.messagenum=res.data.jlid
-                _this.messageinform.username=res.data.yhm
-                // _this.messageinform.userUrl
-                _this.messageinform.datatime=res.data.fbsj
-                _this.messageinform.passage=res.data.wz
-                // _this.messageinform.lovenumber
-                // _this.messageinform.islove
-                // _this.messageinform.starnumber
-                // _this.messageinform.isstar
-            })
-            .catch(err => {
-                console.log('错误：'+err)
-            })
-            axios.get('http://localhost:8000/getPhotoByjlid',{
-                params:{
-                    jlid:e
-                }
-            }).then(res => {
-                console.log(res.data)
-                _this.ph=res.data
-                // console.log(_this.ph[0].zp)
-                // console.log(_this.ph[1].zp)
-                var i=0
-                for(i=0;i<_this.ph.length;i++){
-                    // console.log(_this.ph[i].zp)
-                    _this.photourl[i]=_this.ph[i].zp
-                    console.log(_this.photourl[i])
-                }
-                // console.log(_this.photourl)
-                    
-            })
-            .catch(err => {
-                console.log('错误：'+err)
-            })
-            
-        }, 
+                }).then(res => {
+                    _this.messageinform.messagenum=res.data.jlid
+                    _this.messageinform.username=res.data.yhm
+                    _this.messageinform.datatime=res.data.fbsj
+                    _this.messageinform.passage=res.data.wz
+                    axios.get('http://localhost:8000/getPhotoByjlid',{
+                    params:{
+                        jlid:_this.id
+                    }
+                    }).then(res => {
+                        _this.ph=res.data
+                        var j=0
+                        for(j=0;j<_this.ph.length;j++){
+                            console.log(res.data[j].zp)
+                            _this.messageinform.photourl[j]=res.data[j].zp
+                        }
+                        axios.post('http://localhost:8000/likecount?jlid='+_this.id)
+                        .then(res=>{
+                            _this.messageinform.lovenumber=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.post('http://localhost:8000/starcount?jlid='+_this.id)
+                        .then(res=>{
+                            _this.messageinform.starnumber=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.get('http://localhost:8000/user/getUserByNamelog/'+_this.messageinform.username)
+                        .then(res=>{
+                            _this.messageinform.userUrl=res.data.tx;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                    }).catch(err => {
+                        console.log('错误！！！！：'+err)
+                    })
+                }).catch(err => {
+                    console.log('错误111：'+err)
+                })
+            console.log("看这里！！！！！：")
+            console.log(this.messageinform)
+        },   
         guanZhu() {
             if(localStorage.getItem("yhid")){
                 axios.get('http://localhost:8000/isfollow',{//查成功
@@ -243,96 +217,98 @@ export default {
             // 这里还要改数据库点赞数增加
             // 如果没登录跳转到登录页面
         },
+        loggotohome(){
+            const _this=this
+            this.$router.push({
+                name: 'user',
+                params: {
+                    yhid: _this.yhid,
+                }
+            })
+        },
     }
+
 }
-  
 </script>
 
 <style scoped>
-/* body {background-attachment:fixed;} */
-.container{
+body {
+    margin: 0;
+}
+.logbox{
     width: 1440px;
     height: 768px;
-    /* background-attachment:fixed; */
-    background-position:fixed
+    font-size: 21px;
+    font-family: ZTSJ-BaguetteFont;
+    font-weight: 400;
+    color: #000000;
 }
-.box{
+.logmainbox{
     width: 1440px;
-    height: 768px;
-    margin-top: 83px;
-    background-attachment:fixed;
-    background-position:fixed;
+    height: 675px
 }
-.messagecard{
-    position: absolute;
-    left: 270px;
+.logcard{
     width: 900px;
     min-height: 520px;
     background: #FDF0E3;
+    margin-left: 270px;
 }
-.userright{
-    margin-top:30px;
+.loguserinfobox{
+    width: 300px;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    margin-left: 23px;
 }
-.userurl{
-    margin-top: 5px;
-    margin-left: 5px;
+.infoleft{
+    display: flex;
+    flex-direction: column;
+}
+.infoup{
+    display: flex;
+    flex-direction: row;
+}
+.userimag{
+    margin-top: 17px; 
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
 }
 .username{
-    width: 75px;
-    height: 22px;
-    font-size: 24px;
-    font-family: ZTSJ-BaguetteFont;
-    font-weight: 400;
-    color: #000000;
-    padding-bottom: 10px;
-}
-.userdatetime{
-    width: 150px;
-    height: 14px;
-    font-size: 24px;
-    font-family: ZTSJ-BaguetteFont;
-    font-weight: 400;
-    color: #000000;
+    margin-top: 47px;
+    margin-left: 15px;
 }
 .guanzhu{
-    height: 24px;
-    width: 50px;
-    background: #fab990;
-    border-radius: 10%;
+    background-color:#f8cb9e ;
+    margin-top: 47px;
+    margin-left: 15px;
+    border-radius: 15px;
 }
-.guantext{
-    width: 80px;
-    height: 22px;
-    font-size: 18px;
-    font-family: ZTSJ-BaguetteFont;
-    font-weight: 400;
-    color: #000000;
-    padding: 3px
+.datetime{
+    margin-top: 15px;
+    margin-left: 15px;
 }
 .messagecont{
-    margin-left: 140px;
-    margin-right: 30px;
+    margin-top: 30px;
+    margin-left: 138px;
+    margin-right: 100px;
 }
-.messagetext{
-    font-size: 24px;
-    font-family: ZTSJ-BaguetteFont;
-    font-weight: 400;
-    color: #000000;
+.messageimgs{
+    width: 662px;
+    margin-left: 138px;
+    margin-right: 100px;
+    margin-top: 10px;
 }
-.lovestar{
-    margin-left: 300px;
+.messageimg{
+    width: 218px; 
+    height: 150px;
+    padding:1px;
+    object-fit: cover;
 }
-.p1{
-    width:25px;
-    height: 25px;
-}
-.txt{
-    width: 300px;
-    height: 24px;
-    font-size: 24px;
-    font-family: ZTSJ-BaguetteFont;
-    font-weight: 400;
-    color: #7F7C79;
-    line-height: 1px;
+.logfoot{
+    width: 350px;
+    margin-left: 520px;
+    display: flex;
+    flex-direction: row;
 }
 </style>

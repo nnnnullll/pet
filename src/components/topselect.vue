@@ -53,7 +53,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-shrink: 0;
-  margin-top: 0.7%;
+  margin-top: 5px;
 }
 .toplogo{
   margin-right: 1%;
@@ -120,7 +120,6 @@ export default {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #000000;
-
 }
 .text1{
   flex: 0 0 45px;
