@@ -428,7 +428,6 @@ export default {
             })
         },
     }
-
 }
 </script>
 
