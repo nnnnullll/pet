@@ -141,7 +141,8 @@ import 'video.js/dist/video-js.css'
 const axios = require('axios');
 export default {
     components:{
-        vTop
+        vTop,
+        videoPlayer
     },
     data(){
         return{
@@ -262,7 +263,7 @@ export default {
             ],
             tuijianlist_video:[
                 {
-                    jlid:13,
+                    jlid:8,
                     txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     username:'用户名',
@@ -336,12 +337,31 @@ export default {
             })
         },
         home_gotolog(e){
-            console.log(e),
-            this.$router.push({
-                name: 'Petlog',
-                params: {
-                    jlid: e,
+            const _this=this
+            axios.get('http://localhost:8000/ishavephoto',{
+                params:{
+                    jlid:e
                 }
+            }).then(res => { //照片
+                console.log(res.data)
+                if(res.data=="you"){
+                    this.$router.push({
+                        name: 'Petlog',
+                        params: {
+                            jlid: e,
+                        }
+                    }) 
+                }
+                else{//视频
+                    this.$router.push({
+                        name: 'Petlog2',
+                        params: {
+                            jlid: e,
+                        }
+                    })
+                }               
+            }).catch(err => {
+                console.log('错误！！！！：'+err)
             })
         },
     }
