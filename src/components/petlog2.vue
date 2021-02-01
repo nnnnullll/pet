@@ -64,7 +64,6 @@ export default {
                 starnumber:0,
                 islove:"喜欢",
                 isstar:"收藏",
-                photourl: [],
             },
             ph:{},
             playerOptions: {
@@ -78,7 +77,7 @@ export default {
                 fluid : false, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
                 sources: [{
                     type: "video/mp4", // 类型
-                    src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' //url地址
+                    src: '' //url地址
                 }],
                 poster: '', // 封面地址
                 notSupportedMessage : '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
@@ -108,17 +107,16 @@ export default {
                     _this.messageinform.datatime=res.data.fbsj
                     _this.messageinform.passage=res.data.wz
                     _this.messageinform.userid=res.data.yhid
-                    axios.get('http://localhost:8000/getPhotoByjlid',{
+                    axios.get('http://localhost:8000/getVideoByjlid',{
                     params:{
                         jlid:_this.id
                     }
                     }).then(res => {
+                        console.log(res.data)
                         _this.ph=res.data
-                        var j=0
-                        for(j=0;j<_this.ph.length;j++){
-                            console.log(res.data[j].zp)
-                            _this.messageinform.photourl[j]=res.data[j].zp
-                        }
+                        _this.playerOptions.sources[0].src=res.data.sp
+                        _this.playerOptions.poster=res.data.fm
+                        console.log(_this.playerOptions.sources.src)
                         axios.post('http://localhost:8000/likecount?jlid='+_this.id)
                         .then(res=>{
                             _this.messageinform.lovenumber=res.data;
