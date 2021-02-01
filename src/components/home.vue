@@ -138,6 +138,7 @@
 import vTop from '../components/topselect'
 import { videoPlayer } from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+const axios = require('axios');
 export default {
     components:{
         vTop
@@ -293,7 +294,33 @@ export default {
             }, 
         }
     },
+    activated:function(){
+        this.gethot()     
+    },
     methods:{
+        gethot(){
+            const _this=this
+            axios.get('http://localhost:8000/gethotshare',{        
+            }).then(res => {
+                console.log(res.data)
+                var i
+                for(i=0;i<10;i++){
+                    _this.hotlist[i].hotid=res.data[i].jlid
+                    _this.hotlist[i].hottext=res.data[i].wz
+                    axios.get('http://localhost:8000/getPhotoByjlid',{
+                    params:{
+                        jlid:res.data[i].jlid
+                    }
+                    }).then(res => {
+
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         home_goto(e){
             this.$router.push('/'+e);
         },
