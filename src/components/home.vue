@@ -124,7 +124,7 @@
                 <div class="hotbox">
                     <div @click="home_gotolog(hot.hotid)" v-for="(hot,index) in hotlist" :key="hot.key" class="hotitem">
                         <span class="hotid">{{index+1}}</span>
-                        <img  class="hotpic" :src="hot.hotpic">
+                        <img  class="hotpic" :src="hot.hotpi">
                         <div class="hottextbox">
                             <div class='hottext'>{{hot.hottext}}</div>
                         </div>
@@ -178,54 +178,55 @@ export default {
             hotlist:[
                 {
                     hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotpic:"",
+                    hotpic:null
                 },
                 {
                     hotid:2,
-                    hotpic:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                    hottext:'文字示例文字示例文字示例文字示例文字示例文'
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:  'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-                    hottext:'字例文字示例文字示例文'
+                    hotid:3,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:2,
-                    hotpic: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:4,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:5,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:6,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:2,
-                    hotpic: 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:7,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
-                },
-                 {
-                    hotid:2,
-                    hotpic:'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:8,
+                    hotpic:null,
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:9,
+                    hotpic:null,
+                    hottext:""
                 },
+                {
+                    hotid:10,
+                    hottext:"",
+                    hotpic:null,
+                },
+                
             ],
             tuijianlist_pic:[
                 {
@@ -302,6 +303,7 @@ export default {
             const _this=this
             axios.get('http://localhost:8000/gethotshare',{        
             }).then(res => {
+                const _this=this
                 console.log(res.data)
                 var i
                 for(i=0;i<10;i++){
@@ -312,7 +314,7 @@ export default {
                         jlid:res.data[i].jlid
                     }
                     }).then(res => {
-
+                        _this.hotlist[i].hotpic=res.data[0].zp
                     }).catch(err => {
                         console.log(err)
                     })

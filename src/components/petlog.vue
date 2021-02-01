@@ -1,8 +1,8 @@
 <template>
     <div class="logbox">
         <!-- 首栏 -->
-        <v-top></v-top>
-        <div class="logmainbox"  :style ="pic">
+        <v-top class="top"></v-top>
+        <div class="logmainbox"  >
             <div class="logcard">
                 <div class="loguserinfobox">
                     <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
@@ -45,11 +45,6 @@ export default {
         return{
             id:0,
             guanzhu:"关注",
-            pic: {
-                backgroundImage: "url(" + require('../assets/img/petshome.png') + ")",
-                width: '1440px',
-                height: '675px',
-            },
             messageinform:{
                 messagenum:0,
                 username:"",
@@ -63,6 +58,7 @@ export default {
                 isstar:"收藏",
                 photourl: [],
             },
+            ph:{}
         }
     },
     activated:function(){
@@ -437,15 +433,23 @@ body {
 }
 .logbox{
     width: 1440px;
-    height: 768px;
+    height: 700px;
     font-size: 21px;
     font-family: ZTSJ-BaguetteFont;
     font-weight: 400;
     color: #000000;
 }
 .logmainbox{
-    width: 1440px;
-    height: 675px
+    width:100%;
+    height:100%;
+    position:relative;
+    top:0px;
+    left:0;
+    right:0;
+    bottom:0;
+    background-image:url("../assets/img/petshome.png");
+    background-repeat:repeat;
+    background-attachment:fixed;
 }
 .logcard{
     width: 900px;
@@ -501,13 +505,14 @@ body {
 }
 .messageimg{
     width: 218px; 
-    height: 150px;
+    height: 140px;
     padding:1px;
     object-fit: cover;
 }
 .logfoot{
     width: 350px;
     margin-left: 520px;
+    padding-bottom: 20px;
     display: flex;
     flex-direction: row;
 }
