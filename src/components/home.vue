@@ -324,8 +324,7 @@ export default {
                 var localstorage=window.localStorage;
                 localstorage.setItem("nowhotid",temp);
             }
-        },
-        
+        }, 
         gethot(){
             let _this=this
             axios.get('http://localhost:8000/gethotshare',{        
