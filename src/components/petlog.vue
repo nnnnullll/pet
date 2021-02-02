@@ -66,29 +66,30 @@ export default {
         this.getJlData()     
     },
     methods:{
-        getJlData() {
+        async getJlData() {
             const _this = this
-            axios.get('http://localhost:8000/getShareByjlid',{
+            await axios.get('http://localhost:8000/getShareByjlid',{
                 params:{
                     jlid:_this.id
                 }
-                }).then(res => {
+                }).then(async res => {
+                    _this.messageinform.photourl=[]
                     _this.messageinform.messagenum=res.data.jlid
                     _this.messageinform.username=res.data.yhm
                     _this.messageinform.datatime=res.data.fbsj
                     _this.messageinform.passage=res.data.wz
                     _this.messageinform.userid=res.data.yhid
-                    axios.get('http://localhost:8000/getPhotoByjlid',{
+                    await axios.get('http://localhost:8000/getPhotoByjlid',{
                     params:{
                         jlid:_this.id
                     }
-                    }).then(res => {
+                    }).then(async res => {
                         _this.ph=res.data
-                        var j=0
+                        var j=0 
                         for(j=0;j<_this.ph.length;j++){
                             _this.messageinform.photourl[j]=res.data[j].zp
                         }
-                        axios.post('http://localhost:8000/likecount?jlid='+_this.id)
+                        await axios.post('http://localhost:8000/likecount?jlid='+_this.id)
                         .then(res=>{
                             _this.messageinform.lovenumber=res.data;
                         }).catch(err => {
@@ -187,6 +188,7 @@ export default {
                 }).catch(err => {
                     console.log('错误111：'+err)
                 })
+                console.log(this.messageinform)
         },   
         guanZhu() {
             const _this=this
