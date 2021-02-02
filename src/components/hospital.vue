@@ -59,7 +59,6 @@
 
 <script>
 import vTop from '../components/topselect'
-import loadBMap from "@/loadBMap";
 export default {
   name: "hospital",
   components:{
