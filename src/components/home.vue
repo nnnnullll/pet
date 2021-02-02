@@ -124,7 +124,7 @@
                 <div class="hotbox">
                     <div @click="home_gotolog(hot.hotid)" v-for="(hot,index) in hotlist" :key="hot.key" class="hotitem">
                         <span class="hotid">{{index+1}}</span>
-                        <img  class="hotpic" :src="hot.hotpi">
+                        <img  class="hotpic" :src="hot.hotpic">
                         <div class="hottextbox">
                             <div class='hottext'>{{hot.hottext}}</div>
                         </div>
@@ -178,56 +178,55 @@ export default {
             ],
             hotlist:[
                 {
+                    hotid:0,
+                    hottext:"",
+                    hotpic:""
+                },
+                {
                     hotid:1,
                     hotpic:"",
-                    hotpic:null
+                    hottext:""
                 },
                 {
                     hotid:2,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:3,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:4,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:5,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:6,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:7,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:8,
-                    hotpic:null,
+                    hotpic:"",
                     hottext:""
                 },
                 {
                     hotid:9,
-                    hotpic:null,
-                    hottext:""
-                },
-                {
-                    hotid:10,
                     hottext:"",
-                    hotpic:null,
-                },
-                
+                    hotpic:"",
+                },                
             ],
             tuijianlist_pic:[
                 {
@@ -294,36 +293,95 @@ export default {
                     fullscreenToggle : true  //全屏按钮
                 }
             }, 
+            a:[],
         }
     },
     activated:function(){
         this.gethot()     
     },
     methods:{
+        // 先反id then里面赋值
+        writelocal(temp){
+            if(!window.localStorage){
+                alert("浏览器支持localstorage");
+                return false;
+            }else{
+                var localstorage=window.localStorage;
+                var arra=[];
+                for(var i=0;i<10;i++){
+                    arra[i]=temp[i].jlid
+                }
+                localStorage.setItem('key',JSON.stringify(arra));
+                var read=JSON.parse(localStorage.getItem('key'));
+                //console.log(read,read.length);
+            }
+        },
+        writelocal2(temp){
+            if(!window.localStorage){
+                alert("浏览器支持localstorage");
+                return false;
+            }else{
+                var localstorage=window.localStorage;
+                localstorage.setItem("nowhotid",temp);
+            }
+        },
+        
         gethot(){
-            const _this=this
+            let _this=this
             axios.get('http://localhost:8000/gethotshare',{        
-            }).then(res => {
-                const _this=this
-                console.log(res.data)
-                var i
-                for(i=0;i<10;i++){
+            }).then(async res => {
+                //console.log(res.data)
+                _this.writelocal(res.data)
+                var i=0
+                while(i<10){
                     _this.hotlist[i].hotid=res.data[i].jlid
-                    _this.hotlist[i].hottext=res.data[i].wz
-                    axios.get('http://localhost:8000/getPhotoByjlid',{
-                    params:{
-                        jlid:res.data[i].jlid
-                    }
-                    }).then(res => {
-                        _this.hotlist[i].hotpic=res.data[0].zp
+                    _this.hotlist[i].hottext=res.data[i].wz  
+                    var read=JSON.parse(localStorage.getItem('key'));
+                    _this.writelocal2(i)
+                    await axios.get('http://localhost:8000/ishavephoto',{
+                        params:{
+                            jlid:read[localStorage.getItem('nowhotid')]
+                        }
+                    }).then(async re => { //照片
+                        // console.log(read)
+                        //console.log(re.data)
+                        // console.log(read[1])
+                        if(re.data=="you"){
+                            await axios.get('http://localhost:8000/getPhotoByjlid',{
+                                params:{
+                                    jlid:read[localStorage.getItem('nowhotid')]
+                                }
+                            }).then((r) => {
+                                //console.log(r.data)
+                                _this.hotlist[localStorage.getItem('nowhotid')].hotpic=r.data[0].zp
+                                i++
+                            }).catch(err => {
+                                console.log(err)
+                            })
+                        }
+                        else{//视频
+                            await axios.get('http://localhost:8000/getVideoByjlid',{
+                                params:{
+                                    jlid:read[localStorage.getItem('nowhotid')]
+                                }
+                            }).then(r => {
+                                //console.log(r.data)
+                                _this.hotlist[localStorage.getItem('nowhotid')].hotpic=r.data.fm
+                                i++
+                            }).catch(err => {
+                                console.log('错误！！！！：'+err)
+                            })
+                        }               
                     }).catch(err => {
-                        console.log(err)
-                    })
+                        console.log('错：'+err)
+                    })    
                 }
             }).catch(err => {
                 console.log(err)
             })
+            console.log(this.hotlist)
         },
+       
         home_goto(e){
             this.$router.push('/'+e);
         },
