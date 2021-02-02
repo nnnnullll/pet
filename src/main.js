@@ -16,8 +16,6 @@ import BaiduMap from 'vue-baidu-map'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 import  VueResource  from 'vue-resource'
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
 Vue.use(iView)
 Vue.use(BaiduMap, {
   ak: 'pssivZt53sNW6Du7mArd2UrtAzeFEkOC'  //百度地图ak
