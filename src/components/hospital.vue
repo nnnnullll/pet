@@ -14,13 +14,15 @@
               <div class="maptitle2">地图</div>
             </div>
             <div class="mapline1"></div>
-            <div class="mapbottom">
-              <div class="outshow">
-                {{address}}
+            <div class="mapbottom" >
+              <div class="outshow" style="display: flex;flex-direction: column">
+                地址：{{address}}
+                <div :distance="distance">距离{{distance}}米</div>
               </div>
-              <button @click="getDistance">{{distance}}</button>
+
+<!--              <button @click="getDistance">{{distance}}</button>-->
               <div class="mapline2"></div>
-              <div class="mapshow">
+              <div class="mapshow" @click="getDistance">
                 <!--放地图的-->
 <!--                  <el-input v-model="addressKeyword" placeholder="请输入地址来直接查找相关位置"></el-input>-->
                   <!-- 给地图加点击事件getLocationPoint，点击地图获取位置相关的信息，经纬度啥的 -->
@@ -33,11 +35,13 @@
                       @ready="handler"
                       @searchcomplete="searchcomplete"
                       @locationSuccess="getLocationSuccess"
-                      @click="getLocationPoint">
+                      @click="getLocationPoint"
+                  >
                     <bm-view style="width: 467px; height:314px;"></bm-view>
                     <bm-geolocation
                         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                         :showAddressBar="true"
+                        :auto-location="true"
                     ></bm-geolocation>
                     <bm-local-search :keyword="searchcontent" :auto-viewport="true" style="display: none"></bm-local-search>
                   </baidu-map>
@@ -68,11 +72,11 @@ export default {
     return{
       distance:0,
       address:"",
-      mylng:0,
-      mylat:0,
+      mylng:'',
+      mylat:'',
       location: {
-        lng: 1,
-        lat: 1
+        lng:'',
+        lat:''
       },
       zoom: 12.8,
       addressKeyword: "",
@@ -95,16 +99,16 @@ export default {
       console.log("mylat:"+_this.mylat+",mylng:"+_this.mylng)
       console.log("lat2:"+this.location.lat+",lng2:"+this.location.lng)
       let EARTH_RADIUS = 6378.137;
-      let radLat1 = this.rad(31.210702893412);
+      let radLat1 = this.rad(this.mylat);
       let radLat2 = this.rad(this.location.lat);
       let a = radLat1-radLat2;
-      let b = this.rad(121.44427510475) - this.rad(this.location.lng);
+      let b = this.rad(this.mylng) - this.rad(this.location.lng);
       let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
           + Math.cos(radLat1) * Math.cos(radLat2)
           * Math.pow(Math.sin(b / 2), 2)));
       s = s * EARTH_RADIUS;
       s = Math.round(s * 10000) / 10000;
-      //s = s*1000;    //乘以1000是换算成米
+      s = parseInt(s*1000);    //乘以1000是换算成米
       this.distance=s;
       console.log("distance:"+this.distance)
     },
@@ -114,9 +118,9 @@ export default {
     },
     searchcomplete(e) {},
     handler ({BMap, map}){
+      let _this=this;
   var geolocation = new BMap.Geolocation();
   geolocation.getCurrentPosition(function(r){
-    var _this=this;
   	if(this.getStatus() == BMAP_STATUS_SUCCESS){
   		var mk = new BMap.Marker(r.point);
   		map.addOverlay(mk);
@@ -126,9 +130,7 @@ export default {
       //this.tmp=(addComp.province + addComp.city + addComp.district + addComp.street + addComp.street_number)+"宠物医院";
       _this.mylng=r.point.lng;
       _this.mylat=r.point.lat;
-
       console.log("mylat:"+_this.mylat+",mylng:"+_this.mylng)
-
   	}
   	else {
   		console.log('failed'+this.getStatus());
@@ -214,6 +216,8 @@ body {
 .outshow{
   width: 519px;
   height: 344px;
+  display: flex;
+  flex-direction: row;
 }
 .mapline2{
   width: 1px;

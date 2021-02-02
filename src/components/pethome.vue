@@ -148,6 +148,8 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #000000;
+  margin: 10px;
+  margin-bottom: 10px;
 }
 .text5{
   width: 102px;
@@ -156,6 +158,7 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #000000;
+  margin: 10px;
 }
 .text6{
   width: 102px;
@@ -164,10 +167,12 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #000000;
+  margin:10px;
 }
 .aboutus{
   margin-right: 8%;
   margin-left: 8%;
+  margin-top: 1%;
   font-size: 18px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -185,6 +190,12 @@ body {
 }
 .nurse{
   margin-right: 5%;
+}
+.description{
+
+}
+.part3{
+  margin-top: 5%;
 }
 .describe1 {
   width: 175px;
@@ -230,7 +241,7 @@ body {
   color: #959595;
 }
 .addr{
-
+  margin-top: 1%;
   font-size: 18px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -242,5 +253,10 @@ body {
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
   color: #959595;
+}
+.process{
+  margin-right: 2%;
+  margin-top: 1%;
+  margin-bottom: 2%;
 }
 </style>
