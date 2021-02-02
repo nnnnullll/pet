@@ -41,7 +41,7 @@
               <div class="fansnum">粉丝数：{{item.num}}</div>
             </div>
             <div class="background">
-              <div class="momenttext">最近动态：{{item.info}}</div>
+              <div class="momenttext" style="margin-bottom: 1%;">最近动态：{{item.info}}</div>
               <div class="imgs" style="display: flex;flex-direction: row;" >
                 <el-image class="shareimg1"  v-for="(photo) in item.photo" :key="photo.key"
 
