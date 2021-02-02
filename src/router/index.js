@@ -107,7 +107,6 @@ export default  new Router({
       //跳转的组件
       name: 'knowledgecard',
       component: knowledgecard,
-      
     },
     {
       //路由路径

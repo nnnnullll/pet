@@ -11,7 +11,7 @@ module.exports = {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {//虚拟目录
-        target: 'http://localhost:8050',//后台NodeSpringboot项目的请求网址
+        target: 'http://localhost:8000',//后台NodeSpringboot项目的请求网址
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''//由于上面的虚拟目录实际上是不存在的，不去掉的话访问的时候显示的url会变成'http://localhost:3000/api'，所以得去掉
