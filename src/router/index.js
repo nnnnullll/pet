@@ -4,6 +4,7 @@ import R from '../views/register'//视图组件导入 改别名Register
 import Othershome from '../views/othershome'
 import PetRegister from '../components/petregister'
 import PetLog from '../components/petlog'
+import PetLog2 from '../components/petlog2'
 import Home from '../components/home'
 import Content from "../components/Content";
 import Testcomp from "../components/Testcomp/Testcomp";
@@ -41,6 +42,12 @@ export default  new Router({
       path:'/log',
       name:'Petlog',
       component:PetLog,
+    
+    },
+    {
+      path:'/log2',
+      name:'Petlog2',
+      component:PetLog2,
     
     },
     {

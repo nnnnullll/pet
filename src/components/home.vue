@@ -138,9 +138,11 @@
 import vTop from '../components/topselect'
 import { videoPlayer } from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+const axios = require('axios');
 export default {
     components:{
-        vTop
+        vTop,
+        videoPlayer
     },
     data(){
         return{
@@ -176,55 +178,55 @@ export default {
             ],
             hotlist:[
                 {
+                    hotid:0,
+                    hottext:"",
+                    hotpic:""
+                },
+                {
                     hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotpic:"",
+                    hottext:""
                 },
                 {
                     hotid:2,
-                    hotpic:'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                    hottext:'文字示例文字示例文字示例文字示例文字示例文'
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:  'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-                    hottext:'字例文字示例文字示例文'
+                    hotid:3,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:2,
-                    hotpic: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:4,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:5,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:6,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:2,
-                    hotpic: 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:7,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
-                },
-                 {
-                    hotid:2,
-                    hotpic:'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
+                    hotid:8,
+                    hotpic:"",
+                    hottext:""
                 },
                 {
-                    hotid:1,
-                    hotpic:'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                    hottext:'示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文'
-                },
+                    hotid:9,
+                    hottext:"",
+                    hotpic:"",
+                },                
             ],
             tuijianlist_pic:[
                 {
@@ -260,7 +262,7 @@ export default {
             ],
             tuijianlist_video:[
                 {
-                    jlid:13,
+                    jlid:8,
                     txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
                     userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     username:'用户名',
@@ -291,14 +293,95 @@ export default {
                     fullscreenToggle : true  //全屏按钮
                 }
             }, 
+            a:[],
         }
     },
-    // watch:{
-    //     '$route'(to,from){
-    //         this.$router.go(0);
-    //     }
-    // },
+    activated:function(){
+        this.gethot()     
+    },
     methods:{
+        // 先反id then里面赋值
+        writelocal(temp){
+            if(!window.localStorage){
+                alert("浏览器支持localstorage");
+                return false;
+            }else{
+                var localstorage=window.localStorage;
+                var arra=[];
+                for(var i=0;i<10;i++){
+                    arra[i]=temp[i].jlid
+                }
+                localStorage.setItem('key',JSON.stringify(arra));
+                var read=JSON.parse(localStorage.getItem('key'));
+                //console.log(read,read.length);
+            }
+        },
+        writelocal2(temp){
+            if(!window.localStorage){
+                alert("浏览器支持localstorage");
+                return false;
+            }else{
+                var localstorage=window.localStorage;
+                localstorage.setItem("nowhotid",temp);
+            }
+        },
+        
+        gethot(){
+            let _this=this
+            axios.get('http://localhost:8000/gethotshare',{        
+            }).then(async res => {
+                //console.log(res.data)
+                _this.writelocal(res.data)
+                var i=0
+                while(i<10){
+                    _this.hotlist[i].hotid=res.data[i].jlid
+                    _this.hotlist[i].hottext=res.data[i].wz  
+                    var read=JSON.parse(localStorage.getItem('key'));
+                    _this.writelocal2(i)
+                    await axios.get('http://localhost:8000/ishavephoto',{
+                        params:{
+                            jlid:read[localStorage.getItem('nowhotid')]
+                        }
+                    }).then(async re => { //照片
+                        // console.log(read)
+                        //console.log(re.data)
+                        // console.log(read[1])
+                        if(re.data=="you"){
+                            await axios.get('http://localhost:8000/getPhotoByjlid',{
+                                params:{
+                                    jlid:read[localStorage.getItem('nowhotid')]
+                                }
+                            }).then((r) => {
+                                //console.log(r.data)
+                                _this.hotlist[localStorage.getItem('nowhotid')].hotpic=r.data[0].zp
+                                i++
+                            }).catch(err => {
+                                console.log(err)
+                            })
+                        }
+                        else{//视频
+                            await axios.get('http://localhost:8000/getVideoByjlid',{
+                                params:{
+                                    jlid:read[localStorage.getItem('nowhotid')]
+                                }
+                            }).then(r => {
+                                //console.log(r.data)
+                                _this.hotlist[localStorage.getItem('nowhotid')].hotpic=r.data.fm
+                                i++
+                            }).catch(err => {
+                                console.log('错误！！！！：'+err)
+                            })
+                        }               
+                    }).catch(err => {
+                        console.log('错：'+err)
+                    })    
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            console.log(this.hotlist)
+        },
+       
         home_goto(e){
             this.$router.push('/'+e);
         },
@@ -312,12 +395,31 @@ export default {
             })
         },
         home_gotolog(e){
-            console.log(e),
-            this.$router.push({
-                name: 'Petlog',
-                params: {
-                    jlid: e,
+            const _this=this
+            axios.get('http://localhost:8000/ishavephoto',{
+                params:{
+                    jlid:e
                 }
+            }).then(res => { //照片
+                console.log(res.data)
+                if(res.data=="you"){
+                    this.$router.push({
+                        name: 'Petlog',
+                        params: {
+                            jlid: e,
+                        }
+                    }) 
+                }
+                else{//视频
+                    this.$router.push({
+                        name: 'Petlog2',
+                        params: {
+                            jlid: e,
+                        }
+                    })
+                }               
+            }).catch(err => {
+                console.log('错误！！！！：'+err)
             })
         },
     }

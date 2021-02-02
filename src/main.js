@@ -6,6 +6,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
+import 'vue-directive-image-previewer/dist/assets/style.css'
+Vue.use(VueDirectiveImagePreviewer) 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 import BaiduMap from 'vue-baidu-map'
