@@ -11,12 +11,19 @@ import 'vue-directive-image-previewer/dist/assets/style.css'
 Vue.use(VueDirectiveImagePreviewer) 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+import BaiduMap from 'vue-baidu-map'
+import iView from 'iview'
+import 'iview/dist/styles/iview.css'    // 使用 CSS
 
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+import  VueResource  from 'vue-resource'
+Vue.use(iView)
+Vue.use(BaiduMap, {
+  ak: 'pssivZt53sNW6Du7mArd2UrtAzeFEkOC'  //百度地图ak
+})
+Vue.use(VueResource)
 Vue.use(router);
 Vue.use(ElementUI);
-
-
 window.router=router
 new Vue({
   el: '#app',
@@ -28,7 +35,8 @@ new Vue({
   render:h=>h(App)
 }).$mount('#app');
 
-// http request 请求拦截器
+//http request 请求拦截器
+
 axios.interceptors.request.use(config => {
   if(store.state.token){
       config.headers.Authorization = `token ${store.state.token}`;
@@ -39,6 +47,7 @@ axios.interceptors.request.use(config => {
   // 对请求错误做些什么
   return Promise.reject(error);
 });
+
 // http response 响应拦截器
 axios.interceptors.response.use(response => {
   return response;

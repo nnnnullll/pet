@@ -1,5 +1,6 @@
 // 宠物识别
 <template xmlns:android="http://www.w3.org/1999/xhtml">
+
   <div class="building">
     <!-- 首栏 -->
     <v-top></v-top>
@@ -13,8 +14,8 @@
         </div>
         <p class="pz">我的品种名字：{{pz}}</p>
         <p class="bm">别名：{{bm}}</p>
-        <p class="zl">种类：{{zl}}</p>
-        <p class="tx">体型：{{tx}}</p>
+        <p class="zl">易得疾病：{{ydjb}}</p>
+        <p class="tx">寿命：{{sm}}</p>
         <p class="xgtz">性格特征：{{xgtz}}</p>
         <p class="jj">简介：{{jj}}</p>
       </div>
@@ -27,7 +28,7 @@
     </div>
   </div>
 </template>
-<script>
+<script  >
 const axios=require('axios');
 import vTop from '../components/topselect'
 export default {
@@ -47,8 +48,8 @@ export default {
       love:require('@/assets/img/love.png'),
       pz:"心肝小宝贝喵喵",
       bm:"囡囡",
-      zl:"团宠喵",
-      tx:"小巧",
+      ydjb:"刀枪不入不得病",
+      sm:"长生不老",
       xgtz:"温顺可爱、友善机灵",
       jj:"喵喵是我们网页设计团队的心头宝，几乎一眼间\n" +
           "就抓到了团队成员的心。它是我们的团宠喵，它也叫囡\n" +
@@ -60,19 +61,23 @@ export default {
           "欢。",
     }
   },
+  mounted:function () {
+
+  },
   methods:{
     submitForm(){
       let _this = this;
       var data;
-      axios.post('http://localhost:8050/knowledge',{
-        pz:"狗"
+      axios.post('http://localhost:8000/doGetJson',{
+        pz:"柴犬"
       }).then((response)=>{
-        console.log(response)
+        //console.log(response)
         if(response){
-          data=response.data;
+          data=response.data.newslist[0];
           console.log(data);
           alert('查询成功');
-          this.pz=data.pz, this.bm=data.bm,this.xgtz=data.xgtz, this.jj=data.jj
+          this.sm=data.life,this.ydjb=data.easyOfDisease,
+          this.pz=data.name, this.bm=data.engName,this.xgtz=data.characters, this.jj=data.careKnowledge,this.pet=data.coverURL
         }
         else{
           alert('查询失败，请重试！')
@@ -80,6 +85,22 @@ export default {
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       });
+      // axios.post('http://localhost:8050/knowledge',{
+      //   pz:"狗"
+      // }).then((response)=>{
+      //   console.log(response)
+      //   if(response){
+      //     data=response.data;
+      //     console.log(data);
+      //     alert('查询成功');
+      //     this.pz=data.pz, this.bm=data.bm,this.xgtz=data.xgtz, this.jj=data.jj
+      //   }
+      //   else{
+      //     alert('查询失败，请重试！')
+      //   }
+      // }).catch(function (error) { // 请求失败处理
+      //   console.log("---查询出错---！"+error);
+      // });
     },
   }
 }
