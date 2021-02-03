@@ -15,9 +15,19 @@
             </div>
             <div class="mapline1"></div>
             <div class="mapbottom" >
-              <div class="outshow" style="display: flex;flex-direction: column">
-                地址：{{address}}
-                <div :distance="distance">距离{{distance}}米</div>
+              <div class="outshow" style="display: flex;flex-direction: column;margin-top: 3%">
+                <div class="mapsearchbox" style="display: flex;flex-direction: row;width: 400px;margin-left: 10%">
+                  <img style="width:60%" :src="myicon">
+                  <el-input style="margin-top: 30px;margin-left: 10px" class="mapinputbox" v-model="addressKeyword" v-on:change="changecontent" placeholder="请输入查询地点"></el-input>
+                </div>
+
+                  <div style="display: flex;flex-direction: column;margin-top: 5%" >
+                    <div style="margin-bottom: 3%;margin-left: 5%">地址：{{address}}</div>
+                    <div style="margin-left: 5%" :distance="distance">距离您所在位置{{distance}}公里</div>
+                  </div>
+
+
+
               </div>
 
 <!--              <button @click="getDistance">{{distance}}</button>-->
@@ -49,12 +59,12 @@
             </div>
           </div>
 
-          <div class="mapsearchbox">
-              <el-input class="mapinputbox" v-model="addressKeyword" v-on:change="changecontent" placeholder="请输入查询地点"></el-input>
-            <div class="mapensurebox">
-              <div class="sousuo">搜索</div>
-            </div>
-          </div>
+<!--          <div class="mapsearchbox">-->
+<!--              <el-input class="mapinputbox" v-model="addressKeyword" v-on:change="changecontent" placeholder="请输入查询地点"></el-input>-->
+<!--            <div class="mapensurebox">-->
+<!--              <div class="sousuo">搜索</div>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
@@ -78,6 +88,7 @@ export default {
         lng:'',
         lat:''
       },
+      myicon:require("@/assets/img/nurse.png"),
       zoom: 12.8,
       addressKeyword: "",
       searchcontent:"",
@@ -108,7 +119,8 @@ export default {
           * Math.pow(Math.sin(b / 2), 2)));
       s = s * EARTH_RADIUS;
       s = Math.round(s * 10000) / 10000;
-      s = parseInt(s*1000);    //乘以1000是换算成米
+      s= parseFloat(s).toFixed(2)
+      //s = parseInt(s*1000);    //乘以1000是换算成米
       this.distance=s;
       console.log("distance:"+this.distance)
     },
