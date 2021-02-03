@@ -260,9 +260,9 @@ export default {
   border-radius: 10px;
 } 
 .sub{
-  padding-top: 8px;
+  padding-top: 0px;
   padding-left: 208px;
-  width: 72px;
+  width: 400px;
   height: 32px;
   font-size: 36px;
   font-family: ZTSJ-BaguetteFont;

@@ -53,7 +53,7 @@ export default {
         return{
             id:0,
             guanzhu:"关注",
-            messageinform:{
+             messageinform:{
                 messagenum:0,
                 username:"",
                 datatime:"",    
@@ -64,6 +64,7 @@ export default {
                 starnumber:0,
                 islove:"喜欢",
                 isstar:"收藏",
+                photourl: [],
             },
             ph:{},
             playerOptions: {
@@ -517,6 +518,7 @@ body {
     border-radius: 15px;
 }
 .datetime{
+    width: 400px;
     margin-top: 15px;
     margin-left: 15px;
 }

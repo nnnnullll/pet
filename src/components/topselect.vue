@@ -74,7 +74,7 @@ export default {
   font-weight: 400;
   color: #030303;
   margin-right: 1%;
-  margin-top: 2%;
+  margin-top: 1.75%;
 
 }
 .webitem15{
