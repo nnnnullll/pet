@@ -12,9 +12,6 @@ Vue.use(VueDirectiveImagePreviewer)
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 import BaiduMap from 'vue-baidu-map'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
-
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 axios.defaults.baseURL="http://localhost:8000/"
