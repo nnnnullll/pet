@@ -53,18 +53,7 @@ export default {
         return{
             id:0,
             guanzhu:"关注",
-            messageinform:{
-                messagenum:0,
-                username:"",
-                datatime:"",    
-                passage:"",
-                userid:"",
-                userUrl:'',
-                lovenumber:0,
-                starnumber:0,
-                islove:"喜欢",
-                isstar:"收藏",
-            },
+            
             ph:{},
             playerOptions: {
                 playbackRates : [ 0.5, 1.0, 1.5, 2.0 ], //可选择的播放速度

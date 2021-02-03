@@ -64,7 +64,7 @@
                 <div class="hometuijianbox">
                     <div class="tuijiantitlebox">
                         <img class="title1" :src="title1">
-                        <img class="title15" :src="title15">
+                        <img @click="change()" class="title15" :src="title15">
                     </div>
                     <div @click="home_gotolog(tuijian.jlid)" v-for="(tuijian,index) in tuijianlist_pic"  :key="tuijian.key" >
                         <div  class="tuijianitembox_pic">
@@ -75,14 +75,14 @@
                                 </div>
                                 <div class="tuijianinfobox">
                                     <img class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div class="tuijianinfotxt">{{tuijian.username}}</div>
-                                    <div class="tuijianinfotxt">{{tuijian.datatim}}</div>
+                                    <div class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
                                     <img class="tuijianstar" :src="star">
-                                    <div>收藏</div>
+                                    <div>{{tuijian.star}} {{tuijian.starnum}}</div>
                                     <img  class="tuijianlove" :src="love">
-                                    <div>喜欢</div>
+                                    <div>{{tuijian.love}}  {{tuijian.lovenum}}</div>
                                 </div>
                             </div>
                         </div>
@@ -100,18 +100,18 @@
                             </div>
                             <div class="tuijianright2">
                                 <div class="tuijiantextbox2">
-                                    <div class='tuijiantext'>{{tuijian2.txt}}</div>
+                                    <div class='tuijiantext2'>{{tuijian2.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox2">
                                     <img class="tuijianuserurl" :src="tuijian2.userurl">
-                                    <div class="tuijianinfotxt">{{tuijian2.username}}</div>
-                                    <div class="tuijianinfotxt">{{tuijian2.datatim}}</div>
+                                    <div class="tuijianinfotxt1">{{tuijian2.username}}</div>
+                                    <div class="tuijianinfotxt2">{{tuijian2.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox2">
                                     <img class="tuijianstar" :src="star">
-                                    <div>收藏</div>
+                                    <div>{{tuijian2.star}} {{tuijian2.starnum}}</div>
                                     <img  class="tuijianlove" :src="love">
-                                    <div>喜欢</div>
+                                    <div>{{tuijian2.love}}  {{tuijian2.lovenum}}</div>
                                 </div>
                             </div>
                         </div>
@@ -231,44 +231,56 @@ export default {
             tuijianlist_pic:[
                 {
                     jlid:1,
-                    url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
-                    userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    username:'用户名',
-                    datatim:'2020-12-01',
+                    userid:8,
+                    url:'',
+                    txt:'',
+                    userurl:'',
+                    username:'',
+                    datatim:'',
                     starnum:'',
                     lovenum:'',
+                     star:"",
+                    love:"",
                 },
                 {
                     jlid:2,
-                    url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    txt:'测试',
-                    userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    username:'用户名',
-                    datatim:'2020-12-01',
+                    userid:8,
+                    url:'',
+                    txt:'',
+                    userurl:'',
+                    username:'',
+                    datatim:'',
                     starnum:'',
                     lovenum:'',
+                     star:"",
+                    love:"",
                 },
                 {
                     jlid:1,
-                    url:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    txt:'测试',
-                    userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    username:'用户名',
-                    datatim:'2020-12-01',
+                    userid:8,
+                    url:'',
+                    txt:'',
+                    userurl:'',
+                    username:'',
+                    datatim:'',
                     starnum:'',
                     lovenum:'',
+                     star:"",
+                    love:"",
                 }
             ],
             tuijianlist_video:[
                 {
-                    jlid:8,
-                    txt:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
-                    userurl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    username:'用户名',
-                    datatim:'2020-12-01',
-                    starnum:'',
-                    lovenum:'',
+                    jlid:0,
+                    userid:0,
+                    txt:'',
+                    userurl:'',
+                    username:'',
+                    datatim:'',
+                    starnum:0,
+                    lovenum:0,
+                    star:"",
+                    love:"",
                 },
             ] ,
             playerOptions: {
@@ -297,10 +309,16 @@ export default {
         }
     },
     activated:function(){
-        this.gethot()     
+        this.gethot()
+        this.gettuijianvd() 
+        this.gettuijianpt()    
     },
     methods:{
         // 先反id then里面赋值
+        change(){
+            this.gettuijianvd();
+            this.gettuijianpt();
+        },
         writelocal(temp){
             if(!window.localStorage){
                 alert("浏览器支持localstorage");
@@ -380,7 +398,227 @@ export default {
             })
             console.log(this.hotlist)
         },
-       
+        async gettuijianvd(){
+            const _this = this
+            await axios.get('http://localhost:8000/getrandomvdid',{                     
+            }). then(async r => {
+                _this.tuijianlist_video[0].jlid=r.data
+                await _this.getvdJlData(r.data);
+            }).catch(err => {
+                console.log('错误！！！！：'+err)
+            })
+        },
+        async gettuijianpt(){
+            const _this = this
+            await axios.get('http://localhost:8000/getRandomptid',{                     
+            }). then(async r => {
+                console.log(r.data)
+                _this.tuijianlist_pic[0].jlid=r.data[0]
+                _this.tuijianlist_pic[1].jlid=r.data[1]
+                _this.tuijianlist_pic[2].jlid=r.data[2]
+                await _this.getptJlData(r.data[0],0);
+                _this.getptJlData(r.data[1],1);
+                _this.getptJlData(r.data[2],2);
+            }).catch(err => {
+                console.log('错误！！！！：'+err)
+            })
+        },
+        getptJlData(e,i) {
+            const _this = this
+            axios.get('http://localhost:8000/getShareByjlid',{
+                params:{
+                    jlid:e
+                }
+                }).then(async res => {
+                    _this.tuijianlist_pic[i].username=res.data.yhm
+                    _this.tuijianlist_pic[i].datatim=res.data.fbsj
+                    _this.tuijianlist_pic[i].txt=res.data.wz
+                    _this.tuijianlist_pic[i].userid=res.data.yhid
+                    await axios.get('http://localhost:8000/getPhotoByjlid',{
+                    params:{
+                        jlid:e
+                    }
+                    }).then(async res => {
+                        _this.tuijianlist_pic[i].url=res.data[0].zp
+                        axios.post('http://localhost:8000/likecount?jlid='+e)
+                        .then(res=>{
+                             _this.tuijianlist_pic[i].lovenum=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.post('http://localhost:8000/starcount?jlid='+e)
+                        .then(res=>{
+                            _this.tuijianlist_pic[i].starnum=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.get('http://localhost:8000/user/getUserByNamelog/'+ _this.tuijianlist_video[0].username)
+                        .then(res=>{
+                             _this.tuijianlist_pic[i].userurl=res.data.tx;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        // 喜欢初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/islike',{//查成功
+                                params:{
+                                    yhid:_this.tuijianlist_pic[i].userid,
+                                    jlid:e
+                                }
+                            }).then(res => {
+                                console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.tuijianlist_pic[i].love="喜欢"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.tuijianlist_pic[i].islove="喜欢"
+                                }
+                                else{
+                                    _this.tuijianlist_pic[i].islove="已喜欢"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                            _this.tuijianlist_video[0].love="喜欢"
+                        }
+                        // 收藏初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/isstar',{//查成功
+                                params:{
+                                    yhid:_this.tuijianlist_pic[i].userid,
+                                    jlid:e
+                                }
+                            }).then(res => {
+                                console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.tuijianlist_pic[i].star="收藏"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.tuijianlist_pic[i].star="收藏"
+                                }
+                                else{
+                                   _this.tuijianlist_pic[i].star="已收藏"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                           _this.tuijianlist_pic[i].star="收藏"
+                        }
+                    }).catch(err => {
+                        console.log('错误！！！！：'+err)
+                    })
+                }).catch(err => {
+                    console.log('错误111：'+err)
+                })
+            console.log("看这里！！！！！：")
+            console.log(this.tuijianlist_pic)
+        }, 
+        getvdJlData(e) {
+            const _this = this
+            axios.get('http://localhost:8000/getShareByjlid',{
+                params:{
+                    jlid:e
+                }
+                }).then(res => {
+                    _this.tuijianlist_video[0].username=res.data.yhm
+                    _this.tuijianlist_video[0].datatim=res.data.fbsj
+                    _this.tuijianlist_video[0].txt=res.data.wz
+                    _this.tuijianlist_video[0].userid=res.data.yhid
+                    axios.get('http://localhost:8000/getVideoByjlid',{
+                    params:{
+                        jlid:e
+                    }
+                    }).then(res => {
+                        // console.log(res.data)
+                        _this.ph=res.data
+                        _this.playerOptions.sources[0].src=res.data.sp
+                        _this.playerOptions.poster=res.data.fm
+                        // console.log(_this.playerOptions.sources.src)
+                        axios.post('http://localhost:8000/likecount?jlid='+e)
+                        .then(res=>{
+                             _this.tuijianlist_video[0].lovenum=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.post('http://localhost:8000/starcount?jlid='+e)
+                        .then(res=>{
+                            _this.tuijianlist_video[0].starnum=res.data;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        axios.get('http://localhost:8000/user/getUserByNamelog/'+ _this.tuijianlist_video[0].username)
+                        .then(res=>{
+                             _this.tuijianlist_video[0].userurl=res.data.tx;
+                        }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                        })
+                        // 喜欢初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/islike',{//查成功
+                                params:{
+                                    yhid:_this.tuijianlist_video[0].userid,
+                                    jlid:e
+                                }
+                            }).then(res => {
+                                // console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.tuijianlist_video[0].love="喜欢"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.tuijianlist_video[0].islove="喜欢"
+                                }
+                                else{
+                                    _this.tuijianlist_video[0].islove="已喜欢"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                            _this.tuijianlist_video[0].love="喜欢"
+                        }
+                        // 收藏初始化
+                        if(localStorage.getItem("yhid")){
+                            const _this=this
+                            axios.get('http://localhost:8000/isstar',{//查成功
+                                params:{
+                                    yhid:_this.tuijianlist_video[0].userid,
+                                    jlid:e
+                                }
+                            }).then(res => {
+                                // console.log(res.data)
+                                if(res.data=="wu"){
+                                    _this.tuijianlist_video[0].star="收藏"
+                                } 
+                                else if(res.data=="1"){
+                                    _this.tuijianlist_video[0].star="收藏"
+                                }
+                                else{
+                                   _this.tuijianlist_video[0].star="已收藏"
+                                }
+                            }).catch(err => {
+                            console.log('错误！！！！：'+err)
+                            })
+                        }
+                        else{
+                           _this.tuijianlist_video[0].star="收藏"
+                        }
+                    }).catch(err => {
+                        console.log('错误！！！！：'+err)
+                    })
+                }).catch(err => {
+                    console.log('错误111：'+err)
+                })
+            // console.log("看这里！！！！！：")
+            console.log(this.tuijianlist_video[0])
+        }, 
         home_goto(e){
             this.$router.push('/'+e);
         },
@@ -573,17 +811,16 @@ body {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     word-wrap:break-word;
     word-break:break-all; 
 }
 .tuijianinfobox{
     margin-top: 5px;
     height: 40px;
-    width: 220px;
+    width: 350px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     font-size: 18px;
 }
 .tuijianuserurl{
@@ -591,13 +828,18 @@ body {
     height: 40px;
     border-radius: 50%;
 }
-.tuijianinfotxt{
+.tuijianinfotxt1{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.tuijianinfotxt2{
+    margin-left: 10px;
     margin-top: 10px;
 }
 .rightbottombox{
-    width: 130px;
+    width: 190px;
     height: 21px;
-    margin-left: 360px;
+    margin-left: 270px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -631,6 +873,7 @@ body {
     background-color: white;
 }
 
+
 /* 左右间隔20px */
 .tuijianright2{
     width: 353px;
@@ -644,17 +887,24 @@ body {
 .tuijianinfobox2{
     margin-top: 5px;
     height: 40px;
-    width: 220px;
+    width: 350px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     font-size: 18px;
+}
+.tuijiantext2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    word-wrap:break-word;
+    word-break:break-all; 
 }
 /* 视频宽度比照片宽170  370-170=200 */
 .rightbottombox2{
-    width: 130px;
+    width: 190px;
     height: 21px;
-    margin-left: 200px;
+    margin-left: 100px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
