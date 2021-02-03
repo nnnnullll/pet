@@ -48,7 +48,7 @@
                     </el-popover>
                 </div>
             </div>
-            <img @click="home_goto('book')" class="book" :src="book">
+            <img @click="home_goto('medicalcard')" class="book" :src="book">
         </div>
         <div class="homebuttom">
             <div class="homeleft">

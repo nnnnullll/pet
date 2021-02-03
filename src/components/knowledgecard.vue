@@ -68,7 +68,7 @@ export default {
     submitForm(){
       let _this = this;
       var data;
-      axios.post('http://localhost:8000/doGetJson',{
+      axios.post('/doGetJson',{
         pz:"柴犬"
       }).then((response)=>{
         //console.log(response)
