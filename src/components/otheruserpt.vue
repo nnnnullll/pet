@@ -40,10 +40,9 @@
           </div>
         </div>
         <div class="bottom_leftbox2" >
-          <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// -->
           <div class="petcard" v-for="pet in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
-              <img class="bottom_leftbox2_peturl" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-image-preview class="bottom_leftbox2_peturl" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
               <div class="bottom_leftbox2_info_right">
                 <div class="bottom_leftbox2_info_hang">
                   <div class="bottom_leftbox2_info_hang_item">{{pet.petname}}</div>
@@ -57,35 +56,24 @@
               </div>
             </div>
             <div class="petsimags">
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
             </div>
           </div>
         </div>
       </div>
       <div class="bottom_rigthbox">
-        <div v-for="messageinform in messageinform" :key="messageinform.index" class="logcard">
-          <div class="loguserinfobox">
-            <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
-            <div class="infoleft">
-              <span class="username">{{messageinform.username}}</span>
-              <span class="datetime">{{messageinform.datatime}}</span>
-            </div> 
-          </div>
-          <div class="messagecont">{{messageinform.passage}}</div>
-          <div class="messageimgs">
-            <img fit="cover" class="messageimg" v-image-preview v-for="(photo) in messageinform.photourl" :key="photo.key"  :src="photo">  
-          </div>
-          <div class="logfoot">
-            <div class="txt" style="font-weight:bold" >
-              <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
-                {{messageinform.starnumber}}  {{messageinform.isstar}}
-            </div>     
-            <div class="txt" style="font-weight:bold" >
-              <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
-                {{messageinform.lovenumber}}  {{messageinform.islove}}
-            </div>
+        <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// -->
+        <div class="bottom_rigthbox_head">
+          <div>照片</div>
+          <div>视频</div>
+        </div>
+        <div v-for="photoinform in photoinforms" :key="photoinform.index" class="photocard">
+          <div class="bottom_rightbox_line"></div>
+          <div class="photodate">{{photoinform.photodate}}</div>
+          <div class="photosbox">
+            <img v-image-preview class="photo" v-for="photo in photoinform.photo" :key="photo.index" :src="photo" >
           </div>
         </div>
       </div>
@@ -130,34 +118,26 @@ export default {
           petclass2:"鹦鹉"
         }
       ],
-      messageinform:[
+      photoinforms:[
         {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:"",
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                      'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-                    ],
+          photodate:"2020-12-01",
+          photo:[
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+
+          ]
         },
         {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:"",
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'],
+          photodate:"2020-12-01",
+          photo:[
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+
+          ]
         },
       ]
     }
@@ -165,7 +145,7 @@ export default {
   methods:{
     otherhomegotopt(){
       const _this=this
-        this.$router.repl({
+        this.$router.push({
           name: 'otheruserpt',
           params: {
             yhid: _this.messageinform[0].userid,
@@ -349,66 +329,47 @@ body {
   width: 114px;
   height: 93px;
 }
+/* <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// --> */
 .bottom_rigthbox{
   margin-left: 22px;
   width: 792px;
-  height: 400px;
+  min-height: 400px;
+  background: #FDF0E3;
 }
-/* <!-- //////////////////////////////和另一个页面不同的地方/////////////////////// --> */
-.logcard{
-    width: 792px;
-    min-height: 400px;
-    background: #FDF0E3;
-    margin-bottom: 5px;
+.bottom_rigthbox_head{
+  width: 225px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 13px;
+  margin-left: 27px;
 }
-.loguserinfobox{
-    width: 300px;
-    height: 70px;
-    display: flex;
-    flex-direction: row;
-    margin-left: 18px;
+.photocard{
+  margin-left: 27px;
+  min-height: 236px;
+  width: 738px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
-.infoleft{
-    display: flex;
-    flex-direction: column;
+.bottom_rightbox_line{
+  width: 738px;
+  height: 1px;
+  background: #BDB6B1;
 }
-.userimag{
-    margin-top: 20px; 
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+.photodate{
+  margin-top: 20px;
 }
-.username{
-    margin-top: 30px;
-    margin-left: 25px;
+.photobox{
+  width: 738px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
 }
-.datetime{
-    width: 400px;
-    margin-top: 0px;
-    margin-left: 25px;
-}
-.messagecont{
-    margin-top: 35px;
-    margin-left: 109px;
-    margin-right: 20px;
-}
-.messageimgs{
-    width: 662px;
-    margin-left: 109px;
-    margin-right: 20px;
-    margin-top: 10px;
-}
-.messageimg{
-    width: 218px; 
-    height: 140px;
-    padding:1px;
-    object-fit: cover;
-}
-.logfoot{
-    width: 350px;
-    margin-left: 500px;
-    padding-bottom: 20px;
-    display: flex;
-    flex-direction: row;
+.photo{
+  width: 245px;
+  height: 162px;
+  padding: 2px;
+  object-fit: cover;
 }
 </style>

@@ -16,7 +16,8 @@ import lan from "../components/lan"
 import knowledgecard from "../components/knowledgecard";
 import hospital from "../components/hospital";
 import Zhongzhuan from "../components/zhongzhuan"
-import Otheruser from "../components/otheruser"
+import otheruser from "../components/otheruser"
+import otheruserpt from "../components/otheruserpt"
 Vue.use(Router)
 
 export default  new Router({
@@ -144,8 +145,15 @@ export default  new Router({
       //路由路径
       path: '/otheruser',
       //跳转的组件
-      name: 'Otheruser',
-      component: Otheruser,
+      name: 'otheruser',
+      component: otheruser,
+    },
+    {
+      //路由路径
+      path: '/otheruserpt',
+      //跳转的组件
+      name: 'otheruserpt',
+      component: otheruserpt,
     },
   ]
 })
