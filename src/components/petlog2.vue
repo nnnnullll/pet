@@ -517,6 +517,7 @@ body {
     border-radius: 15px;
 }
 .datetime{
+    width: 400px;
     margin-top: 15px;
     margin-left: 15px;
 }
