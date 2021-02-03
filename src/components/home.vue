@@ -66,11 +66,11 @@
                         <img class="title1" :src="title1">
                         <img @click="change()" class="title15" :src="title15">
                     </div>
-                    <div @click="home_gotolog(tuijian.jlid)" v-for="(tuijian,index) in tuijianlist_pic"  :key="tuijian.key" >
+                    <div  v-for="(tuijian,index) in tuijianlist_pic"  :key="tuijian.key" >
                         <div  class="tuijianitembox_pic">
-                            <img class="tuijianpic" :src="tuijian.url">
+                            <img @click="home_gotolog(tuijian.jlid)" class="tuijianpic" :src="tuijian.url">
                             <div class="tuijianright">
-                                <div class="tuijiantextbox">
+                                <div @click="home_gotolog(tuijian.jlid)" class="tuijiantextbox">
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
@@ -79,18 +79,18 @@
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
-                                    <img class="tuijianstar" :src="star">
+                                    <img @click="starplus(index)" class="tuijianstar" :src="star">
                                     <div>{{tuijian.star}} {{tuijian.starnum}}</div>
-                                    <img  class="tuijianlove" :src="love">
+                                    <img @click="loveplus(index)" class="tuijianlove" :src="love">
                                     <div>{{tuijian.love}}  {{tuijian.lovenum}}</div>
                                 </div>
                             </div>
                         </div>
                         <div class="tuijianline"></div>
                     </div>
-                    <div @click="home_gotolog(tuijian2.jlid)" v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
+                    <div  v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
                         <div  class="tuijianitembox_video">
-                            <div class="tuijianvideo">
+                            <div @click="home_gotolog(tuijian2.jlid)" class="tuijianvideo">
                                 <video-player class="video-player vjs-custom-skin"
                                     muted
                                     ref="videoPlayer"
@@ -99,7 +99,7 @@
                                 </video-player>
                             </div>
                             <div class="tuijianright2">
-                                <div class="tuijiantextbox2">
+                                <div @click="home_gotolog(tuijian2.jlid)" class="tuijiantextbox2">
                                     <div class='tuijiantext2'>{{tuijian2.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox2">
@@ -108,9 +108,9 @@
                                     <div class="tuijianinfotxt2">{{tuijian2.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox2">
-                                    <img class="tuijianstar" :src="star">
+                                    <img @click="starplus2()" class="tuijianstar" :src="star">
                                     <div>{{tuijian2.star}} {{tuijian2.starnum}}</div>
-                                    <img  class="tuijianlove" :src="love">
+                                    <img @click="loveplus2()" class="tuijianlove" :src="love">
                                     <div>{{tuijian2.love}}  {{tuijian2.lovenum}}</div>
                                 </div>
                             </div>
@@ -237,8 +237,8 @@ export default {
                     userurl:'',
                     username:'',
                     datatim:'',
-                    starnum:'',
-                    lovenum:'',
+                    starnum:0,
+                    lovenum:0,
                      star:"",
                     love:"",
                 },
@@ -250,8 +250,8 @@ export default {
                     userurl:'',
                     username:'',
                     datatim:'',
-                    starnum:'',
-                    lovenum:'',
+                    starnum:0,
+                    lovenum:0,
                      star:"",
                     love:"",
                 },
@@ -263,8 +263,8 @@ export default {
                     userurl:'',
                     username:'',
                     datatim:'',
-                    starnum:'',
-                    lovenum:'',
+                    starnum:0,
+                    lovenum:0,
                      star:"",
                     love:"",
                 }
@@ -310,14 +310,15 @@ export default {
     },
     activated:function(){
         this.gethot()
-        this.gettuijianvd() 
-        this.gettuijianpt()    
+        this.change()   
     },
     methods:{
         // 先反id then里面赋值
         change(){
             this.gettuijianvd();
             this.gettuijianpt();
+            console.log(this.tuijianlist_pic)
+            console.log(this.tuijianlist_video[0])
         },
         writelocal(temp){
             if(!window.localStorage){
@@ -412,7 +413,7 @@ export default {
             const _this = this
             await axios.get('http://localhost:8000/getRandomptid',{                     
             }). then(async r => {
-                console.log(r.data)
+                // console.log(r.data)
                 _this.tuijianlist_pic[0].jlid=r.data[0]
                 _this.tuijianlist_pic[1].jlid=r.data[1]
                 _this.tuijianlist_pic[2].jlid=r.data[2]
@@ -467,7 +468,7 @@ export default {
                                     jlid:e
                                 }
                             }).then(res => {
-                                console.log(res.data)
+                                // console.log(res.data)
                                 if(res.data=="wu"){
                                     _this.tuijianlist_pic[i].love="喜欢"
                                 } 
@@ -482,7 +483,7 @@ export default {
                             })
                         }
                         else{
-                            _this.tuijianlist_video[0].love="喜欢"
+                            _this.tuijianlist_video[i].love="喜欢"
                         }
                         // 收藏初始化
                         if(localStorage.getItem("yhid")){
@@ -493,7 +494,7 @@ export default {
                                     jlid:e
                                 }
                             }).then(res => {
-                                console.log(res.data)
+                                // console.log(res.data)
                                 if(res.data=="wu"){
                                     _this.tuijianlist_pic[i].star="收藏"
                                 } 
@@ -516,8 +517,8 @@ export default {
                 }).catch(err => {
                     console.log('错误111：'+err)
                 })
-            console.log("看这里！！！！！：")
-            console.log(this.tuijianlist_pic)
+            // console.log("看这里！！！！！：")
+            // console.log(this.tuijianlist_pic)
         }, 
         getvdJlData(e) {
             const _this = this
@@ -617,8 +618,291 @@ export default {
                     console.log('错误111：'+err)
                 })
             // console.log("看这里！！！！！：")
-            console.log(this.tuijianlist_video[0])
+            // console.log(this.tuijianlist_video[0])
         }, 
+        loveplus(e) {
+            console.log(e)
+            const _this=this
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/islike', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:_this.tuijianlist_pic[e].jlid
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                    axios.get('http://localhost:8000/addlike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_pic[e].jlid
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_pic[e].love="已喜欢"
+                            _this.tuijianlist_pic[e].lovenum++
+                        }
+                    }).catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_pic[e].jlid,
+                        sc:0
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_pic[e].love="已喜欢"
+                            _this.tuijianlist_pic[e].lovenum++
+                        }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                        })
+                }
+                else{
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_pic[e].jlid,
+                        sc:1
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_pic[e].love="喜欢"
+                        _this.tuijianlist_pic[e].lovenum--
+                    }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
+            }
+            else{
+                this.$router.push({
+                name: 'content',
+                })
+            }
+        },
+        loveplus2() {
+            const _this=this
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/islike', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:_this.tuijianlist_video[0].jlid
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                    axios.get('http://localhost:8000/addlike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_video[0].jlid
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_video[0].love="已喜欢"
+                            _this.tuijianlist_video[0].lovenum++
+                        }
+                    }).catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_video[0].jlid,
+                        sc:0
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_video[0].love="已喜欢"
+                            _this.tuijianlist_video[0].lovenum++
+                        }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                        })
+                }
+                else{
+                    axios.get('http://localhost:8000/uplike',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_video[0].jlid,
+                        sc:1
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_video[0].love="喜欢"
+                        _this.tuijianlist_video[0].lovenum--
+                    }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
+            }
+            else{
+                this.$router.push({
+                name: 'content',
+                })
+            }
+        },
+        starplus(e) {
+            const _this= this
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/isstar', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:_this.tuijianlist_pic[e].jlid
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                        axios.get('http://localhost:8000/addstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:_this.tuijianlist_pic[e].jlid
+                        }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_pic[e].star="已收藏"
+                        _this.tuijianlist_pic[e].starnum++
+                    }
+                    })
+                        .catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/upstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:_this.tuijianlist_pic[e].jlid,
+                            sc:0
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_pic[e].star="已收藏"
+                        _this.tuijianlist_pic[e].starnum++
+                    }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                    })
+                }
+                else{
+                    axios.get('http://localhost:8000/upstar',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_pic[e].jlid,
+                        sc:1
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_pic[e].star="收藏"
+                            _this.tuijianlist_pic[e].starnum--
+                        }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
+            }
+            else{
+                this.$router.push({
+                name: 'content',
+                })
+            }
+        },
+        starplus2() {
+            const _this= this
+            if(localStorage.getItem("yhid")){
+                axios.get('http://localhost:8000/isstar', {
+                params:{
+                    yhid:localStorage.getItem("yhid"),
+                    jlid:_this.tuijianlist_video[0].jlid
+                }
+                }).then(res => {
+                console.log(res.data)
+                if(res.data=="wu"){
+                        axios.get('http://localhost:8000/addstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:_this.tuijianlist_video[0].jlid
+                        }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_video[0].star="已收藏"
+                        _this.tuijianlist_video[0].starnum++
+                    }
+                    })
+                        .catch(err => {
+                        console.log('首关注环节错误：'+err)//
+                        })
+                }
+                else if(res.data=="1"){
+                    axios.get('http://localhost:8000/upstar',{
+                        params:{
+                            yhid:localStorage.getItem("yhid"),
+                            jlid:_this.tuijianlist_video[0].jlid,
+                            sc:0
+                    }
+                    }).then(res => {
+                    console.log(res.data)
+                    if(res.data=="success"){
+                        _this.tuijianlist_video[0].star="已收藏"
+                        _this.tuijianlist_video[0].starnum++
+                    }
+                    }).catch(err => {
+                        console.log('再关注环节错误：'+err)//
+                    })
+                }
+                else{
+                    axios.get('http://localhost:8000/upstar',{
+                    params:{
+                        yhid:localStorage.getItem("yhid"),
+                        jlid:_this.tuijianlist_video[0].jlid,
+                        sc:1
+                    }
+                    }).then(res => {
+                        console.log(res.data)
+                        if(res.data=="success"){
+                            _this.tuijianlist_video[0].star="收藏"
+                            _this.tuijianlist_video[0].starnum--
+                        }
+                    }).catch(err => {
+                        console.log('取关错误：'+err)
+                    })
+                }
+                }).catch(err => {
+                    console.log('查错误：'+err)
+                })
+            }
+            else{
+                this.$router.push({
+                name: 'content',
+                })
+            }
+        },
         home_goto(e){
             this.$router.push('/'+e);
         },
@@ -827,6 +1111,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    object-fit: cover;
 }
 .tuijianinfotxt1{
     margin-left: 10px;
