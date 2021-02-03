@@ -7,16 +7,16 @@
     <!-- 识别 -->
     <div class="bottom">
       <div class="information" style="display: flex;flex-direction: column;">
-        <div style="display: flex;flex-direction: row;justify-content: center;">
+        <div style="display: flex;flex-direction: row;justify-content: center;margin-bottom: 4% ">
           <img :src="love" class="love1">
-          <p class="title">你想了解的我</p>
+          <p class="title" style="padding-top: 2%">你想了解的我</p>
           <img :src="love" class="love2">
         </div>
-        <p class="pz">我的品种名字：{{pz}}</p>
-        <p class="bm">别名：{{bm}}</p>
-        <p class="zl">易得疾病：{{ydjb}}</p>
-        <p class="tx">寿命：{{sm}}</p>
-        <p class="xgtz">性格特征：{{xgtz}}</p>
+        <p class="pz" style="margin-bottom: 1%;">我的品种名字：{{pz}}</p>
+        <p class="bm" style="margin-bottom: 1%;">别名：{{bm}}</p>
+        <p class="zl" style="margin-bottom: 1%;">易得疾病：{{ydjb}}</p>
+        <p class="tx" style="margin-bottom: 1%;">寿命：{{sm}}</p>
+        <p class="xgtz" style="margin-bottom: 1%;">性格特征：{{xgtz}}</p>
         <p class="jj">简介：{{jj}}</p>
       </div>
       <div style="display: flex;flex-direction: column;">
@@ -159,11 +159,11 @@ body {
 .information{
   position: absolute;
   margin-left: 55%;
-  margin-top: 20%;
+  margin-top: 18%;
 }
 .pz{
   width: 513px;
-  height: 21px;
+  /*height: 21px;*/
   font-size: 21px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -171,7 +171,7 @@ body {
 }
 .bm{
   width: 513px;
-  height: 20px;
+  /*height: 20px;*/
   font-size: 21px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -179,7 +179,7 @@ body {
 }
 .zl{
   width: 513px;
-  height: 21px;
+  /*height: 21px;*/
   font-size: 21px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -187,7 +187,7 @@ body {
 }
 .tx{
   width: 513px;
-  height: 20px;
+  /*height: 20px;*/
   font-size: 21px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
@@ -195,7 +195,7 @@ body {
 }
 .xgtz{
   width: 513px;
-  height: 21px;
+  /*height: 21px;*/
   font-size: 21px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;

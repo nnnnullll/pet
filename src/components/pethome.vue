@@ -98,7 +98,6 @@ body {
 }
 .text3{
   width: 34px;
-  height: 249px;
   font-size: 30px;
   font-family: ZTSJ-BaguetteFont;
   font-weight: 400;
