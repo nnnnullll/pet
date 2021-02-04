@@ -74,8 +74,8 @@
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
-                                    <img @click="home_gotouser(tuijian.userid)" class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div @click="home_gotouser(tuijian.userid)" class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <img @click="home_gotouser(tuijian.username)" class="tuijianuserurl" :src="tuijian.userurl">
+                                    <div @click="home_gotouser(tuijian.username)" class="tuijianinfotxt1">{{tuijian.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
@@ -947,7 +947,7 @@ export default {
             this.$router.push({
                 name: 'otheruser',
                     params: {
-                        yhid: e,
+                        yhm: e,
                     }
                 })
         }

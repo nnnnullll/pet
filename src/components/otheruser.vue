@@ -6,13 +6,13 @@
       <header class="header_userinfobox">
         <img class="header_change" :src="user_change">
         <div class="header_userinfobox_bottom">
-          <img class="header_userurl" :src="userurl">
+          <img class="header_userurl" :src="user_url">
           <div class="header_textinfobox">
             <div class="header_nameguanzhu">
-              <div class="header_textinfo_name">{{username}}</div>
-              <div class="header_guanzhu">{{guanzhu}}</div>
+              <div class="header_textinfo_name">{{user_name}}</div>
+              <div class="header_guanzhu">{{user_guanzhu}}</div>
             </div>
-            <div class="header_textinfo_qianmin">{{qianmin}}</div>
+            <div class="header_textinfo_qianmin">{{user_qianmin}}</div>
           </div>
         </div>
       </header>
@@ -25,17 +25,17 @@
       <div class="bottom_leftbox">
         <div class="bottom_leftbox1">
           <div class="bottom_leftbox1_inner">
-            <div>{{guanzhunum}}</div>
+            <div>{{guanzhu_num}}</div>
             <div>关注</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
-            <div>{{fensinum}}</div>
+            <div>{{fensi_num}}</div>
             <div>粉丝</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
-            <div>{{fenxiangnum}}</div>
+            <div>{{fenxiang_num}}</div>
             <div>分享</div>
           </div>
         </div>
@@ -67,7 +67,7 @@
       <div class="bottom_rigthbox">
         <div v-for="messageinform in messageinform" :key="messageinform.index" class="logcard">
           <div class="loguserinfobox">
-            <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
+            <img class="userimag" :src="messageinform.userUrl">
             <div class="infoleft">
               <span class="username">{{messageinform.username}}</span>
               <span class="datetime">{{messageinform.datatime}}</span>
@@ -107,13 +107,14 @@ export default {
   data(){
     return{
       user_change:require("@/assets/img/user_change.png"),
-      userurl:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-      username:"用户名",
-      guanzhu:"已关注",
-      guanzhunum:22,
-      fensinum:23,
-      fenxiangnum:222,
-      qianmin:"个性签名~个性签名~个性签名~最多20个字",
+      user_id:0,
+      user_url:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+      user_name:"用户名",
+      user_qianmin:"个性签名~个性签名~个性签名~最多20个字",
+      user_guanzhu:"已关注",
+      guanzhu_num:22,
+      fensi_num:23,
+      fenxiang_num:222,
       pets:[
         {
           petname:"啾啾",
@@ -162,7 +163,75 @@ export default {
       ]
     }
   },
+  activated:function(){
+   
+    this.getuserinfo( this.$route.params.yhm)
+  },
   methods:{
+    getnum(e){
+      const _this= this
+      axios.post('http://localhost:8000/follow?zyhid='+e)
+      .then((response)=>{
+        console.log(response)
+        _this.fensi_num=response.data;
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+      axios.post('http://localhost:8000/fsfollow?fsid='+e)
+      .then((response)=>{
+        console.log(response)
+        _this.guanzhu_num=response.data;
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+      axios.post('http://localhost:8000/share?yhid='+e)
+      .then((response)=>{
+        console.log(response)
+        _this.fenxiang_num=response.data;
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+    },
+    getguanzhu(e){
+      const _this=this
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isfollow',{//查成功
+          params:{
+            zyhid:e,
+            fsid:localStorage.getItem("yhid"),
+          }
+        }).then(re => {
+          if(re.data=="wu"){
+            _this.guanzhu="+关注"
+          } 
+          else if(re.data=="1"){
+            _this.guanzhu="+关注"
+          }
+          else{
+            _this.guanzhu="已关注"
+          }
+        }).catch(err => {
+          console.log('错误！！！！：'+err)
+        })
+      }
+      else{
+        _this.guanzhu="+关注"
+      }
+    },
+    getuserinfo(e){
+      const _this= this
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+e)
+        .then(async res=>{
+          _this.user_id=res.data.yhid
+          _this.user_name=res.data.yhm;
+          _this.user_url=res.data.tx;
+          _this.user_qianmin=res.data.gxqm;
+          _this.getguanzhu(res.data.yhid);
+          _this.getnum(res.data.yhid);
+        }).catch(err => {
+          console.log('错误！！！！：'+err)
+      })
+    },
     otherhomegotopt(){
       const _this=this
         this.$router.repl({

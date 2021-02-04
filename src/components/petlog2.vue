@@ -448,7 +448,7 @@ export default {
             this.$router.push({
                 name: 'otheruser',
                 params: {
-                    yhid: _this.yhid,
+                    yhm: _this.messageinform.username,
                 }
             })
         },
