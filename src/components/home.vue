@@ -74,8 +74,8 @@
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
-                                    <img class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <img @click="home_gotouser(tuijian.userid)" class="tuijianuserurl" :src="tuijian.userurl">
+                                    <div @click="home_gotouser(tuijian.userid)" class="tuijianinfotxt1">{{tuijian.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
@@ -239,7 +239,7 @@ export default {
                     datatim:'',
                     starnum:0,
                     lovenum:0,
-                     star:"",
+                    star:"",
                     love:"",
                 },
                 {
@@ -252,7 +252,7 @@ export default {
                     datatim:'',
                     starnum:0,
                     lovenum:0,
-                     star:"",
+                    star:"",
                     love:"",
                 },
                 {
@@ -265,7 +265,7 @@ export default {
                     datatim:'',
                     starnum:0,
                     lovenum:0,
-                     star:"",
+                    star:"",
                     love:"",
                 }
             ],
@@ -943,6 +943,14 @@ export default {
                 console.log('错误！！！！：'+err)
             })
         },
+        home_gotouser(e){
+            this.$router.push({
+                name: 'otheruser',
+                    params: {
+                        yhid: e,
+                    }
+                })
+        }
     }
 }   
 </script>

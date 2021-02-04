@@ -5,10 +5,10 @@
         <div class="logmainbox"  >
             <div class="logcard">
                 <div class="loguserinfobox">
-                    <img @click="loggotohome" class="userimag" :src="messageinform.userUrl">
+                    <img @click="log_gotouser" class="userimag" :src="messageinform.userUrl">
                     <div class="infoleft">
                         <div class="infoup">
-                            <span @click="loggotohome" class="username">{{messageinform.username}}</span>
+                            <span @click="log_gotouser" class="username">{{messageinform.username}}</span>
                             <span @click="guanZhu" class="guanzhu">{{guanzhu}}</span>
                         </div>
                         <span class="datetime">{{messageinform.datatime}}</span>
@@ -410,10 +410,10 @@ export default {
                 })
             }
         },
-        loggotohome(){
+        log_gotouser(){
             const _this=this
             this.$router.push({
-                name: 'user',
+                name: 'otheruser',
                 params: {
                     yhid: _this.yhid,
                 }
