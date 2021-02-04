@@ -41,25 +41,23 @@
         </div>
         <div class="bottom_leftbox2" >
           <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// -->
-          <div class="petcard" v-for="pet in pets" :key="pet.index">
+          <div class="petcard" v-for="(pet,index) in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
               <img class="bottom_leftbox2_peturl" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
               <div class="bottom_leftbox2_info_right">
                 <div class="bottom_leftbox2_info_hang">
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petname}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petsex}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petage}}岁</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.xm}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.xb}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.csrq}}</div>
                 </div>
                 <div class="bottom_leftbox2_info_hang">
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petclass1}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petclass2}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.zl}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pz}}</div>
                 </div>
               </div>
             </div>
             <div class="petsimags">
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-for="petpic in petspic[index]" class="petsimag" :src="petpic" >
             </div>
           </div>
         </div>
@@ -115,21 +113,11 @@ export default {
       guanzhu_num:22,
       fensi_num:23,
       fenxiang_num:222,
-      pets:[
-        {
-          petname:"啾啾",
-          petage:"9",
-          petsex:"男",
-          petclass1:"鸟",
-          petclass2:"鹦鹉"
-        },
-        {
-          petname:"啾啾",
-          petage:"9",
-          petsex:"男",
-          petclass1:"鸟",
-          petclass2:"鹦鹉"
-        }
+      pets:[],
+      petspic:[
+        [
+          "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+        ]
       ],
       messageinform:[
         {
@@ -168,25 +156,47 @@ export default {
     this.getuserinfo( this.$route.params.yhm)
   },
   methods:{
+    getpet(e){
+      axios.post('http://localhost:8000/petlist?yhid='+e)
+      .then((response)=>{
+        console.log(response)
+        this.pets=response.data
+          var i=0
+          while(i<response.data.length){
+            axios.post('http://localhost:8000/getpetpic?cwid='+response.data[i].cwid)
+            .then((res)=>{
+              console.log(res)
+              petspic[i][0]=res.data[0]
+              petspic[i][1]=res.data[1]
+              petspic[i][2]=res.data[2]
+              i++
+            }).catch(function (error) { // 请求失败处理
+              console.log("---查询出错---！"+error);
+            })
+          }
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+    },
     getnum(e){
       const _this= this
       axios.post('http://localhost:8000/follow?zyhid='+e)
       .then((response)=>{
-        console.log(response)
+        // console.log(response)
         _this.fensi_num=response.data;
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
       axios.post('http://localhost:8000/fsfollow?fsid='+e)
       .then((response)=>{
-        console.log(response)
+        // console.log(response)
         _this.guanzhu_num=response.data;
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
       axios.post('http://localhost:8000/share?yhid='+e)
       .then((response)=>{
-        console.log(response)
+        // console.log(response)
         _this.fenxiang_num=response.data;
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
@@ -228,6 +238,7 @@ export default {
           _this.user_qianmin=res.data.gxqm;
           _this.getguanzhu(res.data.yhid);
           _this.getnum(res.data.yhid);
+          _this.getpet(res.data.yhid)
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
@@ -376,7 +387,7 @@ body {
 }
 .petcard{
   width: 379px;
-  height: 206px;
+  min-height: 70px;
   background: #FDF0E3;
   margin-bottom: 5px;
 }
@@ -407,16 +418,18 @@ body {
 }
 .petsimags{
   margin-left:14px ;
-  height: 93px;
+  min-height: 0px;
   width: 348px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 15px;
+  
 }
 .petsimag{
   width: 114px;
   height: 93px;
+  margin-bottom: 15px;
 }
 .bottom_rigthbox{
   margin-left: 22px;
