@@ -117,7 +117,7 @@ export default {
                         _this.ph=res.data
                         _this.playerOptions.sources[0].src=res.data.sp
                         _this.playerOptions.poster=res.data.fm
-                        console.log(_this.playerOptions.sources.src)
+                        // console.log(_this.playerOptions.sources.src)
                         axios.post('http://localhost:8000/likecount?jlid='+_this.id)
                         .then(res=>{
                             _this.messageinform.lovenumber=res.data;

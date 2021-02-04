@@ -629,7 +629,7 @@ export default {
             // console.log(this.tuijianlist_video[0])
         }, 
         loveplus(e) {
-            console.log(e)
+            // console.log(e)
             const _this=this
             if(localStorage.getItem("yhid")){
                 axios.get('http://localhost:8000/islike', {
@@ -638,7 +638,7 @@ export default {
                     jlid:_this.tuijianlist_pic[e].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addlike',{
                     params:{
@@ -646,7 +646,7 @@ export default {
                         jlid:_this.tuijianlist_pic[e].jlid
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].love="已喜欢"
                             _this.tuijianlist_pic[e].lovenum++
@@ -663,7 +663,7 @@ export default {
                         sc:0
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].love="已喜欢"
                             _this.tuijianlist_pic[e].lovenum++
@@ -680,7 +680,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].love="喜欢"
                         _this.tuijianlist_pic[e].lovenum--
@@ -708,7 +708,7 @@ export default {
                     jlid:_this.tuijianlist_video[0].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addlike',{
                     params:{
@@ -750,7 +750,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].love="喜欢"
                         _this.tuijianlist_video[0].lovenum--
@@ -778,7 +778,7 @@ export default {
                     jlid:_this.tuijianlist_pic[e].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                         axios.get('http://localhost:8000/addstar',{
                         params:{
@@ -786,7 +786,7 @@ export default {
                             jlid:_this.tuijianlist_pic[e].jlid
                         }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].star="已收藏"
                         _this.tuijianlist_pic[e].starnum++
@@ -804,7 +804,7 @@ export default {
                             sc:0
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].star="已收藏"
                         _this.tuijianlist_pic[e].starnum++
@@ -821,7 +821,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].star="收藏"
                             _this.tuijianlist_pic[e].starnum--
@@ -849,7 +849,7 @@ export default {
                     jlid:_this.tuijianlist_video[0].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                         axios.get('http://localhost:8000/addstar',{
                         params:{
@@ -857,7 +857,7 @@ export default {
                             jlid:_this.tuijianlist_video[0].jlid
                         }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].star="已收藏"
                         _this.tuijianlist_video[0].starnum++
@@ -875,7 +875,7 @@ export default {
                             sc:0
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].star="已收藏"
                         _this.tuijianlist_video[0].starnum++
@@ -892,7 +892,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_video[0].star="收藏"
                             _this.tuijianlist_video[0].starnum--
@@ -915,7 +915,7 @@ export default {
             this.$router.push('/'+e);
         },
         home_gotosearch(e){
-            console.log(e),
+            // console.log(e),
             this.$router.push({
                 name: 'search',
                 params: {

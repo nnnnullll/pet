@@ -45,8 +45,8 @@ axios.interceptors.request.use(config => {
       config.headers.Authorization = `token ${store.state.token}`;
       console.log("token----->"+localStorage.getItem('token'))
   }
-    console.log("config:")
-    console.log(config)
+    // console.log("config:")
+    // console.log(config)
     // if(config.headers['Content-Type'] !='application/json'){
     //   config.data = qs.stringify(config.data);
     // }

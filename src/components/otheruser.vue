@@ -114,11 +114,7 @@ export default {
       fensi_num:23,
       fenxiang_num:222,
       pets:[],
-      petspic:[
-        [
-          "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-        ]
-      ],
+      petspic:[[],[],[],[],[],[]],
       messageinform:[
         {
           messagenum:0,
@@ -157,26 +153,27 @@ export default {
   },
   methods:{
     getpet(e){
+      const _this=this
       axios.post('http://localhost:8000/petlist?yhid='+e)
       .then((response)=>{
-        console.log(response)
+        // console.log(response)
         this.pets=response.data
           var i=0
-          while(i<response.data.length){
+          for(i=0;i<response.data.length;i++){
             axios.post('http://localhost:8000/getpetpic?cwid='+response.data[i].cwid)
             .then((res)=>{
-              console.log(res)
-              petspic[i][0]=res.data[0]
-              petspic[i][1]=res.data[1]
-              petspic[i][2]=res.data[2]
-              i++
+              // console.log(res)
+              for(var j=0;j<3;j++){
+                _this.petspic[i][j]=res.data[j]
+              }
             }).catch(function (error) { // 请求失败处理
-              console.log("---查询出错---！"+error);
+              console.log("查询出错"+error);
             })
           }
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
+     
     },
     getnum(e){
       const _this= this
@@ -242,6 +239,8 @@ export default {
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
+      console.log(this.pets)
+      console.log(this.petspic)
     },
     otherhomegotopt(){
       const _this=this
