@@ -121,7 +121,7 @@ export default {
           username:"用户名",
           datatime:"2021-01-01 00：00",    
           passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:"",
+          userid:0,
           userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
           lovenumber:223,
           starnumber:12,
@@ -244,10 +244,11 @@ export default {
     },
     otherhomegotopt(){
       const _this=this
-        this.$router.repl({
+        this.$router.replace({
           name: 'otheruserpt',
           params: {
-            yhid: _this.messageinform[0].userid,
+            yhid: _this.user_id,
+            yhm:_this.user_name
           }
         })
     }

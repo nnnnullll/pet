@@ -71,9 +71,9 @@
         </div>
         <div v-for="photoinform in photoinforms" :key="photoinform.index" class="photocard">
           <div class="bottom_rightbox_line"></div>
-          <div class="photodate">{{photoinform.photodate}}</div>
+          <div class="photodate">{{photoinform.fbsj}}</div>
           <div class="photosbox">
-            <img v-image-preview class="photo" v-for="photo in photoinform.photo" :key="photo.index" :src="photo" >
+            <img v-image-preview class="photo" v-for="photo in photoinform.photolist" :key="photo.index" :src="photo" >
           </div>
         </div>
       </div>
@@ -118,31 +118,22 @@ export default {
           petclass2:"鹦鹉"
         }
       ],
-      photoinforms:[
-        {
-          photodate:"2020-12-01",
-          photo:[
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-
-          ]
-        },
-        {
-          photodate:"2020-12-01",
-          photo:[
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-
-          ]
-        },
-      ]
+      photoinforms:[]
     }
   },
+  activated:function(){
+    this.getphoto(this.$route.params.yhid)
+  },
   methods:{
+    getphoto(e){
+      axios.post('http://localhost:8000/getuserfbsjpic?yhid='+e)
+      .then((response)=>{
+        console.log(response)
+        this.photoinforms=response.data
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+    },
     otherhomegotopt(){
       const _this=this
         this.$router.push({
