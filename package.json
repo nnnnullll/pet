@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.14.1",
     "iview": "^3.5.4",
+    "qs": "^6.9.6",
     "stylus": "^0.54.8",
     "stylus-loader": "^4.3.3",
     "video.js": "^7.10.2",

@@ -59,6 +59,11 @@ export default {
     submitForm(user){
       let _this = this;
       console.log(user);
+      // let tmp={
+      //   username:_this.user.input,
+      //   password:_this.user.password
+      // }
+      // tmp=JSON.stringify(tmp)
       axios.post('http://localhost:8000/user/login',{
         username:_this.user.input,
         password:_this.user.password
@@ -79,7 +84,8 @@ export default {
           alert('登陆失败，请重试！')
         }
       }).catch(function (error) { // 请求失败处理
-        console.log("---出错---！"+error);
+        console.log("---出错---！");
+        console.log(error)
       });
 
     },
