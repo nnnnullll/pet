@@ -74,8 +74,8 @@
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
-                                    <img @click="home_gotouser(tuijian.username,tuijian.userid)" class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div @click="home_gotouser(tuijian.username,tuijian.userid)" class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <img @click="home_gotouser(tuijian.username,tuijian.userid,tuijian.url)" class="tuijianuserurl" :src="tuijian.userurl">
+                                    <div @click="home_gotouser(tuijian.username,tuijian.userid,tuijian.url)" class="tuijianinfotxt1">{{tuijian.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
@@ -103,8 +103,8 @@
                                     <div class='tuijiantext2'>{{tuijian2.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox2">
-                                    <img class="tuijianuserurl" :src="tuijian2.userurl">
-                                    <div class="tuijianinfotxt1">{{tuijian2.username}}</div>
+                                    <img @click="home_gotouser(tuijian2.username,tuijian2.userid,tuijian2.url)"  class="tuijianuserurl" :src="tuijian2.userurl">
+                                    <div @click="home_gotouser(tuijian2.username,tuijian2.userid,tuijian2.url)"  class="tuijianinfotxt1">{{tuijian2.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian2.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox2">
@@ -951,12 +951,13 @@ export default {
                 console.log('错误！！！！：'+err)
             })
         },
-        home_gotouser(e,i){
+        home_gotouser(e,i,t){
             this.$router.push({
                 name: 'otheruser',
                     params: {
                         yhm: e,
-                        yhid:i
+                        yhid:i,
+                        tx:t
                     }
                 })
         }

@@ -493,7 +493,7 @@ body {
 .bottom_rigthbox{
   margin-left: 22px;
   width: 792px;
-  height: 900px;
+  height: 800px;
   overflow:auto
 }
 .bottom_rigthboxinner{
@@ -522,7 +522,6 @@ body {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  overflow:auto
 }
 .bottom_rightbox_line{
   width: 738px;
@@ -533,6 +532,7 @@ body {
   margin-top: 20px;
 }
 .photosbox{
+  margin-top: 15px;
   width: 738px;
   min-height: 180px;
 }

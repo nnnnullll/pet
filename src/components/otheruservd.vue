@@ -63,21 +63,23 @@
       </div>
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
-        <div class="bottom_rigthbox_head">
-          <div @click="userhomegotopt()" class="bottom_rigthbox_headtxt1">照片</div>
-          <div class="bottom_rigthbox_headtxt2">视频</div>
-        </div>
-        <div v-for="(videoinform,index) in videoinforms" :key="videoinform.index" class="photocard">
-          <div class="bottom_rightbox_line"></div>
-          <div class="photodate">{{videoinform.fbsj}}</div>
-          <div class="photosbox">
-            <div class="list-vedio" v-for="(item,index1) in videoinform.photolist" :key="index1">
-              <video-player
-                class="video-player vjs-custom-skin"
-                ref="videoPlayer"
-                :playsinline="true"
-                :options="playerOptions[index][index1]"
-              ></video-player>
+        <div class="bottom_rigthboxinner">
+          <div class="bottom_rigthbox_head">
+            <div @click="userhomegotopt()" class="bottom_rigthbox_headtxt1">照片</div>
+            <div class="bottom_rigthbox_headtxt2">视频</div>
+          </div>
+          <div v-for="(videoinform,index) in videoinforms" :key="videoinform.index" class="photocard">
+            <div class="bottom_rightbox_line"></div>
+            <div class="photodate">{{videoinform.fbsj}}</div>
+            <div class="photosbox">
+              <div class="list-vedio" v-for="(item,index1) in videoinform.photolist" :key="index1">
+                <video-player
+                  class="video-player vjs-custom-skin"
+                  ref="videoPlayer"
+                  :playsinline="true"
+                  :options="playerOptions[index][index1]"
+                ></video-player>
+              </div>
             </div>
           </div>
         </div>
@@ -112,29 +114,6 @@ export default {
       pets:[],
       videoinforms:[],
       playerOptions: [],
-      // playerOptions: {
-      //           playbackRates : [ 0.5, 1.0, 1.5, 2.0 ], //可选择的播放速度
-      //           autoplay : 'muted', //如果true,浏览器准备好时开始回放。
-      //           //muted : true, // 默认情况下将会消除任何音频。
-      //           loop : true, // 视频一结束就重新开始。
-      //           preload : 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-      //           language : 'zh-CN',
-      //           aspectRatio : '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-      //           fluid : false, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-      //           sources: [{
-      //               type: "video/mp4", // 类型
-      //               src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' //url地址
-      //           }],
-      //           poster: '', // 封面地址
-      //           notSupportedMessage : '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-      //           controlBar : {
-      //               timeDivider : true,//当前时间和持续时间的分隔符
-      //               durationDisplay : true,//显示持续时间
-      //               remainingTimeDisplay : false,//是否显示剩余时间功能
-      //               fullscreenToggle : true  //全屏按钮
-      //           }
-      //       }, 
-      
     }
   },
   activated:function(){
@@ -148,12 +127,9 @@ export default {
       .then((response)=>{
         // console.log(response)
         this.videoinforms=response.data
-
-        for (let i of response.data) {
-          console.log(i)
-          let arr=[]
-          for (var j=0;j< response.data[i].photolist.length;j++) {
-            console.log(j)
+        for(var i=0;i<response.data.length;i++){
+          var temp=[]
+          for (var j=0;j<response.data[i].photolist.length;j++) {
             let arrStr = {
               playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
               autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -178,13 +154,10 @@ export default {
                 fullscreenToggle: true, //全屏按钮
               },
             };
-            arr.push(arrStr);
+            temp.push(arrStr);
           }
-          this.playerOptions.push(arr)
+          this.playerOptions.push(temp);
         }
-
-
-
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
@@ -534,6 +507,11 @@ body {
 .bottom_rigthbox{
   margin-left: 22px;
   width: 792px;
+  height: 800px;
+  overflow:auto
+}
+.bottom_rigthboxinner{
+  width: 792px;
   min-height: 400px;
   background: #FDF0E3;
 }
@@ -568,8 +546,9 @@ body {
   margin-top: 20px;
 }
 .photosbox{
+  margin-top: 15px;
   width: 738px;
-  min-height: 180px;
+  min-height: 139px;
   display: flex;
   flex-direction: row;
 }
