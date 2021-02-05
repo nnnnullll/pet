@@ -6,80 +6,78 @@
       <header class="header_userinfobox">
         <img class="header_change" :src="user_change">
         <div class="header_userinfobox_bottom">
-          <img class="header_userurl" :src="userurl">
+          <img  v-image-preview   class="header_userurl" :src="user_url">
           <div class="header_textinfobox">
             <div class="header_nameguanzhu">
-              <div class="header_textinfo_name">{{username}}</div>
-              <div class="header_guanzhu">{{guanzhu}}</div>
+              <div class="header_textinfo_name">{{user_name}}</div>
+              <div @click="guanzhu()" class="header_guanzhu">{{user_guanzhu}}</div>
             </div>
-            <div class="header_textinfo_qianmin">{{qianmin}}</div>
+            <div class="header_textinfo_qianmin">{{user_qianmin}}</div>
           </div>
         </div>
       </header>
     </div>
     <div class="othserusermedium">
-      <div class="medium_txt1">他的主页</div>
-      <div @click="otherhomegotopt()" class="medium_txt2">他的相册</div>
+      <div @click="otherhomegotopt()" class="medium_txt1">他的主页</div>
+      <div  class="medium_txt2">他的相册</div>
     </div>
     <div class="otheruserbottom">
       <div class="bottom_leftbox">
         <div class="bottom_leftbox1">
           <div class="bottom_leftbox1_inner">
-            <div>{{guanzhunum}}</div>
+            <div>{{guanzhu_num}}</div>
             <div>关注</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
-            <div>{{fensinum}}</div>
+            <div>{{fensi_num}}</div>
             <div>粉丝</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
-            <div>{{fenxiangnum}}</div>
+            <div>{{fenxiang_num}}</div>
             <div>分享</div>
           </div>
         </div>
         <div class="bottom_leftbox2" >
-          <div class="petcard" v-for="pet in pets" :key="pet.index">
+          <div class="petcard" v-for="(pet,index) in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
-              <img v-image-preview class="bottom_leftbox2_peturl" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img  v-image-preview   class="bottom_leftbox2_peturl" :src="pet.pet.cwtx" >
               <div class="bottom_leftbox2_info_right">
                 <div class="bottom_leftbox2_info_hang">
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petname}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petsex}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petage}}岁</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pet.xm}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pet.xb}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pet.csrq}}</div>
                 </div>
                 <div class="bottom_leftbox2_info_hang">
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petclass1}}</div>
-                  <div class="bottom_leftbox2_info_hang_item">{{pet.petclass2}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pet.zl}}</div>
+                  <div class="bottom_leftbox2_info_hang_item">{{pet.pet.pz}}</div>
                 </div>
               </div>
             </div>
             <div class="petsimags">
-              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
-              <img v-image-preview class="petsimag" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" >
+              <img v-image-preview   v-for="petpic in pet.petpic" class="petsimag" :src="petpic" >
             </div>
           </div>
         </div>
       </div>
+<!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
-        <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// -->
-        <div class="bottom_rigthbox_head">
-          <div>照片</div>
-          <div>视频</div>
-        </div>
-        <div v-for="photoinform in photoinforms" :key="photoinform.index" class="photocard">
-          <div class="bottom_rightbox_line"></div>
-          <div class="photodate">{{photoinform.fbsj}}</div>
-          <div class="photosbox">
-            <img v-image-preview class="photo" v-for="photo in photoinform.photolist" :key="photo.index" :src="photo" >
+        <div class="bottom_rigthboxinner">
+          <div class="bottom_rigthbox_head">
+            <div class="bottom_rigthbox_headtxt1">照片</div>
+            <div @click="userhomegotovd()" class="bottom_rigthbox_headtxt2">视频</div>
+          </div>
+          <div v-for="photoinform in photoinforms" :key="photoinform.index" class="photocard">
+            <div class="bottom_rightbox_line"></div>
+            <div class="photodate">{{photoinform.fbsj}}</div>
+            <div class="photosbox">
+              <img v-image-preview class="photo" v-for="photo in photoinform.photolist" :key="photo.index" :src="photo" >
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -95,33 +93,50 @@ export default {
   data(){
     return{
       user_change:require("@/assets/img/user_change.png"),
-      userurl:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-      username:"用户名",
-      guanzhu:"已关注",
-      guanzhunum:22,
-      fensinum:23,
-      fenxiangnum:222,
-      qianmin:"个性签名~个性签名~个性签名~最多20个字",
-      pets:[
+      user_id:0,
+      user_url:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+      user_name:"用户名",
+      user_qianmin:"个性签名~个性签名~个性签名~最多20个字",
+      user_guanzhu:"",
+      guanzhu_num:22,
+      fensi_num:23,
+      fenxiang_num:222,
+      pets:[],
+      photoinforms:[],
+      messageinform:[
         {
-          petname:"啾啾",
-          petage:"9",
-          petsex:"男",
-          petclass1:"鸟",
-          petclass2:"鹦鹉"
+          messagenum:0,
+          username:"用户名",
+          datatime:"2021-01-01 00：00",    
+          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
+          userid:0,
+          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+          lovenumber:223,
+          starnumber:12,
+          islove:"喜欢",
+          isstar:"收藏",
+          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                      'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+                    ],
         },
         {
-          petname:"啾啾",
-          petage:"9",
-          petsex:"男",
-          petclass1:"鸟",
-          petclass2:"鹦鹉"
-        }
-      ],
-      photoinforms:[]
+          messagenum:0,
+          username:"用户名",
+          datatime:"2021-01-01 00：00",    
+          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
+          userid:"",
+          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+          lovenumber:223,
+          starnumber:12,
+          islove:"喜欢",
+          isstar:"收藏",
+          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'],
+        },
+      ]
     }
   },
   activated:function(){
+    this.getuserinfo( this.$route.params.yhm)
     this.getphoto(this.$route.params.yhid)
   },
   methods:{
@@ -134,14 +149,163 @@ export default {
         console.log("---查询出错---！"+error);
       })
     },
-    otherhomegotopt(){
+    getpet(e){
       const _this=this
-        this.$router.push({
-          name: 'otheruserpt',
-          params: {
-            yhid: _this.messageinform[0].userid,
+      axios.post('http://localhost:8000/petinfolistbyyhid?yhid='+e)
+      .then((response)=>{
+        // console.log(response)
+        this.pets=response.data
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+    },
+    getnum(e){
+      const _this= this
+      axios.post('http://localhost:8000/user/gzfsfx?yhid='+e)
+      .then((response)=>{
+        // console.log(response)
+        _this.guanzhu_num=response.data[0];
+        _this.fensi_num=response.data[1];
+        _this.fenxiang_num=response.data[2];
+      }).catch(function (error) { // 请求失败处理
+        console.log("---查询出错---！"+error);
+      })
+    },
+    getguanzhu(e){
+      const _this=this
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isfollow',{//查成功
+          params:{
+            zyhid:e,
+            fsid:localStorage.getItem("yhid"),
+          }
+        }).then(re => {
+          if(re.data=="wu"){
+            _this.user_guanzhu="+关注"
+          } 
+          else if(re.data=="1"){
+            _this.user_guanzhu="+关注"
+          }
+          else{
+            _this.user_guanzhu="已关注"
+          }
+        }).catch(err => {
+          console.log('错误！！！！：'+err)
+        })
+      }
+      else{
+        _this.user_guanzhu="+关注"
+      }
+    },
+    getuserinfo(e){
+      const _this= this
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+e)
+        .then(async res=>{
+          _this.user_id=res.data.yhid
+          _this.user_name=res.data.yhm;
+          _this.user_url=res.data.tx;
+          _this.user_qianmin=res.data.gxqm;
+          _this.getguanzhu(res.data.yhid);
+          _this.getnum(res.data.yhid);
+          _this.getpet(res.data.yhid)
+        }).catch(err => {
+          console.log('错误！！！！：'+err)
+      })
+    },
+    guanzhu() {
+      const _this=this
+      if(localStorage.getItem("yhid")){
+        axios.get('http://localhost:8000/isfollow',{//查成功
+          params:{
+            zyhid:_this.user_id,
+            fsid:localStorage.getItem("yhid"),
+          }
+        }).then(res => {
+          console.log(res.data)
+          if(res.data=="wu"){
+            axios.get('http://localhost:8000/addfollow',{
+              params:{
+                zyhid:_this.user_id,
+                fsid:localStorage.getItem("yhid"),
+                qxgz:0
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                alert("关注成功")
+                _this.user_guanzhu="已关注"
+              } 
+            })
+            .catch(err => {
+              console.log('首关注环节错误：'+err)//
+            })
+          } 
+          else if(res.data=="1"){
+            axios.get('http://localhost:8000/upfollow',{
+            params:{
+              zyhid:_this.user_id,
+              fsid:localStorage.getItem("yhid"),
+              qxgz:0
+            }
+          }).then(res => {
+            console.log(res.data)
+            if(res.data=="success"){
+              alert("关注成功")
+            _this.user_guanzhu="已关注"
+          } 
+        })
+        .catch(err => {
+          console.log('再关注环节错误：'+err)//
+        })
+          }
+          else{
+            axios.get('http://localhost:8000/upfollow',{
+              params:{
+                zyhid:_this.user_id,
+                fsid:localStorage.getItem("yhid"),
+                qxgz:1
+              }
+            }).then(res => {
+              console.log(res.data)
+              if(res.data=="success"){
+                alert("取消关注成功")
+                _this.user_guanzhu="+关注"
+              } 
+            })
+            .catch(err => {
+              console.log('取关错误：'+err)
+            })
           }
         })
+        .catch(err => {
+          console.log('查错误：'+err)
+        })
+      }
+      else{
+        this.$router.push({
+          name: 'content',
+        })
+      }
+    },
+    otherhomegotopt(){
+      const _this=this
+      this.$router.replace({
+        name: 'otheruser',
+        params: {
+          yhid: _this.user_id,
+          yhm:_this.user_name
+        }
+      })
+    },
+    userhomegotovd(){
+      const _this=this
+      this.$router.replace({
+        name: 'otheruservd',
+        params: {
+          yhid: _this.user_id,
+          yhm:_this.user_name
+        }
+      })
     }
   }
 }
@@ -188,6 +352,7 @@ body {
   width: 110px;
   height: 110px;
   border-radius: 50%;
+  object-fit: cover;
 }
 .header_textinfobox{
   display: flex;
@@ -230,11 +395,11 @@ body {
 .medium_txt1{
   font-size: 24px;
   margin-top: 3px;
-  color: #FBA259;
 }
 .medium_txt2{
   font-size: 24px;
   margin-top: 3px;
+  color: #FBA259;
 }
 .otheruserbottom{
   display: flex;
@@ -278,7 +443,7 @@ body {
 }
 .petcard{
   width: 379px;
-  height: 206px;
+  min-height: 70px;
   background: #FDF0E3;
   margin-bottom: 5px;
 }
@@ -292,6 +457,7 @@ body {
   border-radius: 50%;
   margin-left: 14px;
   margin-top: 13px;
+  object-fit: cover;
 }
 .bottom_leftbox2_info_right{
   width: 300px;
@@ -309,20 +475,28 @@ body {
 }
 .petsimags{
   margin-left:14px ;
-  height: 93px;
+  min-height: 0px;
   width: 348px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 15px;
+  
 }
 .petsimag{
   width: 114px;
   height: 93px;
+  margin-bottom: 15px;
+  object-fit: cover;
 }
-/* <!-- //////////////////////////////和另一个页面不同的地方//////除了这部分复制就可以///////////////// --> */
+/* ////////////////////////////////// */
 .bottom_rigthbox{
   margin-left: 22px;
+  width: 792px;
+  height: 900px;
+  overflow:auto
+}
+.bottom_rigthboxinner{
   width: 792px;
   min-height: 400px;
   background: #FDF0E3;
@@ -335,6 +509,12 @@ body {
   margin-top: 13px;
   margin-left: 27px;
 }
+.bottom_rigthbox_headtxt1{
+  color: #000000; 
+}
+.bottom_rigthbox_headtxt2{
+  color: #BDB6B1;
+}
 .photocard{
   margin-left: 27px;
   min-height: 236px;
@@ -342,6 +522,7 @@ body {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  overflow:auto
 }
 .bottom_rightbox_line{
   width: 738px;
@@ -351,11 +532,9 @@ body {
 .photodate{
   margin-top: 20px;
 }
-.photobox{
+.photosbox{
   width: 738px;
   min-height: 180px;
-  display: flex;
-  flex-direction: row;
 }
 .photo{
   width: 245px;

@@ -18,8 +18,8 @@
       </header>
     </div>
     <div class="othserusermedium">
-      <div  class="medium_txt1">他的主页</div>
-      <div @click="userhomegotopt()" class="medium_txt2">他的相册</div>
+      <div @click="otherhomegotozy()" class="medium_txt1">他的主页</div>
+      <div  class="medium_txt2">他的相册</div>
     </div>
     <div class="otheruserbottom">
       <div class="bottom_leftbox">
@@ -63,28 +63,21 @@
       </div>
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
-        <div class="bottom_rigthboxinner">
-          <div v-for="messageinform in messageinform" :key="messageinform.index" class="logcard">
-            <div class="loguserinfobox">
-              <img class="userimag" :src="messageinform.userUrl">
-              <div class="infoleft">
-                <span class="username">{{messageinform.username}}</span>
-                <span class="datetime">{{messageinform.datatime}}</span>
-              </div> 
-            </div>
-            <div class="messagecont">{{messageinform.passage}}</div>
-            <div class="messageimgs">
-              <img fit="cover" class="messageimg" v-image-preview v-for="(photo) in messageinform.photourl" :key="photo.key"  :src="photo">  
-            </div>
-            <div class="logfoot">
-              <div class="txt" style="font-weight:bold" >
-                <img @click="starplus()" class="p1" src="../assets/img/star.png" alt="">
-                  {{messageinform.starnumber}}  {{messageinform.isstar}}
-              </div>     
-              <div class="txt" style="font-weight:bold" >
-                <img @click="loveplus()" class="p1" src="../assets/img/love.png" alt="">
-                  {{messageinform.lovenumber}}  {{messageinform.islove}}
-              </div>
+        <div class="bottom_rigthbox_head">
+          <div @click="userhomegotopt()" class="bottom_rigthbox_headtxt1">照片</div>
+          <div class="bottom_rigthbox_headtxt2">视频</div>
+        </div>
+        <div v-for="(videoinform,index) in videoinforms" :key="videoinform.index" class="photocard">
+          <div class="bottom_rightbox_line"></div>
+          <div class="photodate">{{videoinform.fbsj}}</div>
+          <div class="photosbox">
+            <div class="list-vedio" v-for="(item,index1) in videoinform.photolist" :key="index1">
+              <video-player
+                class="video-player vjs-custom-skin"
+                ref="videoPlayer"
+                :playsinline="true"
+                :options="playerOptions[index][index1]"
+              ></video-player>
             </div>
           </div>
         </div>
@@ -97,10 +90,13 @@
 import vTop from '../components/topselect'
 import pethomeVue from './pethome.vue';
 const axios = require('axios');
+import { videoPlayer } from 'vue-video-player'
+import 'video.js/dist/video-js.css'
 export default {
   name: "otheruser",
   components:{
     vTop,
+    videoPlayer
   },
   data(){
     return{
@@ -114,48 +110,81 @@ export default {
       fensi_num:23,
       fenxiang_num:222,
       pets:[],
-      messageinform:[
-        {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:0,
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                      'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-                    ],
-        },
-        {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:"",
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'],
-        },
-      ]
+      videoinforms:[],
+      playerOptions: [],
+      // playerOptions: {
+      //           playbackRates : [ 0.5, 1.0, 1.5, 2.0 ], //可选择的播放速度
+      //           autoplay : 'muted', //如果true,浏览器准备好时开始回放。
+      //           //muted : true, // 默认情况下将会消除任何音频。
+      //           loop : true, // 视频一结束就重新开始。
+      //           preload : 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+      //           language : 'zh-CN',
+      //           aspectRatio : '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+      //           fluid : false, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+      //           sources: [{
+      //               type: "video/mp4", // 类型
+      //               src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' //url地址
+      //           }],
+      //           poster: '', // 封面地址
+      //           notSupportedMessage : '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+      //           controlBar : {
+      //               timeDivider : true,//当前时间和持续时间的分隔符
+      //               durationDisplay : true,//显示持续时间
+      //               remainingTimeDisplay : false,//是否显示剩余时间功能
+      //               fullscreenToggle : true  //全屏按钮
+      //           }
+      //       }, 
+      
     }
   },
   activated:function(){
     this.getuserinfo( this.$route.params.yhm)
-    this.getphoto(this.$route.params.yhid)
+    this.getvideo(this.$route.params.yhid)
+    console.log(this.$route.params.yhid)
   },
   methods:{
-    getphoto(e){
-      axios.post('http://localhost:8000/getuserfbsjpic?yhid='+e)
+    getvideo(e){
+      axios.post('http://localhost:8000/getuserfbsjvid?yhid='+e)
       .then((response)=>{
-        console.log(response)
-        this.photoinforms=response.data
+        // console.log(response)
+        this.videoinforms=response.data
+
+        for (let i of response.data) {
+          console.log(i)
+          let arr=[]
+          for (var j=0;j< response.data[i].photolist.length;j++) {
+            console.log(j)
+            let arrStr = {
+              playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+              autoplay: false, //如果true,浏览器准备好时开始回放。
+              muted: false, // 默认情况下将会消除任何音频。
+              loop: false, // 导致视频一结束就重新开始。
+              preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+              language: "zh-CN",
+              aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+              fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+              notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+              sources: [
+                {
+                  type: "", //这里的种类支持很多种：基本视频格式、直播、流媒体等
+                  src: response.data[i].photolist[j], //url地址 "../../static/vedio/test1.mp4"
+                },
+              ],
+              poster: "", //你的封面地址 "../../static/vedio/test.jpg"
+              controlBar: {
+                timeDivider: true,
+                durationDisplay: true,
+                remainingTimeDisplay: false,
+                fullscreenToggle: true, //全屏按钮
+              },
+            };
+            arr.push(arrStr);
+          }
+          this.playerOptions.push(arr)
+        }
+
+
+
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
@@ -174,7 +203,7 @@ export default {
       const _this= this
       axios.post('http://localhost:8000/user/gzfsfx?yhid='+e)
       .then((response)=>{
-        // console.log(response)
+        // console.log(response.data)
         _this.guanzhu_num=response.data[0];
         _this.fensi_num=response.data[1];
         _this.fenxiang_num=response.data[2];
@@ -298,6 +327,16 @@ export default {
         })
       }
     },
+    otherhomegotozy(){
+      const _this=this
+      this.$router.replace({
+        name: 'otheruser',
+        params: {
+          yhid: _this.user_id,
+          yhm:_this.user_name
+        }
+      })
+    },
     userhomegotopt(){
       const _this=this
       this.$router.replace({
@@ -396,12 +435,11 @@ body {
 .medium_txt1{
   font-size: 24px;
   margin-top: 3px;
-  color: #FBA259;
 }
 .medium_txt2{
   font-size: 24px;
   margin-top: 3px;
-  
+  color: #FBA259;
 }
 .otheruserbottom{
   display: flex;
@@ -492,72 +530,52 @@ body {
   object-fit: cover;
 }
 /* ////////////////////////////////// */
+
 .bottom_rigthbox{
   margin-left: 22px;
-  width: 792px;
-  height: 900px;
-  overflow:auto
-}
-.bottom_rigthboxinner{
   width: 792px;
   min-height: 400px;
   background: #FDF0E3;
 }
-.logcard{
-    width: 792px;
-    min-height: 400px;
-    background: #FDF0E3;
-    margin-bottom: 5px;
+.bottom_rigthbox_head{
+  width: 225px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 13px;
+  margin-left: 27px;
 }
-.loguserinfobox{
-    width: 300px;
-    height: 70px;
-    display: flex;
-    flex-direction: row;
-    margin-left: 18px;
+.bottom_rigthbox_headtxt1{
+  color: #BDB6B1;
 }
-.infoleft{
-    display: flex;
-    flex-direction: column;
+.bottom_rigthbox_headtxt2{
+  color: #000000;
 }
-.userimag{
-    margin-top: 20px; 
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
+.photocard{
+  margin-left: 27px;
+  min-height: 236px;
+  width: 738px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
-.username{
-    margin-top: 30px;
-    margin-left: 25px;
+.bottom_rightbox_line{
+  width: 738px;
+  height: 1px;
+  background: #BDB6B1;
 }
-.datetime{
-    width: 400px;
-    margin-top: 0px;
-    margin-left: 25px;
+.photodate{
+  margin-top: 20px;
 }
-.messagecont{
-    margin-top: 35px;
-    margin-left: 109px;
-    margin-right: 20px;
+.photosbox{
+  width: 738px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: row;
 }
-.messageimgs{
-    width: 662px;
-    margin-left: 109px;
-    margin-right: 20px;
-    margin-top: 10px;
-}
-.messageimg{
-    width: 218px; 
-    height: 140px;
-    padding:1px;
-    object-fit: cover;
-}
-.logfoot{
-    width: 350px;
-    margin-left: 500px;
-    padding-bottom: 20px;
-    display: flex;
-    flex-direction: row;
+.list-vedio{
+  width: 245px;
+  height: 139px;
+  padding: 2px;
 }
 </style>

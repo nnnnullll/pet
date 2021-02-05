@@ -74,8 +74,8 @@
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
-                                    <img @click="home_gotouser(tuijian.username)" class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div @click="home_gotouser(tuijian.username)" class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <img @click="home_gotouser(tuijian.username,tuijian.userid)" class="tuijianuserurl" :src="tuijian.userurl">
+                                    <div @click="home_gotouser(tuijian.username,tuijian.userid)" class="tuijianinfotxt1">{{tuijian.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
@@ -90,7 +90,7 @@
                     </div>
                     <div  v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
                         <div  class="tuijianitembox_video">
-                            <div @click="home_gotolog(tuijian2.jlid)" class="tuijianvideo">
+                            <div @click="home_gotolog(tuijian2.jlid,tuijian2.userid)" class="tuijianvideo">
                                 <video-player class="video-player vjs-custom-skin"
                                     muted
                                     ref="videoPlayer"
@@ -99,7 +99,7 @@
                                 </video-player>
                             </div>
                             <div class="tuijianright2">
-                                <div @click="home_gotolog(tuijian2.jlid)" class="tuijiantextbox2">
+                                <div @click="home_gotolog(tuijian2.jlid,tuijian2.userid)" class="tuijiantextbox2">
                                     <div class='tuijiantext2'>{{tuijian2.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox2">
@@ -951,11 +951,12 @@ export default {
                 console.log('错误！！！！：'+err)
             })
         },
-        home_gotouser(e){
+        home_gotouser(e,i){
             this.$router.push({
                 name: 'otheruser',
                     params: {
                         yhm: e,
+                        yhid:i
                     }
                 })
         }

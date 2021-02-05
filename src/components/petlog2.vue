@@ -449,6 +449,7 @@ export default {
                 name: 'otheruser',
                 params: {
                     yhm: _this.messageinform.username,
+                    yhid: _this.messageinform.userid
                 }
             })
         },
