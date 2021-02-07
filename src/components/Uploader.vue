@@ -27,7 +27,6 @@
 </template>
 <script>
 import axios from "axios";
-
 export default {
   name:'uploader',
   props: {
@@ -45,10 +44,7 @@ export default {
     }
   },
   methods: {
-    //从后端获取并更新左侧表格信息
-    update(){
 
-    },
     add() {
       this.$refs.file.click()//调用file的click事件
     },

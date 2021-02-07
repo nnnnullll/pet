@@ -44,7 +44,6 @@
               <div class="momenttext" style="margin-bottom: 1%;">最近动态：{{item.info}}</div>
               <div class="imgs" style="display: flex;flex-direction: row;" >
                 <el-image class="shareimg1"  v-for="(photo) in item.photo" :key="photo.key"
-
                            :src="photo"
                            :preview-src-list="item.photo"
                            fit="cover"/>
