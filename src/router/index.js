@@ -100,6 +100,13 @@ export default  new Router({
     },
     {
       //路由路径
+      path: '/Uploader',
+      //跳转的组件
+      name: 'Uploader',
+      component:()=>import("../components/Uploader"),
+    },
+    {
+      //路由路径
       path: '/pethome',
       //跳转的组件
       name: 'pethome',
