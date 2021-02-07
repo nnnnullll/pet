@@ -813,7 +813,6 @@ body {
 .guanzhu{
   height: 24px;
   width: 65px;
-  background: #fab990;
   border-radius: 10%;
 }
 .guantext{

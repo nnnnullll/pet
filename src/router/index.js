@@ -89,7 +89,7 @@ export default  new Router({
       //路由路径
       path: '/search',
       //跳转的组件
-      name: 'search',
+      name: 'Search',
       component: search,
     },
     {

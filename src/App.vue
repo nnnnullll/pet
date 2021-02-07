@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <router-link to="pethome">topethome</router-link>
-    <router-link to="search">tosearch</router-link>
-    <router-link to="knowledgecard">toknowledgecard</router-link>
     <!--  <keep-alive> 帮助获取路由跳转监听 -->
     <keep-alive>
       <router-view></router-view>
