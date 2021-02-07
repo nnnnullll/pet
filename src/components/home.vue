@@ -74,8 +74,8 @@
                                     <div class='tuijiantext'>{{tuijian.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox">
-                                    <img @click="home_gotouser(tuijian.userid)" class="tuijianuserurl" :src="tuijian.userurl">
-                                    <div @click="home_gotouser(tuijian.userid)" class="tuijianinfotxt1">{{tuijian.username}}</div>
+                                    <img @click="home_gotouser(tuijian.username,tuijian.userid,tuijian.url)" class="tuijianuserurl" :src="tuijian.userurl">
+                                    <div @click="home_gotouser(tuijian.username,tuijian.userid,tuijian.url)" class="tuijianinfotxt1">{{tuijian.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox">
@@ -90,7 +90,7 @@
                     </div>
                     <div  v-for="tuijian2 in tuijianlist_video"  :key="tuijian2.key" >
                         <div  class="tuijianitembox_video">
-                            <div @click="home_gotolog(tuijian2.jlid)" class="tuijianvideo">
+                            <div @click="home_gotolog(tuijian2.jlid,tuijian2.userid)" class="tuijianvideo">
                                 <video-player class="video-player vjs-custom-skin"
                                     muted
                                     ref="videoPlayer"
@@ -99,12 +99,12 @@
                                 </video-player>
                             </div>
                             <div class="tuijianright2">
-                                <div @click="home_gotolog(tuijian2.jlid)" class="tuijiantextbox2">
+                                <div @click="home_gotolog(tuijian2.jlid,tuijian2.userid)" class="tuijiantextbox2">
                                     <div class='tuijiantext2'>{{tuijian2.txt}}</div>
                                 </div>
                                 <div class="tuijianinfobox2">
-                                    <img class="tuijianuserurl" :src="tuijian2.userurl">
-                                    <div class="tuijianinfotxt1">{{tuijian2.username}}</div>
+                                    <img @click="home_gotouser(tuijian2.username,tuijian2.userid,tuijian2.url)"  class="tuijianuserurl" :src="tuijian2.userurl">
+                                    <div @click="home_gotouser(tuijian2.username,tuijian2.userid,tuijian2.url)"  class="tuijianinfotxt1">{{tuijian2.username}}</div>
                                     <div class="tuijianinfotxt2">{{tuijian2.datatim}}</div>
                                 </div>
                                 <div class="rightbottombox2">
@@ -412,19 +412,26 @@ export default {
         async gettuijianpt(){
             const _this = this
             await axios.get('http://localhost:8000/getRandomptid',{                     
-            }). then(async r => {
+            }). then( r => {
                 // console.log(r.data)
-                _this.tuijianlist_pic[0].jlid=r.data[0]
-                _this.tuijianlist_pic[1].jlid=r.data[1]
-                _this.tuijianlist_pic[2].jlid=r.data[2]
-                await _this.getptJlData(r.data[0],0);
-                _this.getptJlData(r.data[1],1);
-                _this.getptJlData(r.data[2],2);
+                // _this.tuijianlist_pic[0].jlid=r.data[0]
+                // _this.tuijianlist_pic[1].jlid=r.data[1]
+                // _this.tuijianlist_pic[2].jlid=r.data[2]
+                // await _this.getptJlData(r.data[0],0);
+                // await _this.getptJlData(r.data[1],1);
+                // await _this.getptJlData(r.data[2],2);
+                var i=0
+                while(i<3){
+                    _this.tuijianlist_pic[i].jlid=r.data[i]
+                    _this.getptJlData(r.data[i],i);
+                    i++
+                }
             }).catch(err => {
                 console.log('错误！！！！：'+err)
             })
         },
         getptJlData(e,i) {
+            
             const _this = this
             axios.get('http://localhost:8000/getShareByjlid',{
                 params:{
@@ -439,51 +446,52 @@ export default {
                     params:{
                         jlid:e
                     }
-                    }).then(async res => {
-                        _this.tuijianlist_pic[i].url=res.data[0].zp
+                    }).then(re => {
+                        _this.tuijianlist_pic[i].url=re.data[0].zp
                         axios.post('http://localhost:8000/likecount?jlid='+e)
-                        .then(res=>{
-                             _this.tuijianlist_pic[i].lovenum=res.data;
+                        .then(r=>{
+                             _this.tuijianlist_pic[i].lovenum=r.data;
                         }).catch(err => {
                             console.log('错误！！！！：'+err)
                         })
                         axios.post('http://localhost:8000/starcount?jlid='+e)
-                        .then(res=>{
-                            _this.tuijianlist_pic[i].starnum=res.data;
+                        .then(r=>{
+                            _this.tuijianlist_pic[i].starnum=r.data;
                         }).catch(err => {
                             console.log('错误！！！！：'+err)
                         })
                         axios.get('http://localhost:8000/user/getUserByNamelog/'+ _this.tuijianlist_video[0].username)
-                        .then(res=>{
-                             _this.tuijianlist_pic[i].userurl=res.data.tx;
+                        .then(r=>{
+                             _this.tuijianlist_pic[i].userurl=r.data.tx;
                         }).catch(err => {
                             console.log('错误！！！！：'+err)
                         })
                         // 喜欢初始化
                         if(localStorage.getItem("yhid")){
+                            console.log(e,i)
                             const _this=this
                             axios.get('http://localhost:8000/islike',{//查成功
                                 params:{
                                     yhid:_this.tuijianlist_pic[i].userid,
                                     jlid:e
                                 }
-                            }).then(res => {
+                            }).then(r => {
                                 // console.log(res.data)
-                                if(res.data=="wu"){
+                                if(r.data=="wu"){
                                     _this.tuijianlist_pic[i].love="喜欢"
                                 } 
-                                else if(res.data=="1"){
-                                    _this.tuijianlist_pic[i].islove="喜欢"
+                                else if(r.data=="1"){
+                                    _this.tuijianlist_pic[i].love="喜欢"
                                 }
                                 else{
-                                    _this.tuijianlist_pic[i].islove="已喜欢"
+                                    _this.tuijianlist_pic[i].love="已喜欢"
                                 }
                             }).catch(err => {
                             console.log('错误！！！！：'+err)
                             })
                         }
                         else{
-                            _this.tuijianlist_video[i].love="喜欢"
+                            _this.tuijianlist_pic[i].love="喜欢"
                         }
                         // 收藏初始化
                         if(localStorage.getItem("yhid")){
@@ -493,12 +501,12 @@ export default {
                                     yhid:_this.tuijianlist_pic[i].userid,
                                     jlid:e
                                 }
-                            }).then(res => {
+                            }).then(r => {
                                 // console.log(res.data)
-                                if(res.data=="wu"){
+                                if(r.data=="wu"){
                                     _this.tuijianlist_pic[i].star="收藏"
                                 } 
-                                else if(res.data=="1"){
+                                else if(r.data=="1"){
                                     _this.tuijianlist_pic[i].star="收藏"
                                 }
                                 else{
@@ -621,7 +629,7 @@ export default {
             // console.log(this.tuijianlist_video[0])
         }, 
         loveplus(e) {
-            console.log(e)
+            // console.log(e)
             const _this=this
             if(localStorage.getItem("yhid")){
                 axios.get('http://localhost:8000/islike', {
@@ -630,7 +638,7 @@ export default {
                     jlid:_this.tuijianlist_pic[e].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addlike',{
                     params:{
@@ -638,7 +646,7 @@ export default {
                         jlid:_this.tuijianlist_pic[e].jlid
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].love="已喜欢"
                             _this.tuijianlist_pic[e].lovenum++
@@ -655,7 +663,7 @@ export default {
                         sc:0
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].love="已喜欢"
                             _this.tuijianlist_pic[e].lovenum++
@@ -672,7 +680,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].love="喜欢"
                         _this.tuijianlist_pic[e].lovenum--
@@ -700,7 +708,7 @@ export default {
                     jlid:_this.tuijianlist_video[0].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addlike',{
                     params:{
@@ -742,7 +750,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].love="喜欢"
                         _this.tuijianlist_video[0].lovenum--
@@ -770,7 +778,7 @@ export default {
                     jlid:_this.tuijianlist_pic[e].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                         axios.get('http://localhost:8000/addstar',{
                         params:{
@@ -778,7 +786,7 @@ export default {
                             jlid:_this.tuijianlist_pic[e].jlid
                         }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].star="已收藏"
                         _this.tuijianlist_pic[e].starnum++
@@ -796,7 +804,7 @@ export default {
                             sc:0
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_pic[e].star="已收藏"
                         _this.tuijianlist_pic[e].starnum++
@@ -813,7 +821,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_pic[e].star="收藏"
                             _this.tuijianlist_pic[e].starnum--
@@ -841,7 +849,7 @@ export default {
                     jlid:_this.tuijianlist_video[0].jlid
                 }
                 }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="wu"){
                         axios.get('http://localhost:8000/addstar',{
                         params:{
@@ -849,7 +857,7 @@ export default {
                             jlid:_this.tuijianlist_video[0].jlid
                         }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].star="已收藏"
                         _this.tuijianlist_video[0].starnum++
@@ -867,7 +875,7 @@ export default {
                             sc:0
                     }
                     }).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     if(res.data=="success"){
                         _this.tuijianlist_video[0].star="已收藏"
                         _this.tuijianlist_video[0].starnum++
@@ -884,7 +892,7 @@ export default {
                         sc:1
                     }
                     }).then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         if(res.data=="success"){
                             _this.tuijianlist_video[0].star="收藏"
                             _this.tuijianlist_video[0].starnum--
@@ -907,7 +915,7 @@ export default {
             this.$router.push('/'+e);
         },
         home_gotosearch(e){
-            console.log(e),
+            // console.log(e),
             this.$router.push({
                 name: 'search',
                 params: {
@@ -943,11 +951,13 @@ export default {
                 console.log('错误！！！！：'+err)
             })
         },
-        home_gotouser(e){
+        home_gotouser(e,i,t){
             this.$router.push({
                 name: 'otheruser',
                     params: {
-                        yhid: e,
+                        yhm: e,
+                        yhid:i,
+                        tx:t
                     }
                 })
         }

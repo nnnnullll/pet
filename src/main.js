@@ -13,7 +13,7 @@ Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 import BaiduMap from 'vue-baidu-map'
 
-
+import qs from 'qs'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 axios.defaults.baseURL="http://localhost:8000/"
@@ -45,11 +45,12 @@ axios.interceptors.request.use(config => {
       config.headers.Authorization = `token ${store.state.token}`;
       console.log("token----->"+localStorage.getItem('token'))
   }
-
+    // console.log("config:")
+    // console.log(config)
     // if(config.headers['Content-Type'] !='application/json'){
     //   config.data = qs.stringify(config.data);
     // }
-  // config.data=qs.stringify(config.data);//防止post请求参数无法传到后台
+  config.data=qs.stringify(config.data);//防止post请求参数无法传到后台
 
   // if(config.method=='post'){
   //   config.data=qs.stringify(config.data);//防止post请求参数无法传到后台

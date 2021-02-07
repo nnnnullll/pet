@@ -18,6 +18,7 @@ import hospital from "../components/hospital";
 import Zhongzhuan from "../components/zhongzhuan"
 import otheruser from "../components/otheruser"
 import otheruserpt from "../components/otheruserpt"
+import otheruservd from "../components/otheruservd"
 Vue.use(Router)
 
 export default  new Router({
@@ -161,6 +162,11 @@ export default  new Router({
       //跳转的组件
       name: 'otheruserpt',
       component: otheruserpt,
+    },
+    {
+      path: '/otheruservd',
+      name: 'otheruservd',
+      component: otheruservd,
     },
   ]
 })

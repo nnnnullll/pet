@@ -18,7 +18,7 @@
       </header>
     </div>
     <div class="othserusermedium">
-      <div @click="otherhomegotopt()" class="medium_txt1">他的主页</div>
+      <div @click="otherhomegotozy()" class="medium_txt1">他的主页</div>
       <div  class="medium_txt2">他的相册</div>
     </div>
     <div class="otheruserbottom">
@@ -65,14 +65,21 @@
       <div class="bottom_rigthbox">
         <div class="bottom_rigthboxinner">
           <div class="bottom_rigthbox_head">
-            <div class="bottom_rigthbox_headtxt1">照片</div>
-            <div @click="userhomegotovd()" class="bottom_rigthbox_headtxt2">视频</div>
+            <div @click="userhomegotopt()" class="bottom_rigthbox_headtxt1">照片</div>
+            <div class="bottom_rigthbox_headtxt2">视频</div>
           </div>
-          <div v-for="photoinform in photoinforms" :key="photoinform.index" class="photocard">
+          <div v-for="(videoinform,index) in videoinforms" :key="videoinform.index" class="photocard">
             <div class="bottom_rightbox_line"></div>
-            <div class="photodate">{{photoinform.fbsj}}</div>
+            <div class="photodate">{{videoinform.fbsj}}</div>
             <div class="photosbox">
-              <img v-image-preview class="photo" v-for="photo in photoinform.photolist" :key="photo.index" :src="photo" >
+              <div class="list-vedio" v-for="(item,index1) in videoinform.photolist" :key="index1">
+                <video-player
+                  class="video-player vjs-custom-skin"
+                  ref="videoPlayer"
+                  :playsinline="true"
+                  :options="playerOptions[index][index1]"
+                ></video-player>
+              </div>
             </div>
           </div>
         </div>
@@ -85,10 +92,13 @@
 import vTop from '../components/topselect'
 import pethomeVue from './pethome.vue';
 const axios = require('axios');
+import { videoPlayer } from 'vue-video-player'
+import 'video.js/dist/video-js.css'
 export default {
   name: "otheruser",
   components:{
     vTop,
+    videoPlayer
   },
   data(){
     return{
@@ -102,49 +112,52 @@ export default {
       fensi_num:23,
       fenxiang_num:222,
       pets:[],
-      photoinforms:[],
-      messageinform:[
-        {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:0,
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                      'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-                    ],
-        },
-        {
-          messagenum:0,
-          username:"用户名",
-          datatime:"2021-01-01 00：00",    
-          passage:"示例文字示例文字示例文字示例文字示例文字示例文字示例文字示例文字",
-          userid:"",
-          userUrl:'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-          lovenumber:223,
-          starnumber:12,
-          islove:"喜欢",
-          isstar:"收藏",
-          photourl: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'],
-        },
-      ]
+      videoinforms:[],
+      playerOptions: [],
     }
   },
   activated:function(){
     this.getuserinfo( this.$route.params.yhm)
-    this.getphoto(this.$route.params.yhid)
+    this.getvideo(this.$route.params.yhid)
+    console.log(this.$route.params.yhid)
   },
   methods:{
-    getphoto(e){
-      axios.post('http://localhost:8000/getuserfbsjpic?yhid='+e)
+    getvideo(e){
+      axios.post('http://localhost:8000/getuserfbsjvid?yhid='+e)
       .then((response)=>{
-        console.log(response)
-        this.photoinforms=response.data
+        // console.log(response)
+        this.videoinforms=response.data
+        for(var i=0;i<response.data.length;i++){
+          var temp=[]
+          for (var j=0;j<response.data[i].photolist.length;j++) {
+            let arrStr = {
+              playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+              autoplay: false, //如果true,浏览器准备好时开始回放。
+              muted: false, // 默认情况下将会消除任何音频。
+              loop: false, // 导致视频一结束就重新开始。
+              preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+              language: "zh-CN",
+              aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+              fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+              notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+              sources: [
+                {
+                  type: "", //这里的种类支持很多种：基本视频格式、直播、流媒体等
+                  src: response.data[i].photolist[j], //url地址 "../../static/vedio/test1.mp4"
+                },
+              ],
+              poster: "", //你的封面地址 "../../static/vedio/test.jpg"
+              controlBar: {
+                timeDivider: true,
+                durationDisplay: true,
+                remainingTimeDisplay: false,
+                fullscreenToggle: true, //全屏按钮
+              },
+            };
+            temp.push(arrStr);
+          }
+          this.playerOptions.push(temp);
+        }
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
@@ -163,7 +176,7 @@ export default {
       const _this= this
       axios.post('http://localhost:8000/user/gzfsfx?yhid='+e)
       .then((response)=>{
-        // console.log(response)
+        // console.log(response.data)
         _this.guanzhu_num=response.data[0];
         _this.fensi_num=response.data[1];
         _this.fenxiang_num=response.data[2];
@@ -287,7 +300,7 @@ export default {
         })
       }
     },
-    otherhomegotopt(){
+    otherhomegotozy(){
       const _this=this
       this.$router.replace({
         name: 'otheruser',
@@ -297,10 +310,10 @@ export default {
         }
       })
     },
-    userhomegotovd(){
+    userhomegotopt(){
       const _this=this
       this.$router.replace({
-        name: 'otheruservd',
+        name: 'otheruserpt',
         params: {
           yhid: _this.user_id,
           yhm:_this.user_name
@@ -490,6 +503,7 @@ body {
   object-fit: cover;
 }
 /* ////////////////////////////////// */
+
 .bottom_rigthbox{
   margin-left: 22px;
   width: 792px;
@@ -510,10 +524,10 @@ body {
   margin-left: 27px;
 }
 .bottom_rigthbox_headtxt1{
-  color: #000000; 
+  color: #BDB6B1;
 }
 .bottom_rigthbox_headtxt2{
-  color: #BDB6B1;
+  color: #000000;
 }
 .photocard{
   margin-left: 27px;
@@ -534,12 +548,13 @@ body {
 .photosbox{
   margin-top: 15px;
   width: 738px;
-  min-height: 180px;
+  min-height: 139px;
+  display: flex;
+  flex-direction: row;
 }
-.photo{
+.list-vedio{
   width: 245px;
-  height: 162px;
+  height: 139px;
   padding: 2px;
-  object-fit: cover;
 }
 </style>
