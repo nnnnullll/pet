@@ -13,9 +13,9 @@
           <div class="moment">动态数：{{count}}条</div>
           <div class="fansnum">粉丝数：{{num}}</div>
         </div>
-        <div class="background">
+        <div class="background1">
           <div class="momenttext">最近动态：{{information}}</div>
-          <div class="imgs" style="display: flex;flex-direction: row;">
+          <div class="images" style="display: flex;flex-direction: row;">
             <img :src="photo[0]" class="shareimg1">
             <img :src="photo[1]" class="shareimg2">
             <img :src="photo[2]" class="shareimg3">
@@ -74,7 +74,6 @@ export default {
 .usersimg{
   width: 150px;
   height: 150px;
-  background: #FACD89;
   border-radius: 50%;
   margin-left:10% ;
 }
@@ -147,11 +146,10 @@ export default {
 .background{
   width: 968px;
   height: 165px;
-  background: #f6deca;
   margin-left: 5.8%;
 }
 .userinfo{
-  padding-left: 2.8%;
+  padding-left: 2%;
 }
 .detail{
   padding-left: 4.5%;

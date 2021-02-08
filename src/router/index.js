@@ -90,7 +90,7 @@ export default  new Router({
       //路由路径
       path: '/search',
       //跳转的组件
-      name: 'search',
+      name: 'Search',
       component: search,
     },
     {
@@ -99,6 +99,13 @@ export default  new Router({
       //跳转的组件
       name: 'medicalcard',
       component:()=>import("../components/MedicalCard"),
+    },
+    {
+      //路由路径
+      path: '/Uploader',
+      //跳转的组件
+      name: 'Uploader',
+      component:()=>import("../components/Uploader"),
     },
     {
       //路由路径

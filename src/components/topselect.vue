@@ -45,13 +45,15 @@ export default {
     top_gotosearch(){
       var e=document.getElementById("topinput");
       console.log(e.value);
-      this.$refs.topsearchval.value="";
       this.$router.push({
-                name: 'search',
-                params: {
-                topsearch: e.value,
-                }
+        name: 'Search',
+        path:"/search",
+        params: {
+          topsearch: e.value,
+        }
             })
+      this.$refs.topsearchval.value="";
+
     },
   }
 }

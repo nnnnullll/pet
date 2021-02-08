@@ -1,5 +1,5 @@
 <template>
-  <div class="building">
+  <div >
     <v-top></v-top>
     <div class="bottom">
       <div class="search" style="display: flex;flex-direction: row;justify-content: center">
@@ -30,21 +30,20 @@
         <div class="showuser" style="display: flex;flex-direction: row">
           <img class="usersimg" :src="item.circleurl">
           <div class="box">
-            <div class="userinfo" style="display: flex;flex-direction: row">
+            <div class="userinfo" style="display: flex;flex-direction: row;margin-left: 4.6%">
               <div class="name">{{item.username}}</div>
               <button  class="btn"  round type="primary" v-on:click="getIndex(item,index)" @click="guanZhu" >
                 {{item.msg}}
               </button>
             </div>
             <div class="detail" style="display: flex;flex-direction: row;">
-              <div class="moment">动态数：{{item.count}}条</div>
+              <div class="moment" style="  margin-left: 1.9%;">动态数：{{item.count}}条</div>
               <div class="fansnum">粉丝数：{{item.num}}</div>
             </div>
-            <div class="background">
+            <div class="background1" style="margin-top: 2%;">
               <div class="momenttext" style="margin-bottom: 1%;">最近动态：{{item.info}}</div>
               <div class="imgs" style="display: flex;flex-direction: row;" >
                 <el-image class="shareimg1"  v-for="(photo) in item.photo" :key="photo.key"
-
                            :src="photo"
                            :preview-src-list="item.photo"
                            fit="cover"/>
@@ -70,7 +69,7 @@ const axios=require('axios');
 import usercomp from "./Testcomp/Testcomp"
 import vTop from "@/components/topselect";
 export default {
-  name: "search",
+  name: "Search",
   components: {
     usercomp,
     vTop
@@ -139,32 +138,19 @@ export default {
     }
   },
   activated:function(){
-    if(this.$route.params.topsearch!=null){
+    if(this.$route.params.topsearch){
       this.$refs.searchval.value=this.$route.params.topsearch
       console.log("!!!!!!!:"+this.$refs.searchval.value)
       this.search()
     }
-
-
   },
   methods:{
-    IsFollow(){
-      for(var i=0;i<this.users.length;i++){
-        if(this.users[i].flag==true)
-        {
-          this.users[i].msg="+关注"
-          //this.iconData = 'el-icon-star-off';
-        }
-        else if(this.users[i].flag==false){
-          this.users[i].msg="已关注"
-          //this.iconData = 'el-icon-star-on';
-        }
-      }
-    },
     // 接收页面跳转得参数
     getRouterData() {
-      // 接收top栏参数  
-      console.log(this.$route.params.topsearch)
+      // 接收top栏参数
+      console.log("info："+this.$route.params.topsearch)
+      this.$refs.searchval.value=this.$route.params.topsearch
+      this.search()
       //接收home页参数  因为栏用1 2 3 4 标志所以必须和top分开避免相同
       console.log( this.$route.params.homesearch)
     },
@@ -301,6 +287,7 @@ export default {
               if(res.data=="success"){
                 this.users[this.index].flag=false;
                 this.users[this.index].msg="已关注"
+                this.users[this.index].num++;
               }
             })
                 .catch(err => {
@@ -319,6 +306,7 @@ export default {
               if(res.data=="success"){
                 this.users[this.index].flag=false;
                 this.users[this.index].msg="已关注"
+                this.users[this.index].num++;
               }
             })
                 .catch(err => {
@@ -337,6 +325,7 @@ export default {
               if(res.data=="success"){
                 this.users[this.index].flag=true;
                 this.users[this.index].msg="+关注"
+                this.users[this.index].num--;
               }
             })
                 .catch(err => {
@@ -415,9 +404,7 @@ export default {
       this.navIndex = this.nav.findIndex(item => item.path === path);
     }
   },
-
   mounted() {
-
   },
   watch: {
     "$route"() {
@@ -759,16 +746,12 @@ body {
   width: 900px;
   height: 20px;
   text-align: left;
-  margin-left: 5px;
 }
-.background{
+.background1{
   width: 968px;
   height: 165px;
-  background: #f6deca;
+  /*background: #f6deca;*/
   margin-left: 5.8%;
-}
-.userinfo{
-  padding-left: 2.8%;
 }
 .detail{
   padding-left: 4.5%;
