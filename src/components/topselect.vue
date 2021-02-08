@@ -12,7 +12,7 @@
       <div class="webitem5" @click="top_gotosearch">
         <p  class="text1">搜索</p>
       </div>
-      <img :src="userimg"  class="userimg" >
+      <img :src="userimg" @click="top_gotouser()" class="userimg" >
       <p class="webitem6" @click="top_goto('content')">登陆</p>
       <p class="webitem7" @click="top_goto('petregister')">注册</p>
     </div>
@@ -31,6 +31,14 @@ export default {
     }
   },
   methods: {
+    top_gotouser(){
+      if(localStorage.getItem('yhid')){
+        this.$router.push('/userhistory');
+      }
+      else{
+        this.$router.push('/content');
+      }
+    },
     top_goto(e){
       this.$router.push('/'+e);
     },

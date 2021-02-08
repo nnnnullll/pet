@@ -19,6 +19,7 @@ import Zhongzhuan from "../components/zhongzhuan"
 import otheruser from "../components/otheruser"
 import otheruserpt from "../components/otheruserpt"
 import otheruservd from "../components/otheruservd"
+import userhistory from "../components/userhistory"
 Vue.use(Router)
 
 export default  new Router({
@@ -136,23 +137,17 @@ export default  new Router({
      
     },
     {
-      //路由路径
       path: '/zhongzhuan',
-      //跳转的组件
       name: 'Zhongzhuan',
       component: Zhongzhuan,
     },
     {
-      //路由路径
       path: '/otheruser',
-      //跳转的组件
       name: 'otheruser',
       component: otheruser,
     },
     {
-      //路由路径
       path: '/otheruserpt',
-      //跳转的组件
       name: 'otheruserpt',
       component: otheruserpt,
     },
@@ -160,6 +155,11 @@ export default  new Router({
       path: '/otheruservd',
       name: 'otheruservd',
       component: otheruservd,
+    },
+    {
+      path: '/userhistory',
+      name: 'userhistory',
+      component: userhistory,
     },
   ]
 })

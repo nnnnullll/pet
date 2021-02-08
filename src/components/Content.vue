@@ -73,6 +73,7 @@ export default {
           var data=response.data;
           console.log(data.yhid);
           localStorage.setItem('yhid', JSON.stringify(data.yhid));
+          localStorage.setItem('yhm', JSON.stringify(data.yhm));
           var tmp = 'Bearer ' + data.token;
           // 将用户token保存到vuex中
           _this.changeLogin({ token: tmp});
