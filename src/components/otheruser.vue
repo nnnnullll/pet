@@ -149,7 +149,7 @@ export default {
     return{
       user_change:require("@/assets/img/user_change.png"),
       ispet:1,
-       pet_url:"",
+      pet_url:"",
       pet_name:"用户名",
       pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_id:0,
@@ -222,7 +222,6 @@ export default {
           }
           console.log(playerOptions)
       }
-
     },
     async getmessage(e,t){
       const _this=this

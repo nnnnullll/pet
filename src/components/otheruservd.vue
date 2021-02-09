@@ -4,8 +4,15 @@
     <v-top></v-top>
     <div class="othseruserheader">
       <header class="header_userinfobox">
-        <img class="header_change" :src="user_change">
-        <div class="header_userinfobox_bottom">
+        <!-- <img class="header_change" :src="user_change"> -->
+        <div class="header_change">
+          <select class="select1" id="petselect"  @change="selectshijiaoFn($event)">
+            <option value =0>请选择视角</option>
+            <option value =1>主人视角</option>
+            <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}视角</option>
+          </select>
+        </div>
+        <div v-if="ispet==1" class="header_userinfobox_bottom">
           <img  v-image-preview   class="header_userurl" :src="user_url">
           <div class="header_textinfobox">
             <div class="header_nameguanzhu">
@@ -13,6 +20,15 @@
               <div @click="guanzhu()" class="header_guanzhu">{{user_guanzhu}}</div>
             </div>
             <div class="header_textinfo_qianmin">{{user_qianmin}}</div>
+          </div>
+        </div>
+        <div v-else-if="ispet==0" class="header_userinfobox_bottom">
+          <img  v-image-preview   class="header_userurl" :src="pet_url">
+          <div class="header_textinfobox">
+            <div class="header_nameguanzhu">
+              <div class="header_textinfo_name">{{pet_name}}</div>
+            </div>
+            <div class="header_textinfo_qianmin">{{pet_qianmin}}</div>
           </div>
         </div>
       </header>
@@ -40,7 +56,7 @@
           </div>
         </div>
         <div class="bottom_leftbox2" >
-          <div class="petcard" v-for="(pet,index) in pets" :key="pet.index">
+          <div  v-if="ispet==1" class="petcard" v-for="(pet,index) in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
               <img  v-image-preview   class="bottom_leftbox2_peturl" :src="pet.pet.cwtx" >
               <div class="bottom_leftbox2_info_right">
@@ -57,6 +73,20 @@
             </div>
             <div class="petsimags">
               <img v-image-preview   v-for="petpic in pet.petpic" class="petsimag" :src="petpic" >
+            </div>
+          </div>
+           <!-- 主人  宠物视角显示 -->
+          <div v-if="ispet==0" class="petcard" >
+            <div class="bottom_leftbox2_info">
+              <img  v-image-preview   class="bottom_leftbox2_peturl" :src="user_url" >
+              <div class="bottom_leftbox2_info_right">
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_name}}</div>
+                </div>
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_qianmin}}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -103,6 +133,10 @@ export default {
   data(){
     return{
       user_change:require("@/assets/img/user_change.png"),
+      ispet:1,
+      pet_url:"",
+      pet_name:"用户名",
+      pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_id:0,
       user_url:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
       user_name:"用户名",
@@ -118,12 +152,28 @@ export default {
   },
   activated:function(){
     this.getuserinfo( this.$route.params.yhm)
-    this.getvideo(this.$route.params.yhid)
-    console.log(this.$route.params.yhid)
   },
   methods:{
-    getvideo(e){
-      axios.post('http://localhost:8000/getuserfbsjvid?yhid='+e)
+    selectshijiaoFn(e){
+      const _this=this
+      console.log(e.target.selectedIndex) 
+      if(e.target.selectedIndex==1){
+        _this.ispet=1
+        _this.getuserinfo(_this.user_name)
+      }
+      else if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        _this.ispet=0
+        _this.pet_url=_this.pets[e.target.selectedIndex-2].pet.cwtx
+        _this.pet_name=_this.pets[e.target.selectedIndex-2].pet.xm
+        _this.pet_qianmin=_this.pets[e.target.selectedIndex-2].pet.pz
+        _this.getvideo(this.user_id,this.pets[e.target.selectedIndex-2].pet.cwid)
+      }
+    },
+    getvideo(e,t){
+      axios.post('http://localhost:8000/getuserfbsjvid?yhid='+e+'&cwid='+t)
       .then((response)=>{
         // console.log(response)
         this.videoinforms=response.data
@@ -220,7 +270,8 @@ export default {
           _this.user_qianmin=res.data.gxqm;
           _this.getguanzhu(res.data.yhid);
           _this.getnum(res.data.yhid);
-          _this.getpet(res.data.yhid)
+          _this.getpet(res.data.yhid);
+          _this.getvideo(res.data.yhid,0)
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
