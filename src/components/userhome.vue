@@ -96,9 +96,29 @@
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
-            
-
-
+          <div class="bottom_rigthbox_header2_txt1">
+            <textarea name="input1" id="input1"  placeholder="有什么和大家分享的？" class="bottom_rigthbox_header2_txt1_input"></textarea>
+          </div>
+          <div class="bottom_rigthbox_header2">
+            <div class="bottom_rigthbox_header2_txt2">
+              <select id="petselect" class="bottom_rigthbox_header2_select1" @change="selectFn1($event)">
+                <option value =0>请选择宠物</option>
+                <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
+              </select>
+            </div>
+            <div class="bottom_rigthbox_header2_txt3">
+              <select id="petselect" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
+                <option value =0>请选择分区</option>
+                <option value =1>萌宠日常</option>
+                <option value =2>养护知识</option>
+                <option value =3>DIY课堂</option>
+                <option value =4>学习训练</option>
+              </select>
+            </div>
+            <img class="bottom_rigthbox_header2_img1" :src="user_camera">
+            <img class="bottom_rigthbox_header2_img2" :src="user_dv">
+            <div class="bottom_rigthbox_header2_txt4">发布</div>
+          </div>
         </div>
         <div class="bottom_rigthboxinner">
           <div v-for="(messageinform,index) in messageinforms" :key="messageinform.index" class="logcard">
@@ -157,6 +177,8 @@ export default {
       book:require("@/assets/img/home_title_book.png"),
       user_change:require("@/assets/img/user_change.png"),
       user_historycat:require("@/assets/img/user_historycat.png"),
+      user_camera:require("@/assets/img/user_camera.png"),
+      user_dv:require("@/assets/img/user_dv.png"),
       ispet:1,
       user_id:0,
       pet_url:"",
@@ -185,6 +207,12 @@ export default {
     }
   },
   methods:{
+    selectFn1(e){
+
+    },
+    selectFn2(e){
+
+    },
     userhome_goto(e){
       this.$router.push("/"+e)
     },
@@ -540,8 +568,7 @@ body {
 .medium_txt2{
   margin-left: 170px;
   font-size: 24px;
-  margin-top: 8px;
-  
+  margin-top: 8px; 
 }
 .medium_txt3{
   font-size: 24px;
@@ -649,36 +676,76 @@ body {
   overflow:auto
 }
 .bottom_rigthbox_header{
-    width: 792px;
-    min-height: 150px;
-    background: #FDF0E3;
-    display: flex;
-    flex-direction: row;
-    position: relative;
+  width: 792px;
+  min-height: 150px;
+  background: #FDF0E3;
+  display: flex;
+  flex-direction: column;
 }
-.bottom_rigthbox_header_text1{
-  margin-left: 20px;
-  margin-top: 15px;
+.bottom_rigthbox_header2_txt1{
+  width: 736px;
+  min-height: 29px;
+  margin-top: 28px;
+  margin-left: 28px;
 }
-.bottom_rigthbox_header_text2box{
-  margin-left: 490px;
-  margin-top: 10px;
-  width: 120px;
-  height: 44px;
-  background-color: #F7D271;
+.bottom_rigthbox_header2_txt1_input{
+  background: #FDF0;
+  border-color: #FDF0;
+  width: 736px;
+  min-height: 70px;
+}
+.bottom_rigthbox_header2{
+  display: flex;
+  flex-direction: row;
+}
+.bottom_rigthbox_header2_txt2{
+  margin-left: 28px;
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+.bottom_rigthbox_header2_select1{
+  background: #F7D271;
+  border-color: #FDF0;
   border-radius: 10px;
+  height: 35px;
 }
-.bottom_rigthbox_header_text2{
-  margin-left: 16px;
-  margin-top: 7px;
-  color: #000000;
+.bottom_rigthbox_header2_txt3{
+  margin-left: 28px;
+  margin-top: 35px;
+  margin-bottom: 20px;
 }
-.user_historycat{
-  position: absolute;
-  width:170px;
-  height: 80px;
-  margin-left: 460px;
+.bottom_rigthbox_header2_select2{
+  background: #F7D271;
+  border-color: #FDF0;
+  border-radius: 10px;
+  height: 35px;
+  
 }
+.bottom_rigthbox_header2_img1{
+  margin-left: 28px;
+  margin-top: 35px;
+  width: 40px;
+  height: 33px;
+  margin-bottom: 20px;
+}
+.bottom_rigthbox_header2_img2{
+  margin-left: 28px;
+  margin-top: 35px;
+  width: 35px;
+  height: 38px;
+  margin-bottom: 20px;
+}
+.bottom_rigthbox_header2_txt4{
+  text-align: center;
+  margin-left: 250px;
+  margin-top: 35px;
+  height: 35px;
+  width: 50px;
+  background: #F7D271;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
 .bottom_rigthboxinner{
   padding-top: 20px;
   width: 792px;
