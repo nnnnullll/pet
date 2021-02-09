@@ -20,6 +20,8 @@ import otheruser from "../components/otheruser"
 import otheruserpt from "../components/otheruserpt"
 import otheruservd from "../components/otheruservd"
 import userhistory from "../components/userhistory"
+import userstar from "../components/userstar"
+import userhome from "../components/userhome"
 Vue.use(Router)
 
 export default  new Router({
@@ -167,6 +169,16 @@ export default  new Router({
       path: '/userhistory',
       name: 'userhistory',
       component: userhistory,
+    },
+    {
+      path: '/userstar',
+      name: 'userstar',
+      component: userstar,
+    },
+    {
+      path: '/userhome',
+      name: 'userhome',
+      component: userhome,
     },
   ]
 })

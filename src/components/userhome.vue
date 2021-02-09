@@ -34,8 +34,8 @@
       <img @click="userhome_goto('MedicalCard')" class="medium_book" :src="book">
     </div>
     <div class="othserusermedium">
-      <div @click="userhome_goto('userhome')" class="medium_txt1">主页</div>
-      <div class="medium_txt2">历史</div>
+      <div class="medium_txt1">主页</div>
+      <div @click="userhome_goto('userhistory')" class="medium_txt2">历史</div>
       <div @click="userhome_goto('userstar')" class="medium_txt3">收藏</div>
       <div @click="userhome_goto('usershezhi')" class="medium_txt4">设置</div>
     </div>
@@ -96,24 +96,16 @@
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
-            <div class="bottom_rigthbox_header_text1">
-              <select id="petselect" class="select2" @change="selectFn($event)">
-                <option value =0>请选择宠物</option>
-                <option value =1>所有宠物</option>
-                <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
-              </select>
-            </div>
-            <img class="user_historycat" :src="user_historycat" >
-            <div class="bottom_rigthbox_header_text2box">
-              <div class="bottom_rigthbox_header_text2">导出回忆</div>
-            </div>
+            
+
+
         </div>
         <div class="bottom_rigthboxinner">
-          <div v-for="(messageinform,index) in messageinform" :key="messageinform.index" class="logcard">
+          <div v-for="(messageinform,index) in messageinforms" :key="messageinform.index" class="logcard">
             <div class="loguserinfobox">
-              <img class="userimag" :src="user_url">
+              <img class="userimag" :src="messageinform.userurl">
               <div class="infoleft">
-                <span class="username">{{user_name}}</span>
+                <span class="username">{{messageinform.username}}</span>
                 <span class="datetime">{{messageinform.datatime}}</span>
               </div> 
             </div>
@@ -155,7 +147,7 @@ import { videoPlayer } from 'vue-video-player'
 import 'video.js/dist/video-js.css'
 const axios = require('axios');
 export default {
-  name: "userhistory",
+  name: "userhome",
   components:{
     vTop,
     videoPlayer
@@ -178,7 +170,7 @@ export default {
       fensi_num:23,
       fenxiang_num:222,
       pets:[],
-      messageinform:[],
+      messageinforms:[],
       playerOptions:[],
     }
   },
@@ -201,7 +193,6 @@ export default {
       console.log(e.target.selectedIndex) 
       if(e.target.selectedIndex==1){
         _this.ispet=1
-        _this.getuserinfo(_this.user_id)
       }
       else if(e.target.selectedIndex==0){
         return
@@ -211,63 +202,46 @@ export default {
         _this.pet_url=_this.pets[e.target.selectedIndex-2].pet.cwtx
         _this.pet_name=_this.pets[e.target.selectedIndex-2].pet.xm
         _this.pet_qianmin=_this.pets[e.target.selectedIndex-2].pet.pz
-        _this.getmessage(this.user_id,this.pets[e.target.selectedIndex-2].pet.cwid)
-      }
-    },
-    selectFn(e) {
-      const _this=this
-      console.log(e.target.selectedIndex) 
-      if(e.target.selectedIndex==1){
-        _this.getmessage(_this.user_id,0)
-      }
-      else if(e.target.selectedIndex==0){
-        return
-      }
-      else{
-        _this.getmessage(_this.user_id,_this.pets[e.target.selectedIndex-2].pet.cwid)
       }
     },
     async getmessage(e,t){
       const _this=this
-      if(localStorage.getItem("yhid"))
-        var a=localStorage.getItem("yhid")
-      else
-        var a=0
       this.playerOptions=[]
-      await axios.post('http://localhost:8000/usersharebyyhid?yhid='+e+'&zyhid='+a+'&cwid='+t)
+      await axios.post('http://localhost:8000/userstarsharebyyhid?yhid='+e+'&fqh='+t+'&follorstar=0')
       .then(async(response)=>{
         console.log(response)
-        this.messageinform=response.data
+        this.messageinforms=response.data
         // await this.setvid(response.data)
         for(var i=0;i<response.data.length;i++){
           console.log(response.data[i].isphoto)
           // if(response.data[i].isphoto=="0"){
-            let arrStr = {
-              playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
-              autoplay: false, //如果true,浏览器准备好时开始回放。
-              muted: false, // 默认情况下将会消除任何音频。
-              loop: false, // 导致视频一结束就重新开始。
-              preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-              language: "zh-CN",
-              aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-              fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-              notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-              sources: [
-                {
-                  type: "", //这里的种类支持很多种：基本视频格式、直播、流媒体等
-                  src: response.data[i].vdurl, //url地址 "../../static/vedio/test1.mp4"
-                },
-              ],
-              poster: "", //你的封面地址 "../../static/vedio/test.jpg"
-              controlBar: {
-                timeDivider: true,
-                durationDisplay: true,
-                remainingTimeDisplay: false,
-                fullscreenToggle: true, //全屏按钮
+          let arrStr = {
+            playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+            autoplay: false, //如果true,浏览器准备好时开始回放。
+            muted: false, // 默认情况下将会消除任何音频。
+            loop: false, // 导致视频一结束就重新开始。
+            preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+            language: "zh-CN",
+            aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+            fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+            notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+            sources: [
+              {
+                type: "", //这里的种类支持很多种：基本视频格式、直播、流媒体等
+                src: response.data[i].vdurl, //url地址 "../../static/vedio/test1.mp4"
               },
-            }
-            this.playerOptions.push(arrStr);
+            ],
+            poster: "", //你的封面地址 "../../static/vedio/test.jpg"
+            controlBar: {
+              timeDivider: true,
+              durationDisplay: true,
+              remainingTimeDisplay: false,
+              fullscreenToggle: true, //全屏按钮
+            },
           }
+          this.playerOptions.push(arrStr);
+        }
+        console.log(this.playerOptions)
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
@@ -561,12 +535,13 @@ body {
   margin-left: 180px;
   font-size: 24px;
   margin-top: 8px;
+  color: #FBA259;
 }
 .medium_txt2{
   margin-left: 170px;
   font-size: 24px;
   margin-top: 8px;
-  color: #FBA259;
+  
 }
 .medium_txt3{
   font-size: 24px;
@@ -577,13 +552,6 @@ body {
   margin-top: 8px;
   margin-left: 170px;
   font-size: 24px;
-}
-.select2{
-    border-radius: 20px;
-    height: 47px;
-    width: 130px;
-    background-color: #FDF0;
-    border-color: #FDF0;
 }
 .otheruserbottom{
   display: flex;
@@ -682,11 +650,10 @@ body {
 }
 .bottom_rigthbox_header{
     width: 792px;
-    height: 59px;
+    min-height: 150px;
     background: #FDF0E3;
     display: flex;
     flex-direction: row;
-    border-bottom: #BDB6B1 solid 1px;
     position: relative;
 }
 .bottom_rigthbox_header_text1{
@@ -713,8 +680,10 @@ body {
   margin-left: 460px;
 }
 .bottom_rigthboxinner{
+  padding-top: 20px;
   width: 792px;
   min-height: 400px;
+  margin-top: 20px;
   background: #FDF0E3;
 }
 .logcard{
