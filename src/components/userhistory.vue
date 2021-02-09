@@ -4,8 +4,15 @@
     <v-top></v-top>
     <div class="othseruserheader">
       <header class="header_userinfobox">
-        <img class="header_change" :src="user_change">
-        <div class="header_userinfobox_bottom">
+        <!-- <img class="header_change" :src="user_change"> -->
+        <div class="header_change">
+          <select class="select1" id="petselect"  @change="selectshijiaoFn($event)">
+            <option value =0>请选择视角</option>
+            <option value =1>主人视角</option>
+            <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}视角</option>
+          </select>
+        </div>
+        <div v-if="ispet==1" class="header_userinfobox_bottom">
           <img  v-image-preview   class="header_userurl" :src="user_url">
           <div class="header_textinfobox">
             <div class="header_nameguanzhu">
@@ -14,26 +21,35 @@
             <div class="header_textinfo_qianmin">{{user_qianmin}}</div>
           </div>
         </div>
+        <div v-else-if="ispet==0" class="header_userinfobox_bottom">
+          <img  v-image-preview   class="header_userurl" :src="pet_url">
+          <div class="header_textinfobox">
+            <div class="header_nameguanzhu">
+              <div class="header_textinfo_name">{{pet_name}}</div>
+            </div>
+            <div class="header_textinfo_qianmin">{{pet_qianmin}}</div>
+          </div>
+        </div>
       </header>
-      <img class="medium_book" :src="book">
+      <img @click="userhome_goto('MedicalCard')" class="medium_book" :src="book">
     </div>
     <div class="othserusermedium">
-      <div class="medium_txt1">主页</div>
+      <div @click="userhome_goto('userhome')" class="medium_txt1">主页</div>
       <div class="medium_txt2">历史</div>
-      <div class="medium_txt3">收藏</div>
-      <div class="medium_txt4">设置</div>
+      <div @click="userhome_goto('usershoucang')" class="medium_txt3">收藏</div>
+      <div @click="userhome_goto('usershezhi')" class="medium_txt4">设置</div>
     </div>
     <div class="otheruserbottom">
       <div class="bottom_leftbox">
         <div class="bottom_leftbox1">
           <div class="bottom_leftbox1_inner">
             <div>{{guanzhu_num}}</div>
-            <div>关注</div>
+            <div @click="userhome_goto('userguanzhu')">关注</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
             <div>{{fensi_num}}</div>
-            <div>粉丝</div>
+            <div @click="userhome_goto('userfensi')">粉丝</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
@@ -42,7 +58,7 @@
           </div>
         </div>
         <div class="bottom_leftbox2" >
-          <div class="petcard" v-for="(pet,index) in pets" :key="pet.index">
+          <div v-if="ispet==1" class="petcard" v-for="(pet,index) in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
               <img  v-image-preview   class="bottom_leftbox2_peturl" :src="pet.pet.cwtx" >
               <div class="bottom_leftbox2_info_right">
@@ -61,14 +77,36 @@
               <img v-image-preview   v-for="petpic in pet.petpic" class="petsimag" :src="petpic" >
             </div>
           </div>
+          <!-- 主人  宠物视角显示 -->
+          <div v-if="ispet==0" class="petcard" >
+            <div class="bottom_leftbox2_info">
+              <img  v-image-preview   class="bottom_leftbox2_peturl" :src="user_url" >
+              <div class="bottom_leftbox2_info_right">
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_name}}</div>
+                </div>
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_qianmin}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
-            <div>选择宠物</div>
-            <img :src="user_historycat" >
-            <div>导出回忆</div>
+            <div class="bottom_rigthbox_header_text1">
+              <select id="petselect" class="select2" @change="selectFn($event)">
+                <option value =0>请选择宠物</option>
+                <option value =1>所有宠物</option>
+                <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
+              </select>
+            </div>
+            <img class="user_historycat" :src="user_historycat" >
+            <div class="bottom_rigthbox_header_text2box">
+              <div class="bottom_rigthbox_header_text2">导出回忆</div>
+            </div>
         </div>
         <div class="bottom_rigthboxinner">
           <div v-for="(messageinform,index) in messageinform" :key="messageinform.index" class="logcard">
@@ -127,7 +165,11 @@ export default {
       book:require("@/assets/img/home_title_book.png"),
       user_change:require("@/assets/img/user_change.png"),
       user_historycat:require("@/assets/img/user_historycat.png"),
+      ispet:1,
       user_id:0,
+      pet_url:"",
+      pet_name:"用户名",
+      pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_url:"",
       user_name:"用户名",
       user_qianmin:"个性签名~个性签名~个性签名~最多20个字",
@@ -141,17 +183,50 @@ export default {
     }
   },
   activated:function(){
-    if(localStorage.getItem("yhid")){
-        console.log(localStorage.getItem("yhm"))
-        console.log(localStorage.getItem("yhid"))
-        this.getuserinfo(localStorage.getItem("yhm"))
-        this.getmessage(localStorage.getItem("yhid"))
+     
+    if(localStorage.getItem("yhid")){ 
+        this.user_name=localStorage.getItem("yhm")
+        this.getuserinfo()
     }
     else{
         this.gotologin()
     }
   },
   methods:{
+    userhome_goto(e){
+      this.$router.push("/"+e)
+    },
+    selectshijiaoFn(e){
+      const _this=this
+      console.log(e.target.selectedIndex) 
+      if(e.target.selectedIndex==1){
+        _this.ispet=1
+        _this.getuserinfo(_this.user_id)
+      }
+      else if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        _this.ispet=0
+        _this.pet_url=_this.pets[e.target.selectedIndex-2].pet.cwtx
+        _this.pet_name=_this.pets[e.target.selectedIndex-2].pet.xm
+        _this.pet_qianmin=_this.pets[e.target.selectedIndex-2].pet.pz
+        _this.getmessage(this.user_id,this.pets[e.target.selectedIndex-2].pet.cwid)
+      }
+    },
+    selectFn(e) {
+      const _this=this
+      console.log(e.target.selectedIndex) 
+      if(e.target.selectedIndex==1){
+        _this.getmessage(_this.user_id,0)
+      }
+      else if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        _this.getmessage(_this.user_id,_this.pets[e.target.selectedIndex-2].pet.cwid)
+      }
+    },
     setvid(e){
      for(var i=0;i<e.length;i++){
           console.log(e[i].isphoto)
@@ -189,13 +264,14 @@ export default {
       }
 
     },
-    async getmessage(e){
+    async getmessage(e,t){
       const _this=this
       if(localStorage.getItem("yhid"))
         var a=localStorage.getItem("yhid")
       else
         var a=0
-      await axios.post('http://localhost:8000/usersharebyyhid?yhid='+e+'&zyhid='+a)
+      this.playerOptions=[]
+      await axios.post('http://localhost:8000/usersharebyyhid?yhid='+e+'&zyhid='+a+'&cwid='+t)
       .then(async(response)=>{
         console.log(response)
         this.messageinform=response.data
@@ -237,7 +313,7 @@ export default {
       const _this=this
       axios.post('http://localhost:8000/petinfolistbyyhid?yhid='+e)
       .then((response)=>{
-        // console.log(response)
+        console.log(response)
         this.pets=response.data
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
@@ -247,7 +323,7 @@ export default {
       const _this= this
       axios.post('http://localhost:8000/user/gzfsfx?yhid='+e)
       .then((response)=>{
-        // console.log(response)
+        console.log(response)
         _this.guanzhu_num=response.data[0];
         _this.fensi_num=response.data[1];
         _this.fenxiang_num=response.data[2];
@@ -255,21 +331,24 @@ export default {
         console.log("---查询出错---！"+error);
       })
     },
-    getuserinfo(e){
+    getuserinfo(){
       const _this= this
-      axios.get('http://localhost:8000/user/getUserByNamelog/'+e)
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+"sywtest")
         .then(async res=>{
+          console.log(res.data)
           _this.user_id=res.data.yhid
           _this.user_name=res.data.yhm;
           _this.user_url=res.data.tx;
           _this.user_qianmin=res.data.gxqm;
           _this.getnum(res.data.yhid);
-          _this.getpet(res.data.yhid)
+          _this.getpet(res.data.yhid);
+          _this.getmessage(res.data.yhid,0);
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
     },
     loveplus(index) {
+      // console.log(this.messageinform)
       if(localStorage.getItem("yhid")){
         axios.get('http://localhost:8000/islike', {
           params:{
@@ -277,7 +356,7 @@ export default {
             jlid:this.messageinform[index].messagenum
           }
         }).then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           if(res.data=="wu"){
             axios.get('http://localhost:8000/addlike',{
             params:{
@@ -285,9 +364,8 @@ export default {
               jlid:this.messageinform[index].messagenum
             }
             }).then(res => {
-              console.log(res.data)
+              // console.log(res.data)
               if(res.data=="success"){
-                this.messageinform[index].love=false;
                 this.messageinform[index].islove="已喜欢"
                 this.messageinform[index].lovenumber++
               }
@@ -303,9 +381,8 @@ export default {
                 sc:0
               }
             }).then(res => {
-              console.log(res.data)
+              // console.log(res.data)
               if(res.data=="success"){
-                this.messageinform[index].love=false;
                 this.messageinform[index].islove="已喜欢"
                 this.messageinform[index].lovenumber++
               }
@@ -317,13 +394,12 @@ export default {
             axios.get('http://localhost:8000/uplike',{
               params:{
                 yhid:localStorage.getItem("yhid"),
-                jlid:this.messageinform.messagenum,
+                jlid:this.messageinform[index].messagenum,
                 sc:1
               }
             }).then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 if(res.data=="success"){
-                  this.messageinform[index].love=true;
                   this.messageinform[index].islove="喜欢"
                   this.messageinform[index].lovenumber--
                 }
@@ -342,26 +418,27 @@ export default {
       }
     },
     starplus(index) {
+        console.log(index)
+        console.log(this.messageinform)
         if(localStorage.getItem("yhid")){
             axios.get('http://localhost:8000/isstar', {
                 params:{
-                    yhid:localStorage.getItem("yhid"),
-                    jlid:this.messageinform[index].messagenum
+                  yhid:localStorage.getItem("yhid"),
+                  jlid:this.messageinform[index].messagenum
                 }
             }).then(res => {
                 console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addstar',{
                         params:{
-                            yhid:localStorage.getItem("yhid"),
-                            jlid:this.messageinform[index].messagenum
+                          yhid:localStorage.getItem("yhid"),
+                          jlid:this.messageinform[index].messagenum
                         }
                     }).then(res => {
                         console.log(res.data)
                         if(res.data=="success"){
-                            this.messageinform[index].star=false;
-                            this.messageinform[index].isstar="已收藏"
-                            this.messageinform[index].starnumber++
+                          this.messageinform[index].isstar="已收藏"
+                          this.messageinform[index].starnumber++
                         }
                     })
                     .catch(err => {
@@ -369,34 +446,34 @@ export default {
                     })
                 }
                 else if(res.data=="1"){
+                  console.log(this.messageinform[index].messagenum)
                     axios.get('http://localhost:8000/upstar',{
                         params:{
-                            yhid:localStorage.getItem("yhid"),
-                            jlid:this.messageinform[index].messagenum,
-                            sc:0
+                          yhid:localStorage.getItem("yhid"),
+                          jlid:this.messageinform[index].messagenum,
+                          sc:0
                         }
                     }).then(res => {
                         console.log(res.data)
                         if(res.data=="success"){
-                            this.messageinform[index].star=false;
-                            this.messageinform[index].isstar="已收藏"
-                            this.messageinform[index].starnumber++
+                          this.messageinform[index].isstar="已收藏"
+                          this.messageinform[index].starnumber++
                         }
                     }).catch(err => {
                         console.log('再关注环节错误：'+err)//
                     })
                 }
                 else{
+                  console.log(index)
                     axios.get('http://localhost:8000/upstar',{
                         params:{
-                            yhid:localStorage[index].getItem("yhid"),
+                            yhid:localStorage.getItem("yhid"),
                             jlid:this.messageinform[index].messagenum,
                             sc:1
                         }
                     }).then(res => {
                         console.log(res.data)
                         if(res.data=="success"){
-                            this.messageinform[index].star=true;
                             this.messageinform[index].isstar="收藏"
                             this.messageinform[index].starnumber--
                         }
@@ -456,6 +533,13 @@ body {
   height: 47px;
   width: 165px;
   margin-top: 30px;
+}
+.select1{
+  border-radius: 20px;
+  height: 47px;
+  width: 130px;
+  background-color: #FDF0E3;
+  border-color: #FDF0e3;
 }
 .header_userinfobox_bottom{
   display: flex;
@@ -530,6 +614,13 @@ body {
   margin-top: 8px;
   margin-left: 170px;
   font-size: 24px;
+}
+.select2{
+    border-radius: 20px;
+    height: 47px;
+    width: 130px;
+    background-color: #FDF0;
+    border-color: #FDF0;
 }
 .otheruserbottom{
   display: flex;
@@ -629,9 +720,34 @@ body {
 .bottom_rigthbox_header{
     width: 792px;
     height: 59px;
+    background: #FDF0E3;
+    display: flex;
+    flex-direction: row;
+    border-bottom: #BDB6B1 solid 1px;
+    position: relative;
+}
+.bottom_rigthbox_header_text1{
+  margin-left: 20px;
+  margin-top: 15px;
+}
+.bottom_rigthbox_header_text2box{
+  margin-left: 490px;
+  margin-top: 10px;
+  width: 120px;
+  height: 44px;
+  background-color: #F7D271;
+  border-radius: 10px;
+}
+.bottom_rigthbox_header_text2{
+  margin-left: 16px;
+  margin-top: 7px;
+  color: #000000;
 }
 .user_historycat{
-
+  position: absolute;
+  width:170px;
+  height: 80px;
+  margin-left: 460px;
 }
 .bottom_rigthboxinner{
   width: 792px;

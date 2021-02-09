@@ -4,8 +4,15 @@
     <v-top></v-top>
     <div class="othseruserheader">
       <header class="header_userinfobox">
-        <img class="header_change" :src="user_change">
-        <div class="header_userinfobox_bottom">
+        <!-- <img class="header_change" :src="user_change"> -->
+        <div class="header_change">
+          <select class="select1" id="petselect"  @change="selectshijiaoFn($event)">
+            <option value =0>请选择视角</option>
+            <option value =1>主人视角</option>
+            <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}视角</option>
+          </select>
+        </div>
+        <div v-if="ispet==1" class="header_userinfobox_bottom">
           <img  v-image-preview   class="header_userurl" :src="user_url">
           <div class="header_textinfobox">
             <div class="header_nameguanzhu">
@@ -13,6 +20,15 @@
               <div @click="guanzhu()" class="header_guanzhu">{{user_guanzhu}}</div>
             </div>
             <div class="header_textinfo_qianmin">{{user_qianmin}}</div>
+          </div>
+        </div>
+         <div v-else-if="ispet==0" class="header_userinfobox_bottom">
+          <img  v-image-preview   class="header_userurl" :src="pet_url">
+          <div class="header_textinfobox">
+            <div class="header_nameguanzhu">
+              <div class="header_textinfo_name">{{pet_name}}</div>
+            </div>
+            <div class="header_textinfo_qianmin">{{pet_qianmin}}</div>
           </div>
         </div>
       </header>
@@ -40,7 +56,7 @@
           </div>
         </div>
         <div class="bottom_leftbox2" >
-          <div class="petcard" v-for="(pet,index) in pets" :key="pet.index">
+          <div v-if="ispet==1" class="petcard" v-for="(pet,index) in pets" :key="pet.index">
             <div class="bottom_leftbox2_info">
               <img  v-image-preview   class="bottom_leftbox2_peturl" :src="pet.pet.cwtx" >
               <div class="bottom_leftbox2_info_right">
@@ -57,6 +73,20 @@
             </div>
             <div class="petsimags">
               <img v-image-preview   v-for="petpic in pet.petpic" class="petsimag" :src="petpic" >
+            </div>
+          </div>
+          <!-- 主人  宠物视角显示 -->
+          <div v-if="ispet==0" class="petcard" >
+            <div class="bottom_leftbox2_info">
+              <img  v-image-preview   class="bottom_leftbox2_peturl" :src="user_url" >
+              <div class="bottom_leftbox2_info_right">
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_name}}</div>
+                </div>
+                <div class="bottom_leftbox2_info_hang">
+                  <div class="bottom_leftbox2_info_hang_item">{{user_qianmin}}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -118,6 +148,10 @@ export default {
   data(){
     return{
       user_change:require("@/assets/img/user_change.png"),
+      ispet:1,
+       pet_url:"",
+      pet_name:"用户名",
+      pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_id:0,
       user_url:"",
       user_name:"",
@@ -133,9 +167,26 @@ export default {
   },
   activated:function(){
     this.getuserinfo( this.$route.params.yhm)
-    this.getmessage(this.$route.params.yhid)
   },
   methods:{
+    selectshijiaoFn(e){
+      const _this=this
+      console.log(e.target.selectedIndex) 
+      if(e.target.selectedIndex==1){
+        _this.ispet=1
+        _this.getuserinfo(_this.user_name)
+      }
+      else if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        _this.ispet=0
+        _this.pet_url=_this.pets[e.target.selectedIndex-2].pet.cwtx
+        _this.pet_name=_this.pets[e.target.selectedIndex-2].pet.xm
+        _this.pet_qianmin=_this.pets[e.target.selectedIndex-2].pet.pz
+        _this.getmessage(this.user_id,this.pets[e.target.selectedIndex-2].pet.cwid)
+      }
+    },
     setvid(e){
      for(var i=0;i<e.length;i++){
           console.log(e[i].isphoto)
@@ -173,13 +224,14 @@ export default {
       }
 
     },
-    async getmessage(e){
+    async getmessage(e,t){
       const _this=this
       if(localStorage.getItem("yhid"))
         var a=localStorage.getItem("yhid")
       else
         var a=0
-      await axios.post('http://localhost:8000/usersharebyyhid?yhid='+e+'&zyhid='+a)
+      _this.playerOptions=[]
+      await axios.post('http://localhost:8000/usersharebyyhid?yhid='+e+'&zyhid='+a+'&cwid='+t)
       .then(async(response)=>{
         console.log(response)
         this.messageinform=response.data
@@ -275,7 +327,8 @@ export default {
           _this.user_qianmin=res.data.gxqm;
           _this.getguanzhu(res.data.yhid);
           _this.getnum(res.data.yhid);
-          _this.getpet(res.data.yhid)
+          _this.getpet(res.data.yhid);
+          _this.getmessage(res.data.yhid,0)
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
@@ -391,7 +444,6 @@ export default {
             }).then(res => {
               console.log(res.data)
               if(res.data=="success"){
-                this.messageinform[index].love=false;
                 this.messageinform[index].islove="已喜欢"
                 this.messageinform[index].lovenumber++
               }
@@ -403,13 +455,12 @@ export default {
             axios.get('http://localhost:8000/uplike',{
               params:{
                 yhid:localStorage.getItem("yhid"),
-                jlid:this.messageinform.messagenum,
+                jlid:this.messageinform[index].messagenum,
                 sc:1
               }
             }).then(res => {
                 console.log(res.data)
                 if(res.data=="success"){
-                  this.messageinform[index].love=true;
                   this.messageinform[index].islove="喜欢"
                   this.messageinform[index].lovenumber--
                 }
@@ -445,7 +496,6 @@ export default {
                     }).then(res => {
                     console.log(res.data)
                     if(res.data=="success"){
-                        this.messageinform[index].star=false;
                         this.messageinform[index].isstar="已收藏"
                         this.messageinform[index].starnumber++
                     }
@@ -464,7 +514,6 @@ export default {
                     }).then(res => {
                     console.log(res.data)
                     if(res.data=="success"){
-                        this.messageinform[index].star=false;
                         this.messageinform[index].isstar="已收藏"
                         this.messageinform[index].starnumber++
                     }
@@ -475,14 +524,13 @@ export default {
                 else{
                     axios.get('http://localhost:8000/upstar',{
                     params:{
-                        yhid:localStorage[index].getItem("yhid"),
+                        yhid:localStorage.getItem("yhid"),
                         jlid:this.messageinform[index].messagenum,
                         sc:1
                     }
                     }).then(res => {
                         console.log(res.data)
                         if(res.data=="success"){
-                            this.messageinform[index].star=true;
                             this.messageinform[index].isstar="收藏"
                             this.messageinform[index].starnumber--
                         }
@@ -545,6 +593,13 @@ body {
   height: 47px;
   width: 165px;
   margin-top: 30px;
+}
+.select1{
+  border-radius: 20px;
+  height: 47px;
+  width: 130px;
+  background-color: #FDF0E3;
+  border-color: #FDF0e3;
 }
 .header_userinfobox_bottom{
   display: flex;
