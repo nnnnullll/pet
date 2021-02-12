@@ -28,7 +28,7 @@
       <div v-if="showflag==true" class="resnum" style="display: flex;flex-direction: row;justify-content: center">共找到{{this.length}}位饲养员  |  按相关度排序 </div>
       <div v-if="showflag==true&&index<length" v-for="(item,index) in users "  :key="index" >
         <div class="showuser" style="display: flex;flex-direction: row">
-          <img class="usersimg" :src="item.circleurl">
+          <img class="usersimg" :src="item.circleurl" @click="gotouser(item.username,useridtmp[index],item.circleurl)">
           <div class="box">
             <div class="userinfo" style="display: flex;flex-direction: row;margin-left: 4.6%">
               <div class="name">{{item.username}}</div>
@@ -140,6 +140,16 @@ export default {
     }
   },
   methods:{
+    gotouser(e,i,t){
+      this.$router.push({
+        name: 'otheruser',
+        params: {
+          yhm: e,
+          yhid:i,
+          tx:t
+        }
+      })
+    },
     // 接收页面跳转得参数
     getRouterData() {
       // 接收top栏参数
