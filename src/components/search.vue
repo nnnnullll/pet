@@ -79,10 +79,6 @@ export default {
       length:0,
       showflag:false,
       tmp:0,
-      user: {
-        input: '',
-        password: '',
-      },
       searchcontent:'',
       imgUrl:require("@/assets/img/img1.png"),
       userimg:require("@/assets/img/userimg.png"),
@@ -93,7 +89,7 @@ export default {
       //users表示后端返回的模糊查询的四个用户信息，包括用户名、粉丝数、动态数、最近一条动态和最近三张照片
       users:[
         {username:'张三',
-          num:132,
+          num:-1,
           count:10,
           flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
@@ -102,7 +98,7 @@ export default {
           msg:''
         },
         {username:'李四',
-          num:412,
+          num:-1,
           count:8,
           flag:true,
           circleurl:"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=757545797,2214471709&fm=11&gp=0.jpg",
@@ -111,7 +107,7 @@ export default {
           msg:''
         },
         {username:'王五',
-          num:23,
+          num:-1,
           count:53,
           flag:true,
           circleurl:"https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1549131754,2955370505&fm=26&gp=0.jpg",
@@ -120,7 +116,7 @@ export default {
           msg:''
         },
         {username:'赵六',
-          num:732,
+          num:-1,
           count: 946,
           flag:true,
           circleurl:"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3562519436,2223863513&fm=26&gp=0.jpg",
@@ -140,7 +136,6 @@ export default {
   activated:function(){
     if(this.$route.params.topsearch){
       this.$refs.searchval.value=this.$route.params.topsearch
-      console.log("!!!!!!!:"+this.$refs.searchval.value)
       this.search()
     }
   },
@@ -241,9 +236,6 @@ export default {
                         var data=response.data;
                         this.users[i].num=data
                       }
-                      else{
-                        alert('查询失败，请重试！')
-                      }
                     }).catch(function (error) { // 请求失败处理
                       console.log("---查询出错---！"+error);
                     })
@@ -251,7 +243,8 @@ export default {
                     console.log("---查询出错---！"+error);
                   })
                 }
-                console.log(this.users)
+                console.log("response:")
+                console.log(this.users.sort(this.compare('num')))
               }
             })
             .catch((err) => {
@@ -394,7 +387,13 @@ export default {
       this.$refs.searchval.value="";
       this.length=0
     },
-
+    compare(property){
+      return function(a,b){
+        var value1 = a[property];
+        var value2 = b[property];
+        return value2 - value1;
+      }
+    },
     /**
      * 检索当前路径
      * @param path
@@ -404,8 +403,6 @@ export default {
       this.navIndex = this.nav.findIndex(item => item.path === path);
     }
   },
-  mounted() {
-  },
   watch: {
     "$route"() {
       // 获取当前路径
@@ -414,22 +411,8 @@ export default {
       this.checkRouterLocal(path);
     }
   },
-  computed:{
-    Sort:function(){
-      var temp=this.users;
-      return temp
-      //return sortKey(temp,'num');
-    }
-  }
 }
-function sortKey(array,key){
-  return array.sort(
-      function(a,b){
-        var x = a[key];
-        var y = b[key];
-        return ((x>y)?-1:(x<y)?1:0)
-  })
-}
+
 </script>
 
 <style scoped>
