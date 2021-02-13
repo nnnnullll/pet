@@ -266,7 +266,7 @@ export default {
          formData.append("file", item.file)
       })
       let headers = {headers: {"Content-Type": "multipart/form-data"}}//设置上传文件格式，为指定传输数据为二进制类型
-      axios.post('/uploadimg',formData,headers)
+      axios.post('/useruploadimg',formData,headers)
         .then(res => {
           if(res.status){
             console.log('文件上传成功')
