@@ -1,27 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import R from '../views/register'//视图组件导入 改别名Register
-import Othershome from '../views/othershome'
-import PetRegister from '../components/petregister'
-import PetLog from '../components/petlog'
-import PetLog2 from '../components/petlog2'
-import Home from '../components/home'
-import Content from "../components/Content";
-import Testcomp from "../components/Testcomp/Testcomp";
-import Test from "../views/test";
-import sortcomp from "../components/sortcomp/sortcomp";
-import search from "../components/search";
-import pethome from "../components/pethome";
-import lan from "../components/lan"
-import knowledgecard from "../components/knowledgecard";
-import hospital from "../components/hospital";
-import Zhongzhuan from "../components/zhongzhuan"
-import otheruser from "../components/otheruser"
-import otheruserpt from "../components/otheruserpt"
-import otheruservd from "../components/otheruservd"
-import userhistory from "../components/userhistory"
-import userstar from "../components/userstar"
-import userhome from "../components/userhome"
+
 Vue.use(Router)
 
 export default  new Router({
@@ -30,70 +9,55 @@ export default  new Router({
     {
       path:'/r',//网站访问路径
       name:'R',//这个路由的名字叫Regiter
-      component:R,//内容就是上面引入的视图组件Register
+      component:()=>import("../views/register"),
     },
     {
       path:'/o',
       name:'Othershome',
-      component:Othershome,
-
+      component:()=>import("../views/othershome"),
     },
     {
       path:'/petregister',
       name:'PetRegister',
-      component:PetRegister,
+      component:()=>import("../components/petregister"),
   
     },
     {
       path:'/log',
       name:'Petlog',
-      component:PetLog,
+      component:()=>import("../components/petlog"),
     
     },
     {
       path:'/log2',
       name:'Petlog2',
-      component:PetLog2,
+      component:()=>import("../components/petlog2"),
     
     },
     {
       path:'/home',
       name:'Home',
-      component:Home,
-     
+      component:()=>import("../components/home"),
     },
     {
       //路由路径
       path: '/content',
       //跳转的组件
       name: 'content',
-      component: Content,
+      component:()=>import("../components/Content"),
       
-    },
-    {
-      path:'/test',
-      name:'test',
-      component: Testcomp,
-     
     },
     {
       path:'/t',
       name:'t',
-      component: Test,
-     
-    },
-    {
-      path:'/sort',
-      name:'sort',
-      component: sortcomp,
-     
+      component:()=>import("../views/test"),
     },
     {
       //路由路径
       path: '/search',
       //跳转的组件
       name: 'Search',
-      component: search,
+      component:()=>import("../components/search"),
     },
     {
       //路由路径
@@ -114,7 +78,7 @@ export default  new Router({
       path: '/pethome',
       //跳转的组件
       name: 'pethome',
-      component: pethome,
+      component:()=>import("../components/pethome"),
       meta: {
         requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
       },
@@ -124,7 +88,7 @@ export default  new Router({
       path: '/lan',
       //跳转的组件
       name: 'lan',
-      component: lan,
+      component:()=>import("../components/lan"),
       
     },
     {
@@ -132,53 +96,62 @@ export default  new Router({
       path: '/knowledgecard',
       //跳转的组件
       name: 'knowledgecard',
-      component: knowledgecard,
+      component:()=>import("../components/knowledgecard"),
     },
     {
       //路由路径
       path: '/hospital',
       //跳转的组件
       name: 'hospital',
-      component: hospital,
+      component:()=>import("../components/hospital"),
       meta: {
         requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
       },
-     
     },
     {
       path: '/zhongzhuan',
       name: 'Zhongzhuan',
-      component: Zhongzhuan,
+      component:()=>import("../components/zhongzhuan"),
     },
     {
       path: '/otheruser',
       name: 'otheruser',
-      component: otheruser,
+      component:()=>import("../components/otheruser"),
     },
     {
       path: '/otheruserpt',
       name: 'otheruserpt',
-      component: otheruserpt,
+      component:()=>import("../components/otheruserpt"),
     },
     {
       path: '/otheruservd',
       name: 'otheruservd',
-      component: otheruservd,
+      component:()=>import("../components/otheruservd"),
     },
     {
       path: '/userhistory',
       name: 'userhistory',
-      component: userhistory,
+      component:()=>import("../components/userhistory"),
     },
     {
       path: '/userstar',
       name: 'userstar',
-      component: userstar,
+      component:()=>import("../components/userstar"),
     },
     {
       path: '/userhome',
       name: 'userhome',
-      component: userhome,
+      component:()=>import("../components/userhome"),
+    },
+    {
+      path: '/usershezhi',
+      name: 'usershezhi',
+      component:()=>import("../components/usershezhi"),
+    },
+    {
+      path: '/petinfo',
+      name: 'petinfo',
+      component:()=>import("../components/petinfo"),
     },
   ]
 })

@@ -55,7 +55,7 @@
             <el-col :span="6" class="userright">
               <el-row>
                 <el-col :span="10">
-                  <div @click="gotouser(item.username,useridtmp[index],item.userUrl)" class="username">{{item.username}}</div>
+                  <div @click="gotouser(item.username,useridtmp[index],item.userUrl)"      class="username">{{item.username}}</div>
                 </el-col>
                 <el-col :span="4">
                   <div class="guanzhu">
