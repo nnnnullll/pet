@@ -96,18 +96,29 @@
 <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
-          <div class="bottom_rigthbox_header2_txt1">
-            <textarea name="input1" id="input1"  placeholder="有什么和大家分享的？" class="bottom_rigthbox_header2_txt1_input"></textarea>
+          <div class="bottom_rigthbox_header1_txt1">
+            <textarea name="input1" id="input1"  placeholder="有什么和大家分享的？" class="bottom_rigthbox_header1_txt1_input"></textarea>
+            <div v-if="status == 'ready'" class="file-list" style="width: 663px">
+              <section v-for="(file, index) of files" class="file-item draggable-item" >
+                <img :src="file.src" alt="" ondragstart="return false;">
+                <span class="file-remove " @click="remove(index)" >+</span>
+              </section>
+              <section v-if="status == 'ready'&&files.length<9" class="file-item">
+                <div @click="add(1)" style="margin-top: 40px;" class="add">
+                  <span>+</span>
+                </div>
+              </section>
+            </div>
           </div>
           <div class="bottom_rigthbox_header2">
             <div class="bottom_rigthbox_header2_txt2">
               <select id="petselect" class="bottom_rigthbox_header2_select1" @change="selectFn1($event)">
                 <option value =0>请选择宠物</option>
-                <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
+                <option v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
               </select>
             </div>
             <div class="bottom_rigthbox_header2_txt3">
-              <select id="petselect" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
+              <select id="fqhselect" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
                 <option value =0>请选择分区</option>
                 <option value =1>萌宠日常</option>
                 <option value =2>养护知识</option>
@@ -115,9 +126,11 @@
                 <option value =4>学习训练</option>
               </select>
             </div>
-            <img class="bottom_rigthbox_header2_img1" :src="user_camera">
-            <img class="bottom_rigthbox_header2_img2" :src="user_dv">
-            <div class="bottom_rigthbox_header2_txt4">发布</div>
+            <img v-if="status == 'pre'"  @click="add(1)" class="bottom_rigthbox_header2_img1" :src="user_camera">
+            <input v-if="arr.isphoto ==1" class="share_input" type="file" accept="image/*" @change="fileChanged" ref="file" multiple="multiple">
+            <input v-if="arr.isphoto ==0" class="share_input" type="file" accept="video/*" @change="fileChanged" ref="file" multiple="multiple">
+            <img v-if="status == 'pre'" @click="add(0)" class="bottom_rigthbox_header2_img2" :src="user_dv">
+            <div class="bottom_rigthbox_header2_txt4"   @click="submit">发布</div>
           </div>
         </div>
         <div class="bottom_rigthboxinner">
@@ -194,10 +207,25 @@ export default {
       pets:[],
       messageinforms:[],
       playerOptions:[],
+      status: 'pre',
+      files: [],
+      uploading: false,
+      percent: 0,
+      arr:{
+        userid:0,
+        username:"",
+        userurl:"",
+        datatime:"",
+        passage:"",
+        photourl:[],
+        vdurl:[],
+        isphoto:9,
+        fqh:1,
+        cwid:0,
+      }
     }
   },
   activated:function(){
-     
     if(localStorage.getItem("yhid")){ 
         this.user_name=localStorage.getItem("yhm")
         this.getuserinfo()
@@ -207,11 +235,103 @@ export default {
     }
   },
   methods:{
-    selectFn1(e){
+    add(e) {
+      this.arr.isphoto=e
+      this.$refs.file.click()//调用file的click事件  
+      this.status="ready"
+    },
+    remove(index) {
+      this.files.splice(index, 1)
+    },
+    current() {
+				var d = new Date(),
+				str = '';
+				str += d.getFullYear() + '-'; //获取当前年份 
+				str += d.getMonth() + 1 + '-'; //获取当前月份（0——11） 
+				str += d.getDate() + ' ';
+				str += d.getHours() + ':';
+				str += d.getMinutes() + ':';
+				str += d.getSeconds() + ' ';
+				return str;
+		},
+    submit() {
+      if (this.files.length === 0) {
+        console.warn('no file!');
+        return
+      }
+      let formData = new FormData()
+      //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
+      this.files.forEach((item) => {
+        // console.log(item)
+         formData.append("file", item.file)
+      })
+      let headers = {headers: {"Content-Type": "multipart/form-data"}}//设置上传文件格式，为指定传输数据为二进制类型
+      axios.post('/uploadimg',formData,headers)
+        .then(res => {
+          if(res.status){
+            console.log('文件上传成功')
+            console.log(res.data)
+            var $reason = document.getElementById('input1').value;
+            this.arr.passage=$reason
+            this.arr.photourl=res.data
+            this.arr.vdurl=res.data
+            this.arr.datatime=this.current()
+            console.log(this.arr)
+            axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
+            .then((response)=>{
+              this.files=[]
+              this.status="pre"
 
+            }).catch(function (error) { // 请求失败处理
+              console.log("---查询出错---！"+error);
+            })
+          }else{
+            console.log('上传失败')
+          }
+        })
+        .catch(err => {
+          console.log('上传失败',err)
+        })
+    },
+    fileChanged() {
+      const list = this.$refs.file.files
+      for (let i = 0; i < list.length; i++) {
+        if (!this.isContain(list[i])) {
+          const item = {
+            file: list[i]
+          }
+          this.html5Reader(list[i], item)
+          this.files.push(item)
+        }
+      }
+      this.$refs.file.value = ''
+    },
+    // 将图片文件转成BASE64格式
+    html5Reader(file, item){
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.$set(item, 'src', e.target.result)
+      }
+      reader.readAsDataURL(file)
+    },
+    isContain(file) {
+      return this.files.find((item) => item.name === file.name && item.size === file.size)    
+    },
+    selectFn1(e){
+      if(e.target.selectedIndex==0){
+        this.arr.cwid=0
+      }
+      else{
+        this.arr.cwid=this.pets[e.target.selectedIndex-1].pet.cwid
+      }
     },
     selectFn2(e){
-
+      if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        this.arr.fqh=e.target.selectedIndex
+      }
     },
     userhome_goto(e){
       this.$router.push("/"+e)
@@ -301,13 +421,17 @@ export default {
       axios.get('http://localhost:8000/user/getUserByNamelog/'+"sywtest")
         .then(async res=>{
           console.log(res.data)
-          _this.user_id=res.data.yhid
+          _this.user_id=res.data.yhid;
           _this.user_name=res.data.yhm;
           _this.user_url=res.data.tx;
           _this.user_qianmin=res.data.gxqm;
           _this.getnum(res.data.yhid);
           _this.getpet(res.data.yhid);
           _this.getmessage(res.data.yhid,0);
+
+          _this.arr.userid=res.data.yhid;
+          _this.arr.username=res.data.yhm;
+          _this.arr.userurl=res.data.tx;
         }).catch(err => {
           console.log('错误！！！！：'+err)
       })
@@ -682,27 +806,81 @@ body {
   display: flex;
   flex-direction: column;
 }
-.bottom_rigthbox_header2_txt1{
-  width: 736px;
-  min-height: 29px;
+.bottom_rigthbox_header1_txt1{
+  width: 700px;
+  min-height: 40px;
   margin-top: 28px;
-  margin-left: 28px;
+  margin-left: 43px;
 }
-.bottom_rigthbox_header2_txt1_input{
+.bottom_rigthbox_header1_txt1_input{
   background: #FDF0;
   border-color: #FDF0;
-  width: 736px;
-  min-height: 70px;
+  width: 700px;
+  min-height: 100px;
+}
+.file-list {
+  padding: 3px 0px;
+}
+.file-list:after {
+  content: '';
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+  font-size: 0;
+}
+.file-list .file-item {
+  float: left;
+  position: relative;
+  width: 200px;
+  text-align: center;
+}
+.file-list .file-item img{
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  padding-left: 2px;
+}
+.file-list .file-item .file-remove {
+  position: absolute;
+  right: 12px;
+  display: none;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  color: white;
+  cursor: pointer;
+  line-height: 12px;
+  border-radius: 100%;
+  transform: rotate(45deg);
+  background: rgba(0, 0, 0, 0.5);
+   display: inline;
+}
+.add {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px;
+  float: left;
+  text-align: center;
+  line-height: 80px;
+  border: 1px dashed #ececec;
+  font-size: 30px;
+  cursor: pointer;
+}
+.share_input{
+  display:none
 }
 .bottom_rigthbox_header2{
   display: flex;
   flex-direction: row;
+  height: 48px;
 }
 .bottom_rigthbox_header2_txt2{
-  margin-left: 28px;
-  margin-top: 35px;
+  margin-left: 43px;
+  margin-top: 1px;
   margin-bottom: 20px;
-}
+} 
 .bottom_rigthbox_header2_select1{
   background: #F7D271;
   border-color: #FDF0;
@@ -711,7 +889,7 @@ body {
 }
 .bottom_rigthbox_header2_txt3{
   margin-left: 28px;
-  margin-top: 35px;
+  margin-top: 1px;
   margin-bottom: 20px;
 }
 .bottom_rigthbox_header2_select2{
@@ -723,22 +901,22 @@ body {
 }
 .bottom_rigthbox_header2_img1{
   margin-left: 28px;
-  margin-top: 35px;
+  margin-top: 1px;
   width: 40px;
   height: 33px;
   margin-bottom: 20px;
 }
 .bottom_rigthbox_header2_img2{
   margin-left: 28px;
-  margin-top: 35px;
+  margin-top: 1px;
   width: 35px;
   height: 38px;
   margin-bottom: 20px;
 }
 .bottom_rigthbox_header2_txt4{
   text-align: center;
-  margin-left: 250px;
-  margin-top: 35px;
+  margin-left: 260px;
+  margin-top: 1px;
   height: 35px;
   width: 50px;
   background: #F7D271;
