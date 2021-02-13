@@ -13,7 +13,7 @@
             <img @click="home_goto('hospital')" class="homelogo23" :src="logo3">
             <!-- 分区 -->
             <div class="homelans">
-                <img @click="home_gotosearch('1')" class="homelan1" :src="lan1"> <!-- 萌宠日常 -->
+                <img @click="home_gotosearch('1w')" class="homelan1" :src="lan1"> <!-- 萌宠日常 -->
                 <img @click="home_gotosearch('2')" class="homelan2" :src="lan2"> <!-- 学习训练 -->
             </div>
             <div class="homelans">
