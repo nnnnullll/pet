@@ -784,7 +784,7 @@ body {
   position: absolute;
   width:170px;
   height: 80px;
-  margin-left: 600px;
+  /*margin-left: 600px;*/
 }
 .bottom_rigthboxinner{
   width: 792px;

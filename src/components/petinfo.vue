@@ -98,18 +98,49 @@
         <div class="bottom_rigthbox_header">
           <div class="medium_txt2" @click="userhome_goto('usershezhi')">主人信息</div>
           <div class="medium_txt4" >宠物信息</div>
-        </div>
-        <div class="bottom_rigthbox_header">
-          <div class="bottom_rigthbox_header_text1">
-            <select id="petselect" class="select2" @change="selectFn($event)">
-              <option value =0>请选择宠物</option>
-              <option value =1>所有宠物</option>
-              <option value=pet.pet.cwid v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
-            </select>
-          </div>
           <img class="user_historycat" :src="user_historycat" >
+
         </div>
-        <div class="bottom_rigthboxinner">
+        <div class="bottom_rigthboxinner" style="display: flex;flex-direction:column">
+          <div style="display: flex;flex-direction: row;padding-top: 4%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">宠物名</div>
+            <!--            flag=false的时候readonly-->
+            <input class="input-before" v-model="pets[index].pet.xm" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pets[index].pet.xm"></input>
+            <div @click="changeFlag1">{{msg1}}</div>
+          </div>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%">品种</div>
+            <input class="input-before"v-model="pets[index].pet.pz" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pets[index].pet.pz"></input>
+            <div @click="changeFlag2">{{msg2}}</div>
+          </div>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">出生日期</div>
+            <input class="input-before" v-model="pets[index].pet.csrq" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pets[index].pet.csrq"></input>
+            <div @click="changeFlag3">{{msg3}}</div>
+          </div>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">性别</div>
+            <input class="input-before" v-model="pets[index].pet.xb" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pets[index].pet.xb"></input>
+            <div @click="changeFlag4">{{msg4}}</div>
+          </div>
+          <div class="confirmbtn" style="margin-left: 70%">
+            <div style="text-align: center;font-size: 28px;" @click="renew">确认修改</div>
+          </div>
+          <div style="display: flex;flex-direction: row;margin-top: 20px;margin-left: 85px">
+            <div style="display: flex;flex-direction: row;margin-right: 30%" >
+              <img :src="former">
+              <div style="margin-top: 20px"  @click="previous">上一个宠物</div>
+            </div>
+            <div style="display: flex;flex-direction: row" v-show="index<pets.length-1">
+              <div style="margin-top: 20px"  @click="next">下一个宠物</div>
+              <img :src="latter">
+            </div>
+            <div style="display: flex;flex-direction: row" v-show="index=pets.length-1">
+              <div style="margin-top: 20px"  @click="next">新建宠物</div>
+              <img :src="latter">
+            </div>
+
+          </div>
 
         </div>
       </div>
@@ -130,6 +161,16 @@ export default {
   },
   data(){
     return{
+      msg1:"编辑",
+      msg2:"编辑",
+      msg3:"编辑",
+      msg4:"编辑",
+      flag1:false,
+      flag2:false,
+      flag3:false,
+      flag4:false,
+      former:require("@/assets/img/former.png"),
+      latter:require("@/assets/img/latter.png"),
       book:require("@/assets/img/home_title_book.png"),
       user_change:require("@/assets/img/user_change.png"),
       user_historycat:require("@/assets/img/user_historycat.png"),
@@ -137,6 +178,9 @@ export default {
       user_id:0,
       pet_url:"",
       pet_name:"用户名",
+      pet_kind:"团宠喵",
+      pet_age:"18",
+      pet_gender:"女",
       pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_url:"",
       user_name:"用户名",
@@ -145,6 +189,7 @@ export default {
       guanzhu_num:22,
       fensi_num:23,
       fenxiang_num:222,
+      index:0,
       pets:[],
       messageinform:[],
       playerOptions:[],
@@ -160,6 +205,84 @@ export default {
     }
   },
   methods:{
+    previous(){
+      if(this.index>0)
+      {
+        this.index--;
+        console.log("下标："+this.index)
+      }
+      else {
+        alert("已经是第一个宠物！")
+      }
+      console.log("下标0")
+    },
+    next(){
+      if(this.index<this.pets.length-1){
+        this.index++;
+        console.log("下标："+this.index)
+      }
+      console.log("下标max")
+    },
+    renew(){
+      //提交修改后宠物信息，链接后台修改数据
+      console.log(this.pets[this.index].pet)
+      let tmp=this.pets[this.index].pet;
+      axios.post('renewPet',{
+        cwid:tmp.cwid,
+        xm:tmp.xm,
+        xb:tmp.xb,
+        pz:tmp.pz,
+        csrq:tmp.csrq
+      })
+      .then(res=>{
+        console.log("yesok")
+        console.log(res)
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    },
+    changeFlag1(){
+      if(this.flag1==false){
+        this.flag1=true;
+        this.msg1="保存"
+      }
+      else{
+        this.flag1=false;
+        this.msg1="编辑"
+      }
+
+    },
+    changeFlag2(){
+      if(this.flag2==false){
+        this.flag2=true;
+        this.msg2="保存"
+      }
+      else{
+        this.flag2=false;
+        this.msg2="编辑"
+      }
+    },
+    changeFlag3(){
+      if(this.flag3==false){
+        this.flag3=true;
+        this.msg3="保存"
+      }
+      else{
+        this.flag3=false;
+        this.msg3="编辑"
+      }
+    },
+    changeFlag4(){
+      if(this.flag4==false){
+        this.flag4=true;
+        this.msg4="保存"
+      }
+      else{
+        this.flag4=false;
+        this.msg4="编辑"
+      }
+    },
     userhome_goto(e){
       this.$router.push("/"+e)
     },
@@ -243,6 +366,7 @@ export default {
       const _this=this
       axios.post('/petinfolistbyyhid?yhid='+e)
           .then((response)=>{
+            console.log("pets:")
             console.log(response)
             this.pets=response.data
           }).catch(function (error) { // 请求失败处理
@@ -432,6 +556,40 @@ export default {
 </script>
 
 <style scoped>
+.confirmbtn{
+  width: 134px;
+  height: 48px;
+  background: #F7D271;
+  border-radius: 10px;
+}
+input-before[readonly]{
+  color:black;opacity:1
+}
+.input-before{
+  color: black;
+  outline-color: invert;
+  outline-style: none;
+  outline-width: 0px;
+  border: none;
+  border-style: none;
+  text-shadow: none;
+  -webkit-appearance: none;
+  -webkit-user-select: text;
+  outline-color: transparent;
+  box-shadow: none;
+
+  display: -webkit-box;/* 弹性盒模型 */
+  -webkit-box-orient: vertical;/* 元素垂直居中*/
+  -webkit-line-clamp: 3;/*  文字显示的行数*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-word-break: break-all;
+  -moz-word-break: break-all;
+  -ms-word-break: break-all;
+  -o-word-break: break-all;
+  word-break: break-all;
+}
+
 body {
   margin: 0;
 }
@@ -547,11 +705,12 @@ body {
 
 }
 .select2{
+  margin-left: 10px;
+  margin-top: 3px;
   border-radius: 20px;
   height: 47px;
   width: 130px;
   background-color: #FDF0;
-  border-color: #FDF0;
 }
 .otheruserbottom{
   display: flex;
@@ -678,7 +837,7 @@ body {
   position: absolute;
   width:170px;
   height: 80px;
-  margin-left: 460px;
+  /*margin-left: 460px;*/
 }
 .bottom_rigthboxinner{
   width: 792px;
