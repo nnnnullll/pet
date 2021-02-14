@@ -105,22 +105,22 @@
           <div style="display: flex;flex-direction: row;padding-top: 4%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">宠物名</div>
             <!--            flag=false的时候readonly-->
-            <input class="input-before" v-model="pets[index].pet.xm" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pets[index].pet.xm"></input>
+            <input class="input-before" v-model="pets[seq].pet.xm" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pets[seq].pet.xm"></input>
             <div @click="changeFlag1">{{msg1}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%">品种</div>
-            <input class="input-before"v-model="pets[index].pet.pz" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pets[index].pet.pz"></input>
+            <input class="input-before"v-model="pets[seq].pet.pz" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pets[seq].pet.pz"></input>
             <div @click="changeFlag2">{{msg2}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">出生日期</div>
-            <input class="input-before" v-model="pets[index].pet.csrq" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pets[index].pet.csrq"></input>
+            <input class="input-before" v-model="pets[seq].pet.csrq" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pets[seq].pet.csrq"></input>
             <div @click="changeFlag3">{{msg3}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">性别</div>
-            <input class="input-before" v-model="pets[index].pet.xb" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pets[index].pet.xb"></input>
+            <input class="input-before" v-model="pets[seq].pet.xb" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pets[seq].pet.xb"></input>
             <div @click="changeFlag4">{{msg4}}</div>
           </div>
           <div class="confirmbtn" style="margin-left: 70%">
@@ -131,17 +131,11 @@
               <img :src="former">
               <div style="margin-top: 20px"  @click="previous">上一个宠物</div>
             </div>
-            <div style="display: flex;flex-direction: row" v-show="index<pets.length-1">
-              <div style="margin-top: 20px"  @click="next">下一个宠物</div>
+            <div style="display: flex;flex-direction: row">
+              <div style="margin-top: 20px"  @click="next">{{this.info}}</div>
               <img :src="latter">
             </div>
-            <div style="display: flex;flex-direction: row" v-show="index=pets.length-1">
-              <div style="margin-top: 20px"  @click="next">新建宠物</div>
-              <img :src="latter">
-            </div>
-
           </div>
-
         </div>
       </div>
     </div>
@@ -161,6 +155,7 @@ export default {
   },
   data(){
     return{
+      info:"下一个宠物",
       msg1:"编辑",
       msg2:"编辑",
       msg3:"编辑",
@@ -189,7 +184,7 @@ export default {
       guanzhu_num:22,
       fensi_num:23,
       fenxiang_num:222,
-      index:0,
+      seq:0,
       pets:[],
       messageinform:[],
       playerOptions:[],
@@ -205,29 +200,36 @@ export default {
     }
   },
   methods:{
+    newPet(){
+      console.log("下标："+this.seq)
+    },
     previous(){
-      if(this.index>0)
+      console.log("长度："+this.pets.length)
+      if(this.seq>0)
       {
-        this.index--;
-        console.log("下标："+this.index)
+        this.seq--;
+        console.log("下标："+this.seq)
       }
       else {
         alert("已经是第一个宠物！")
+        console.log("下标0")
       }
-      console.log("下标0")
     },
     next(){
-      if(this.index<this.pets.length-1){
-        this.index++;
-        console.log("下标："+this.index)
+      if(this.seq<this.pets.length){
+        this.seq++;
+        console.log("下标："+this.seq)
+      }
+      else{
+        this.info="新建宠物"
       }
       console.log("下标max")
     },
     renew(){
       //提交修改后宠物信息，链接后台修改数据
-      console.log(this.pets[this.index].pet)
-      let tmp=this.pets[this.index].pet;
-      axios.post('renewPet',{
+      console.log(this.pets[this.seq].pet)
+      let tmp=this.pets[this.seq].pet;
+      axios.post('/renewPet',{
         cwid:tmp.cwid,
         xm:tmp.xm,
         xb:tmp.xb,
