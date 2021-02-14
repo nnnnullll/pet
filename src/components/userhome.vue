@@ -97,14 +97,17 @@
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
           <div class="bottom_rigthbox_header1_txt1">
-            <textarea name="input1" id="input1"  placeholder="有什么和大家分享的？" class="bottom_rigthbox_header1_txt1_input"></textarea>
+            <!-- <textarea v-model="currentValue" name="input1" id="input1"  placeholder="有什么和大家分享的？" class="bottom_rigthbox_header1_txt1_input"></textarea> -->
+            <div class="address-container">
+                <textarea name="input1" id="input1"  placeholder="有什么和大家分享的？" ref="test" class="textarea-mine" v-model="currentValue"></textarea>
+            </div>
             <div v-if="status == 'ready'" class="file-list" style="width: 663px">
               <section v-for="(file, index) of files" class="file-item draggable-item" >
                 <img :src="file.src" alt="" ondragstart="return false;">
                 <span class="file-remove " @click="remove(index)" >+</span>
               </section>
-              <section v-if="status == 'ready'&&files.length<9" class="file-item">
-                <div @click="add(1)" style="margin-top: 40px;" class="add">
+              <section v-if="(status == 'ready'&&files.length<9&&arr.isphoto ==1)||(status == 'ready'&&files.length<1&&arr.isphoto ==0)" class="file-item">
+                <div @click="add(arr.isphoto)" style="margin-top: 40px;" class="add">
                   <span>+</span>
                 </div>
               </section>
@@ -112,13 +115,13 @@
           </div>
           <div class="bottom_rigthbox_header2">
             <div class="bottom_rigthbox_header2_txt2">
-              <select id="petselect" class="bottom_rigthbox_header2_select1" @change="selectFn1($event)">
-                <option value =0>请选择宠物</option>
+              <select id="sharepetselect1" name="sharepetselect1" class="bottom_rigthbox_header2_select1" @change="selectFn1($event)">
+                <option value ="0">请选择宠物</option>
                 <option v-for="(pet,index) in pets" :key="pet.index">{{pet.pet.xm}}</option>
               </select>
             </div>
             <div class="bottom_rigthbox_header2_txt3">
-              <select id="fqhselect" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
+              <select id="sharefqhselect1" name="sharefqhselect1" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
                 <option value =0>请选择分区</option>
                 <option value =1>萌宠日常</option>
                 <option value =2>养护知识</option>
@@ -221,11 +224,14 @@ export default {
         vdurl:[],
         isphoto:9,
         fqh:1,
-        cwid:0,
-      }
+        cwid:1,
+      },
+      //textarea高度自适应
+      currentValue: ''
     }
   },
   activated:function(){
+    this.clean();
     if(localStorage.getItem("yhid")){ 
         this.user_name=localStorage.getItem("yhm")
         this.getuserinfo()
@@ -234,7 +240,31 @@ export default {
         this.gotologin()
     }
   },
+  //textarea高度自适应
+   watch: {
+      currentValue (nv, ov) {
+        if (nv === ov) {
+          return
+        }
+        this.currentValue = nv
+        console.log('value changed')
+        this.changeHeight()
+      }
+    },
   methods:{
+    //textarea高度自适应
+     changeHeight () {
+        let _this = this
+        this.$nextTick(() => {
+          var textArea = _this.$refs.test
+          var scrollHeight = textArea.scrollHeight // 控件所有的高度，包含滚动的那部分(不可见也会有高度)
+          var height = textArea.offsetHeight // 屏幕上显示的高度
+          if (height <= scrollHeight) {
+            textArea.style.height = 'auto' // 恢复默认值，这个作用就是根据内容自适应textarea高度
+            textArea.style.height = textArea.scrollHeight + 'px' // 拿到最新的高度改变textarea的高度
+          }
+        })
+    },
     add(e) {
       this.arr.isphoto=e
       this.$refs.file.click()//调用file的click事件  
@@ -242,6 +272,10 @@ export default {
     },
     remove(index) {
       this.files.splice(index, 1)
+      if(!this.isContain(this.files)){
+        this.status="pre"
+        this.arr.isphoto=9
+      }
     },
     current() {
 				var d = new Date(),
@@ -255,43 +289,64 @@ export default {
 				return str;
 		},
     submit() {
-      if (this.files.length === 0) {
+      console.log(document.getElementById('input1').value)
+      if (this.files.length == 0&&document.getElementById('input1').value=="") {
         console.warn('no file!');
         return
       }
-      let formData = new FormData()
-      //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
-      this.files.forEach((item) => {
-        // console.log(item)
-         formData.append("file", item.file)
-      })
-      let headers = {headers: {"Content-Type": "multipart/form-data"}}//设置上传文件格式，为指定传输数据为二进制类型
-      axios.post('/useruploadimg',formData,headers)
-        .then(res => {
-          if(res.status){
-            console.log('文件上传成功')
-            console.log(res.data)
-            var $reason = document.getElementById('input1').value;
-            this.arr.passage=$reason
-            this.arr.photourl=res.data
-            this.arr.vdurl=res.data
-            this.arr.datatime=this.current()
-            console.log(this.arr)
-            axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
-            .then((response)=>{
-              this.files=[]
-              this.status="pre"
-
-            }).catch(function (error) { // 请求失败处理
-              console.log("---查询出错---！"+error);
-            })
-          }else{
-            console.log('上传失败')
-          }
+      else if (this.files.length != 0) {
+        let formData = new FormData()
+        //当点击上传按钮时，将会遍历所有选中的文件，并添加到自定义的FormData中
+        this.files.forEach((item) => {
+          // console.log(item)
+          formData.append("file", item.file)
         })
-        .catch(err => {
-          console.log('上传失败',err)
+        let headers = {headers: {"Content-Type": "multipart/form-data"}}//设置上传文件格式，为指定传输数据为二进制类型
+        axios.post('/useruploadimg',formData,headers)
+          .then(res => {
+            if(res.status){
+              console.log('文件上传成功')
+              console.log(res.data)
+              var reason = document.getElementById('input1').value;
+              this.arr.passage=reason
+              this.arr.photourl=res.data
+              this.arr.vdurl=res.data
+              this.arr.datatime=this.current()
+              console.log(this.arr)
+              axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
+              .then((response)=>{
+                this.clean()
+              }).catch(function (error) { // 请求失败处理
+                console.log("---查询出错---！"+error);
+              })
+            }else{
+              console.log('上传失败')
+            }
+          })
+          .catch(err => {
+            console.log('上传失败',err)
+          })
+      }
+      else{
+        var reason = document.getElementById('input1').value;
+        this.arr.passage=reason
+        this.arr.datatime=this.current()
+        console.log(this.arr)
+        axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
+        .then((response)=>{
+          this.clean()
+        }).catch(function (error) { // 请求失败处理
+          console.log("---查询出错---！"+error);
         })
+      }
+    },
+    clean(){
+      this.arr.isphoto=9
+      this.files=[]
+      this.status="pre"
+      document.getElementById("input1").value=""
+      document.getElementById("sharepetselect1").value="0"
+      document.getElementById("sharefqhselect1").value="0"
     },
     fileChanged() {
       const list = this.$refs.file.files
@@ -418,7 +473,7 @@ export default {
     },
     getuserinfo(){
       const _this= this
-      axios.get('http://localhost:8000/user/getUserByNamelog/'+"sywtest")
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+JSON.parse(localStorage.getItem('yhm')))
         .then(async res=>{
           console.log(res.data)
           _this.user_id=res.data.yhid;
@@ -793,6 +848,27 @@ body {
   object-fit: cover;
 }
 /* ////////////////////////////////// */
+/* //textarea高度自适应 */
+ .address-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .textarea-mine {
+    background: #FDF0;
+    border-color: #FDF0;
+    min-height: 20px;
+    padding: 5px;
+    width: 700px;
+    display: block;
+    flex: 1;
+    outline: none;
+    border: none;
+    overflow-y: auto;
+    appearance: none;
+    text-align: inherit;
+  }
+/* 右下加上面的textarea////////////////////////////////////////////// */
 .bottom_rigthbox{
   margin-left: 22px;
   width: 792px;
@@ -805,19 +881,33 @@ body {
   background: #FDF0E3;
   display: flex;
   flex-direction: column;
+  position: relative;
+  display: flex;
+    
 }
 .bottom_rigthbox_header1_txt1{
   width: 700px;
   min-height: 40px;
-  margin-top: 28px;
-  margin-left: 43px;
+  margin-top: 15px;
+  margin-left: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
-.bottom_rigthbox_header1_txt1_input{
+/* .bottom_rigthbox_header1_txt1_input{
   background: #FDF0;
   border-color: #FDF0;
   width: 700px;
-  min-height: 100px;
-}
+  min-height: 20px;
+  display: block;
+  flex: 1;
+  color: #0c0c0c;
+  outline: none;
+  border: none;
+  overflow-y: auto;
+  appearance: none;
+  text-align: inherit;
+} */
 .file-list {
   padding: 3px 0px;
 }
@@ -877,7 +967,7 @@ body {
   height: 48px;
 }
 .bottom_rigthbox_header2_txt2{
-  margin-left: 43px;
+  margin-left: 15px;
   margin-top: 1px;
   margin-bottom: 20px;
 } 

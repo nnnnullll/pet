@@ -13,8 +13,8 @@
         <p  class="text1">搜索</p>
       </div>
       <img :src="userimg" @click="top_gotouser()" class="userimg" >
-      <p class="webitem6" @click="top_goto('content')">登陆</p>
-      <p class="webitem7" @click="top_goto('petregister')">注册</p>
+      <p v-if="islogin==0" class="webitem6" @click="top_goto('content')">登陆</p>
+      <p  v-if="islogin==0" class="webitem7" @click="top_goto('petregister')">注册</p>
     </div>
 </template>
 
@@ -28,6 +28,19 @@ export default {
       topUrl:require("@/assets/img/toplogo.png"),
       imgUrl:require("@/assets/img/img1.png"),
       userimg:require("@/assets/img/userimg.png"),
+      islogin:0,
+    }
+  },
+  activated:function(){
+    if(localStorage.getItem("yhm")){
+      this.islogin=1
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+JSON.parse(localStorage.getItem('yhm')))
+        .then(res=>{
+          console.log("头像："+res.data)
+          this.userimg=res.data.tx
+        }).catch(err => {
+          console.log('错误！！！！：'+err)
+      })
     }
   },
   methods: {
@@ -167,6 +180,7 @@ export default {
   width:75px;
   height: 75px;
   margin-right: 1%;
+  border-radius: 50%;
 }
 .webitem6{
   font-size: 23px;

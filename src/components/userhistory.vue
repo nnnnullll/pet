@@ -296,7 +296,7 @@ export default {
     },
     getuserinfo(){
       const _this= this
-      axios.get('http://localhost:8000/user/getUserByNamelog/'+"sywtest")
+      axios.get('http://localhost:8000/user/getUserByNamelog/'+JSON.parse(localStorage.getItem('yhm')))
         .then(async res=>{
           console.log(res.data)
           _this.user_id=res.data.yhid
