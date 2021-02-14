@@ -101,40 +101,40 @@
           <img class="user_historycat" :src="user_historycat" >
 
         </div>
+        <div style="background: #FDF0E3;padding-top: 30px;padding-left: 4%;">
+          <select id="sharefqhselect1" name="sharefqhselect1" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
+            <option value =0>请选择分区</option>
+            <option value =1>猫咪</option>
+            <option value =2>狗狗</option>
+            <option value =3>兔子</option>
+            <option value =4>仓鼠</option>
+          </select>
+        </div>
+
         <div class="bottom_rigthboxinner" style="display: flex;flex-direction:column">
-          <div style="display: flex;flex-direction: row;padding-top: 4%">
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">宠物名</div>
             <!--            flag=false的时候readonly-->
-            <input class="input-before" v-model="pets[seq].pet.xm" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pets[seq].pet.xm"></input>
+            <input class="input-before" v-model="pet_name" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pet_name"></input>
             <div @click="changeFlag1">{{msg1}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%">品种</div>
-            <input class="input-before"v-model="pets[seq].pet.pz" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pets[seq].pet.pz"></input>
+            <input class="input-before"v-model="pet_kind" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pet_kind"></input>
             <div @click="changeFlag2">{{msg2}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">出生日期</div>
-            <input class="input-before" v-model="pets[seq].pet.csrq" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pets[seq].pet.csrq"></input>
+            <input class="input-before" v-model="pet_age" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pet_age"></input>
             <div @click="changeFlag3">{{msg3}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">性别</div>
-            <input class="input-before" v-model="pets[seq].pet.xb" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pets[seq].pet.xb"></input>
+            <input class="input-before" v-model="pet_gender" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pet_gender"></input>
             <div @click="changeFlag4">{{msg4}}</div>
           </div>
-          <div class="confirmbtn" style="margin-left: 70%">
-            <div style="text-align: center;font-size: 28px;" @click="renew">确认修改</div>
-          </div>
-          <div style="display: flex;flex-direction: row;margin-top: 20px;margin-left: 85px">
-            <div style="display: flex;flex-direction: row;margin-right: 30%" >
-              <img :src="former">
-              <div style="margin-top: 20px"  @click="previous">上一个宠物</div>
-            </div>
-            <div style="display: flex;flex-direction: row">
-              <div style="margin-top: 20px"  @click="next">{{this.info}}</div>
-              <img :src="latter">
-            </div>
+          <div class="confirmbtn" style="margin-left: 70%;margin-top: 4%">
+            <div style="text-align: center;font-size: 28px;" @click="renew">确认新建</div>
           </div>
         </div>
       </div>
@@ -148,13 +148,14 @@ import vTop from "@/components/topselect";
 import {videoPlayer} from "vue-video-player";
 
 export default {
-  name: "petinfo",
+  name: "newpetinfo",
   components:{
     vTop,
     videoPlayer
   },
   data(){
     return{
+      pet_zl:"",
       info:"下一个宠物",
       msg1:"编辑",
       msg2:"编辑",
@@ -172,10 +173,10 @@ export default {
       ispet:1,
       user_id:0,
       pet_url:"",
-      pet_name:"用户名",
-      pet_kind:"团宠喵",
-      pet_age:"18",
-      pet_gender:"女",
+      pet_name:"",
+      pet_kind:"",
+      pet_age:"",
+      pet_gender:"",
       pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_url:"",
       user_name:"用户名",
@@ -188,6 +189,8 @@ export default {
       pets:[],
       messageinform:[],
       playerOptions:[],
+      zlh:0,
+      zl:""
     }
   },
   activated:function(){
@@ -200,6 +203,30 @@ export default {
     }
   },
   methods:{
+    selectFn2(e){
+      if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        this.zlh=e.target.selectedIndex
+        console.log("zlh:"+this.zlh)
+        switch (this.zlh) {
+          case 1:
+            this.zl="猫咪";
+            break;
+          case 2:
+            this.zl="狗狗";
+            break;
+          case 3:
+            this.zl="兔子";
+            break;
+          case 4:
+            this.zl="仓鼠";
+            break;
+        }
+        console.log("zl:"+this.zl)
+      }
+    },
     newPet(){
       console.log("下标："+this.seq)
     },
@@ -236,23 +263,21 @@ export default {
 
     },
     renew(){
-      //提交修改后宠物信息，链接后台修改数据
-      console.log(this.pets[this.seq].pet)
-      let tmp=this.pets[this.seq].pet;
-      axios.post('/renewPet',{
-        cwid:tmp.cwid,
-        xm:tmp.xm,
-        xb:tmp.xb,
-        pz:tmp.pz,
-        csrq:tmp.csrq
+      axios.post('/addPet',{
+        xm:this.pet_name,
+        xb:this.pet_gender,
+        pz:this.pet_kind,
+        zl:this.zl,
+        csrq:this.pet_age,
+        yhid:localStorage.getItem('yhid')
       })
-      .then(res=>{
-        console.log("yesok")
-        console.log(res)
-      })
-      .catch(err=>{
-        console.log(err)
-      })
+          .then(res=>{
+            console.log("yesok")
+            console.log(res)
+          })
+          .catch(err=>{
+            console.log(err)
+          })
     },
     changeFlag1(){
       if(this.flag1==false){
@@ -568,6 +593,12 @@ export default {
 </script>
 
 <style scoped>
+.bottom_rigthbox_header2_select1{
+  background: #F7D271;
+  border-color: #FDF0;
+  border-radius: 10px;
+  height: 35px;
+}
 .confirmbtn{
   width: 134px;
   height: 48px;

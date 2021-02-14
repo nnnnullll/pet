@@ -153,5 +153,10 @@ export default  new Router({
       name: 'petinfo',
       component:()=>import("../components/petinfo"),
     },
+    {
+      path: '/newpetinfo',
+      name: 'newpetinfo',
+      component:()=>import("../components/newpetinfo"),
+    },
   ]
 })

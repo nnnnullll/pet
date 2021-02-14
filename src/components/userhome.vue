@@ -987,7 +987,6 @@ body {
   border-color: #FDF0;
   border-radius: 10px;
   height: 35px;
-  
 }
 .bottom_rigthbox_header2_img1{
   margin-left: 28px;
