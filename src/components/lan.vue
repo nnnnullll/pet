@@ -50,7 +50,7 @@
           <!-- 用户信息 -->
           <el-row >
             <el-col  :span="4" class="userleft">
-              <el-avatar @click="gotouser(item.username,useridtmp[index],item.userUrl)" class="userurl" :size="100"  :src="item.userUrl"></el-avatar>
+              <img @click="gotouser(item.username,useridtmp[index],item.userUrl)" class="userurl" :size="100"  :src="item.userUrl"></img>
             </el-col >
             <el-col :span="6" class="userright">
               <el-row>
@@ -2124,11 +2124,17 @@ export default {
   }
 }
 </script>
+<style>
+.userurl{
 
+}
+</style>
 <style scoped>
 body {
   margin: 0;
 }
+
+
 .building1{
   width: 1440px;
   height: 1300px;
@@ -2281,6 +2287,9 @@ body {
 .userurl{
   margin-top: 5px;
   margin-left: 5px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }
 .username{
   width: 75px;

@@ -274,6 +274,8 @@ export default {
           .then(res=>{
             console.log("yesok")
             console.log(res)
+            alert("新建宠物成功！")
+            this.$router.push("/petinfo")
           })
           .catch(err=>{
             console.log(err)

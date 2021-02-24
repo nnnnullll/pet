@@ -101,8 +101,18 @@
           <img class="user_historycat" :src="user_historycat" >
         </div>
 
+
         <div class="bottom_rigthboxinner" style="display: flex;flex-direction:column">
           <div style="display: flex;flex-direction: row;padding-top: 4%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">头像</div>
+            <div>
+              <input style="background: transparent;border: #FFFFFF" type="file" name="fileUpload"  id = "input_updata" @change="change($event)" ref="inputFile" >
+              <input style="background: transparent;border: #FFFFFF;padding-left: 110px" type="submit" value="上传头像" id = "btn_updata" @click = "updata" multiple="multiple">
+            </div>
+
+          </div>
+
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
             <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">昵称</div>
 <!--            flag=false的时候readonly-->
             <input class="input-before" v-model="user_name" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="user_name"></input>
@@ -140,10 +150,12 @@ export default {
   name: "usershezhi",
   components:{
     vTop,
-    videoPlayer
+    videoPlayer,
+
   },
   data(){
     return{
+
       haspet:"无",
       msg1:"编辑",
       msg2:"编辑",
@@ -170,6 +182,7 @@ export default {
       pets:[],
       messageinform:[],
       playerOptions:[],
+
     }
   },
   activated:function(){
@@ -182,6 +195,40 @@ export default {
     }
   },
   methods:{
+    change(event){
+      console.log('文件上传',event.target.files[0])
+      this.file = event.target.files[0]
+    },
+    //  文件上传
+    updata(){
+      console.log('点击了文件上传')
+      var data = new FormData();
+      // 将需要添加的参数添加进表单中
+      data.append("file",this.file)//获取需要上传的文件
+      console.log(data)
+      let headers = {headers: {"Content-Type": "multipart/form-data"}}//设置上传文件格式，为指定传输数据为二进制类型
+      axios.post('/useruploadimg',data,headers)
+          .then(res => {
+            if(res.status){
+              console.log(res.data[0]);
+              let tmp=res.data[0];
+              axios.post("/user/resetTx",{
+                tx:tmp,
+                yhid:localStorage.getItem("yhid")
+              }).then(res=>{
+                console.log(res)}
+                )
+            }else{
+              console.log('上传失败')
+            }
+          })
+          .catch(err => {
+            console.log('上传失败',err)
+          })
+    },
+    setImg(){
+
+    },
     renew(){
       axios.post("/user/renew",{
         yhid:localStorage.getItem('yhid'),
