@@ -644,10 +644,11 @@ body {
   
 }
 .petsimag{
-  width: 114px;
+  width: 116px;
   height: 93px;
   margin-bottom: 15px;
   object-fit: cover;
+  margin-left: 2px;
 }
 /* ////////////////////////////////// */
 .bottom_rigthbox{

@@ -78,6 +78,7 @@ export default {
   flex-direction: row;
   flex-shrink: 0;
   margin-top: 5px;
+  background-color: white;
 }
 .toplogo{
   margin-right: 1%;

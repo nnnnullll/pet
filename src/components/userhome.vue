@@ -247,7 +247,7 @@ export default {
           return
         }
         this.currentValue = nv
-        console.log('value changed')
+        //console.log('value changed')
         this.changeHeight()
       }
     },
@@ -283,13 +283,10 @@ export default {
 				str += d.getFullYear() + '-'; //获取当前年份 
 				str += d.getMonth() + 1 + '-'; //获取当前月份（0——11） 
 				str += d.getDate() + ' ';
-				str += d.getHours() + ':';
-				str += d.getMinutes() + ':';
-				str += d.getSeconds() + ' ';
 				return str;
 		},
     submit() {
-      console.log(document.getElementById('input1').value)
+      //console.log(document.getElementById('input1').value)
       if (this.files.length == 0&&document.getElementById('input1').value=="") {
         console.warn('no file!');
         return
@@ -305,14 +302,14 @@ export default {
         axios.post('/useruploadimg',formData,headers)
           .then(res => {
             if(res.status){
-              console.log('文件上传成功')
-              console.log(res.data)
+              //console.log('文件上传成功')
+              //console.log(res.data)
               var reason = document.getElementById('input1').value;
               this.arr.passage=reason
               this.arr.photourl=res.data
               this.arr.vdurl=res.data
               this.arr.datatime=this.current()
-              console.log(this.arr)
+              //console.log(this.arr)
               axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
               .then((response)=>{
                 this.clean()
@@ -331,7 +328,7 @@ export default {
         var reason = document.getElementById('input1').value;
         this.arr.passage=reason
         this.arr.datatime=this.current()
-        console.log(this.arr)
+        //console.log(this.arr)
         axios.post('http://localhost:8000/addshare?userid='+this.arr.userid+'&username='+this.arr.username+'&userurl='+this.arr.userurl+'&datatime='+this.arr.datatime+'&passage='+this.arr.passage+'&photourl='+this.arr.photourl+'&vdurl='+this.arr.vdurl+'&isphoto='+this.arr.isphoto+'&fqh='+this.arr.fqh+'&cwid='+this.arr.cwid)
         .then((response)=>{
           this.clean()
@@ -393,7 +390,7 @@ export default {
     },
     selectshijiaoFn(e){
       const _this=this
-      console.log(e.target.selectedIndex) 
+      //console.log(e.target.selectedIndex) 
       if(e.target.selectedIndex==1){
         _this.ispet=1
       }
@@ -412,11 +409,11 @@ export default {
       this.playerOptions=[]
       await axios.post('http://localhost:8000/userstarsharebyyhid?yhid='+e+'&fqh='+t+'&follorstar=0')
       .then(async(response)=>{
-        console.log(response)
+        //console.log(response)
         this.messageinforms=response.data
         // await this.setvid(response.data)
         for(var i=0;i<response.data.length;i++){
-          console.log(response.data[i].isphoto)
+          //console.log(response.data[i].isphoto)
           // if(response.data[i].isphoto=="0"){
           let arrStr = {
             playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
@@ -444,7 +441,7 @@ export default {
           }
           this.playerOptions.push(arrStr);
         }
-        console.log(this.playerOptions)
+        //console.log(this.playerOptions)
       }).catch(function (error) { // 请求失败处理
         console.log("---查询出错---！"+error);
       })
@@ -463,7 +460,7 @@ export default {
       const _this= this
       axios.post('http://localhost:8000/user/gzfsfx?yhid='+e)
       .then((response)=>{
-        console.log(response)
+        //console.log(response)
         _this.guanzhu_num=response.data[0];
         _this.fensi_num=response.data[1];
         _this.fenxiang_num=response.data[2];
@@ -475,7 +472,7 @@ export default {
       const _this= this
       axios.get('http://localhost:8000/user/getUserByNamelog/'+JSON.parse(localStorage.getItem('yhm')))
         .then(async res=>{
-          console.log(res.data)
+          //console.log(res.data)
           _this.user_id=res.data.yhid;
           _this.user_name=res.data.yhm;
           _this.user_url=res.data.tx;
@@ -562,8 +559,8 @@ export default {
       }
     },
     starplus(index) {
-        console.log(index)
-        console.log(this.messageinform)
+        //console.log(index)
+        //console.log(this.messageinform)
         if(localStorage.getItem("yhid")){
             axios.get('http://localhost:8000/isstar', {
                 params:{
@@ -571,7 +568,7 @@ export default {
                   jlid:this.messageinform[index].messagenum
                 }
             }).then(res => {
-                console.log(res.data)
+                //console.log(res.data)
                 if(res.data=="wu"){
                     axios.get('http://localhost:8000/addstar',{
                         params:{
@@ -579,7 +576,7 @@ export default {
                           jlid:this.messageinform[index].messagenum
                         }
                     }).then(res => {
-                        console.log(res.data)
+                        //console.log(res.data)
                         if(res.data=="success"){
                           this.messageinform[index].isstar="已收藏"
                           this.messageinform[index].starnumber++
@@ -590,7 +587,7 @@ export default {
                     })
                 }
                 else if(res.data=="1"){
-                  console.log(this.messageinform[index].messagenum)
+                  //console.log(this.messageinform[index].messagenum)
                     axios.get('http://localhost:8000/upstar',{
                         params:{
                           yhid:localStorage.getItem("yhid"),
@@ -598,7 +595,7 @@ export default {
                           sc:0
                         }
                     }).then(res => {
-                        console.log(res.data)
+                        //console.log(res.data)
                         if(res.data=="success"){
                           this.messageinform[index].isstar="已收藏"
                           this.messageinform[index].starnumber++
@@ -608,7 +605,7 @@ export default {
                     })
                 }
                 else{
-                  console.log(index)
+                  //console.log(index)
                     axios.get('http://localhost:8000/upstar',{
                         params:{
                             yhid:localStorage.getItem("yhid"),
@@ -616,7 +613,7 @@ export default {
                             sc:1
                         }
                     }).then(res => {
-                        console.log(res.data)
+                        //console.log(res.data)
                         if(res.data=="success"){
                             this.messageinform[index].isstar="收藏"
                             this.messageinform[index].starnumber--
@@ -842,10 +839,11 @@ body {
   
 }
 .petsimag{
-  width: 114px;
+  width: 116px;
   height: 93px;
   margin-bottom: 15px;
   object-fit: cover;
+  margin-left: 2px;
 }
 /* ////////////////////////////////// */
 /* //textarea高度自适应 */
