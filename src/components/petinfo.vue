@@ -735,6 +735,8 @@ body {
   display: flex;
   flex-direction: column;
   width: 380px;
+  height: 800px;
+  overflow: auto;
 }
 .bottom_leftbox1{
   width: 380px;
@@ -807,10 +809,11 @@ body {
 
 }
 .petsimag{
-  width: 114px;
+  width: 116px;
   height: 93px;
   margin-bottom: 15px;
   object-fit: cover;
+  margin-right: 2px;
 }
 /* ////////////////////////////////// */
 .bottom_rigthbox{

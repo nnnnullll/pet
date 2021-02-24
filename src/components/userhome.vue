@@ -44,12 +44,12 @@
         <div class="bottom_leftbox1">
           <div class="bottom_leftbox1_inner">
             <div>{{guanzhu_num}}</div>
-            <div @click="userhome_goto('userguanzhu')">关注</div>
+            <div @click="userhome_gotofollow('userguanzhu',1)">关注</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
             <div>{{fensi_num}}</div>
-            <div @click="userhome_goto('userfensi')">粉丝</div>
+            <div @click="userhome_gotofollow('userfensi',2)">粉丝</div>
           </div>
           <div class="bottom_leftbox1_line"></div>
           <div class="bottom_leftbox1_inner">
@@ -252,6 +252,13 @@ export default {
       }
     },
   methods:{
+    userhome_gotofollow(e,t){
+      this.$router.push("/"+e)({
+        params: {
+          userfollow: t,
+        }
+      })
+    },
     //textarea高度自适应
      changeHeight () {
         let _this = this
@@ -767,6 +774,8 @@ body {
   display: flex;
   flex-direction: column;
   width: 380px;
+  height: 800px;
+  overflow: auto;
 }
 .bottom_leftbox1{
   width: 380px;
@@ -1020,7 +1029,7 @@ body {
 }
 .logcard{
     width: 792px;
-    min-height: 400px;
+    min-height: 200px;
     background: #FDF0E3;
     margin-bottom: 5px;
 }

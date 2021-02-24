@@ -670,6 +670,8 @@ body {
   display: flex;
   flex-direction: column;
   width: 380px;
+  height: 800px;
+  overflow: auto;
 }
 .bottom_leftbox1{
   width: 380px;

@@ -596,6 +596,8 @@ body {
   display: flex;
   flex-direction: column;
   width: 380px;
+  height: 800px;
+  overflow: auto;
 }
 .bottom_leftbox1{
   width: 380px;
@@ -720,7 +722,7 @@ body {
 }
 .logcard{
     width: 792px;
-    min-height: 400px;
+    min-height: 200px;
     background: #FDF0E3;
     margin-bottom: 5px;
 }

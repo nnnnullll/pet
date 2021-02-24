@@ -158,5 +158,15 @@ export default  new Router({
       name: 'newpetinfo',
       component:()=>import("../components/newpetinfo"),
     },
+    {
+      path: '/userguanzhu',
+      name: 'userguanzhu',
+      component:()=>import("../components/userguanzhu"),
+    },
+    {
+      path: '/userfensi',
+      name: 'userfensi',
+      component:()=>import("../components/userfensi"),
+    },
   ]
 })
