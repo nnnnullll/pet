@@ -96,34 +96,45 @@
       <!-- ////////////////////////////////////////////////// -->
       <div class="bottom_rigthbox">
         <div class="bottom_rigthbox_header">
-            <div class="medium_txt4">主人信息</div>
-            <div class="medium_txt2" @click="userhome_goto('petinfo')">宠物信息</div>
+          <div class="medium_txt2" @click="userhome_goto('usershezhi')">主人信息</div>
+          <div class="medium_txt4" >宠物信息</div>
           <img class="user_historycat" :src="user_historycat" >
+
+        </div>
+        <div style="background: #FDF0E3;padding-top: 30px;padding-left: 4%;">
+          <select id="sharefqhselect1" name="sharefqhselect1" class="bottom_rigthbox_header2_select1" @change="selectFn2($event)">
+            <option value =0>请选择分区</option>
+            <option value =1>猫咪</option>
+            <option value =2>狗狗</option>
+            <option value =3>兔子</option>
+            <option value =4>仓鼠</option>
+          </select>
         </div>
 
         <div class="bottom_rigthboxinner" style="display: flex;flex-direction:column">
-          <div style="display: flex;flex-direction: row;padding-top: 4%">
-            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">昵称</div>
-<!--            flag=false的时候readonly-->
-            <input class="input-before" v-model="user_name" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="user_name"></input>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">宠物名</div>
+            <!--            flag=false的时候readonly-->
+            <input class="input-before" v-model="pet_name" style="width: 471px;background-color: transparent"type="text" :readonly="flag1?false:'readonly'" :placeholder="pet_name"></input>
             <div @click="changeFlag1">{{msg1}}</div>
           </div>
-          <div style="display: flex;flex-direction: row;padding-top: 2%;height: fit-content">
-            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">个性签名</div>
-            <textarea class="input-before"v-model="user_qianmin" style="width: 471px;max-height:90px;min-height:40px;word-break:break-all;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="user_qianmin"></textarea>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%">品种</div>
+            <input class="input-before"v-model="pet_kind" style="width: 471px;background-color: transparent"type="text" :readonly="flag2?false:'readonly'" :placeholder="pet_kind"></input>
             <div @click="changeFlag2">{{msg2}}</div>
           </div>
-          <div style="display: flex;flex-direction: row">
-            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">邮箱</div>
-            <input class="input-before" v-model="user_email" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="user_email"></input>
+          <div style="display: flex;flex-direction: row;padding-top: 2%">
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">出生日期</div>
+            <input class="input-before" v-model="pet_age" style="width: 471px;background-color: transparent"type="text" :readonly="flag3?false:'readonly'" :placeholder="pet_age"></input>
             <div @click="changeFlag3">{{msg3}}</div>
           </div>
           <div style="display: flex;flex-direction: row;padding-top: 2%">
-            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">宠物</div>
-            <div style="width: 471px">{{haspet}}</div>
+            <div style="width:84px;margin-right: 4.5%;margin-left: 4%;">性别</div>
+            <input class="input-before" v-model="pet_gender" style="width: 471px;background-color: transparent"type="text" :readonly="flag4?false:'readonly'" :placeholder="pet_gender"></input>
+            <div @click="changeFlag4">{{msg4}}</div>
           </div>
-          <div class="confirmbtn" style="margin-left: 70%">
-            <div style="text-align: center;font-size: 28px;" @click="renew">确认修改</div>
+          <div class="confirmbtn" style="margin-left: 70%;margin-top: 4%">
+            <div style="text-align: center;font-size: 28px;" @click="renew">确认新建</div>
           </div>
         </div>
       </div>
@@ -137,28 +148,35 @@ import vTop from "@/components/topselect";
 import {videoPlayer} from "vue-video-player";
 
 export default {
-  name: "usershezhi",
+  name: "newpetinfo",
   components:{
     vTop,
     videoPlayer
   },
   data(){
     return{
-      haspet:"无",
+      pet_zl:"",
+      info:"下一个宠物",
       msg1:"编辑",
       msg2:"编辑",
       msg3:"编辑",
+      msg4:"编辑",
       flag1:false,
       flag2:false,
       flag3:false,
-      user_email:"1111111111@qq.com",
+      flag4:false,
+      former:require("@/assets/img/former.png"),
+      latter:require("@/assets/img/latter.png"),
       book:require("@/assets/img/home_title_book.png"),
       user_change:require("@/assets/img/user_change.png"),
       user_historycat:require("@/assets/img/user_historycat.png"),
       ispet:1,
       user_id:0,
       pet_url:"",
-      pet_name:"用户名",
+      pet_name:"",
+      pet_kind:"",
+      pet_age:"",
+      pet_gender:"",
       pet_qianmin:"个性签名~个性签名~个性签名~最多20个字",
       user_url:"",
       user_name:"用户名",
@@ -167,9 +185,12 @@ export default {
       guanzhu_num:22,
       fensi_num:23,
       fenxiang_num:222,
+      seq:0,
       pets:[],
       messageinform:[],
       playerOptions:[],
+      zlh:0,
+      zl:""
     }
   },
   activated:function(){
@@ -182,20 +203,81 @@ export default {
     }
   },
   methods:{
+    selectFn2(e){
+      if(e.target.selectedIndex==0){
+        return
+      }
+      else{
+        this.zlh=e.target.selectedIndex
+        console.log("zlh:"+this.zlh)
+        switch (this.zlh) {
+          case 1:
+            this.zl="猫咪";
+            break;
+          case 2:
+            this.zl="狗狗";
+            break;
+          case 3:
+            this.zl="兔子";
+            break;
+          case 4:
+            this.zl="仓鼠";
+            break;
+        }
+        console.log("zl:"+this.zl)
+      }
+    },
+    newPet(){
+      console.log("下标："+this.seq)
+    },
+    previous(){
+      console.log("长度："+this.pets.length)
+      if(this.seq>0)
+      {
+        if(this.seq==this.pets.length-1){
+          this.info="下一个宠物"
+        }
+        this.seq--;
+        console.log("下标："+this.seq)
+      }
+      else if(this.seq==0){
+        alert("已经是第一个宠物！")
+        console.log("下标0")
+      }
+    },
+    next(){
+      console.log("长度："+this.pets.length)
+      if(this.seq==this.pets.length-1){
+        console.log("下标max，为："+this.seq)
+        this.info="新建宠物"
+        this.$router.push("/newpetinfo")
+      }
+      if(this.seq<this.pets.length-1){
+        this.seq++;
+        console.log("下标："+this.seq)
+        this.info="下一个宠物"
+        if(this.seq==this.pets.length-1){
+          this.info="新建宠物"
+        }
+      }
+
+    },
     renew(){
-      axios.post("/user/renew",{
-        yhid:localStorage.getItem('yhid'),
-        yx:this.user_email,
-        gxqm:this.user_qianmin,
-        yhm:this.user_name
+      axios.post('/addPet',{
+        xm:this.pet_name,
+        xb:this.pet_gender,
+        pz:this.pet_kind,
+        zl:this.zl,
+        csrq:this.pet_age,
+        yhid:localStorage.getItem('yhid')
       })
-      .then(res=>{
-        console.log(res)
-        alert("修改成功")
-      })
-      .catch(err=>{
-        console.log(err)
-      })
+          .then(res=>{
+            console.log("yesok")
+            console.log(res)
+          })
+          .catch(err=>{
+            console.log(err)
+          })
     },
     changeFlag1(){
       if(this.flag1==false){
@@ -203,7 +285,6 @@ export default {
         this.msg1="保存"
       }
       else{
-        console.log(this.user_name)
         this.flag1=false;
         this.msg1="编辑"
       }
@@ -215,7 +296,6 @@ export default {
         this.msg2="保存"
       }
       else{
-        console.log(this.user_qianmin)
         this.flag2=false;
         this.msg2="编辑"
       }
@@ -226,9 +306,18 @@ export default {
         this.msg3="保存"
       }
       else{
-        console.log(this.user_email)
         this.flag3=false;
         this.msg3="编辑"
+      }
+    },
+    changeFlag4(){
+      if(this.flag4==false){
+        this.flag4=true;
+        this.msg4="保存"
+      }
+      else{
+        this.flag4=false;
+        this.msg4="编辑"
       }
     },
     userhome_goto(e){
@@ -314,6 +403,7 @@ export default {
       const _this=this
       axios.post('/petinfolistbyyhid?yhid='+e)
           .then((response)=>{
+            console.log("pets:")
             console.log(response)
             this.pets=response.data
           }).catch(function (error) { // 请求失败处理
@@ -334,14 +424,13 @@ export default {
     },
     getuserinfo(){
       const _this= this
-      axios.get('/user/getUserByNamelog/'+JSON.parse(localStorage.getItem('yhm')))
+      axios.get('/user/getUserByNamelog/'+"sywtest")
           .then(async res=>{
             console.log(res.data)
             _this.user_id=res.data.yhid
             _this.user_name=res.data.yhm;
             _this.user_url=res.data.tx;
             _this.user_qianmin=res.data.gxqm;
-            _this.user_email=res.data.yx;
             _this.getnum(res.data.yhid);
             _this.getpet(res.data.yhid);
             _this.getmessage(res.data.yhid,0);
@@ -504,6 +593,12 @@ export default {
 </script>
 
 <style scoped>
+.bottom_rigthbox_header2_select1{
+  background: #F7D271;
+  border-color: #FDF0;
+  border-radius: 10px;
+  height: 35px;
+}
 .confirmbtn{
   width: 134px;
   height: 48px;
@@ -653,11 +748,12 @@ body {
 
 }
 .select2{
+  margin-left: 10px;
+  margin-top: 3px;
   border-radius: 20px;
   height: 47px;
   width: 130px;
   background-color: #FDF0;
-  border-color: #FDF0;
 }
 .otheruserbottom{
   display: flex;
@@ -742,11 +838,10 @@ body {
 
 }
 .petsimag{
-  width: 116px;
+  width: 114px;
   height: 93px;
   margin-bottom: 15px;
   object-fit: cover;
-  margin-left: 2px;
 }
 /* ////////////////////////////////// */
 .bottom_rigthbox{
@@ -785,7 +880,7 @@ body {
   position: absolute;
   width:170px;
   height: 80px;
-  /*margin-left: 600px;*/
+  /*margin-left: 460px;*/
 }
 .bottom_rigthboxinner{
   width: 792px;
